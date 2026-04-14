@@ -1,6 +1,6 @@
 # Web Dev Labs
 
-> Base de conhecimento sobre desenvolvimento web da Caramelo Tech, com foco em aprendizado pratico para iniciantes.
+> Base de conhecimento sobre Desenvolvimento Web da Caramelo Tech, com foco em aprendizado pratico para iniciantes.
 
 Bem-vindo ao **Web Dev Labs**. Este repositorio reune notas publicadas com Astro + Starlight, exercicios e projetos para apoiar a jornada de quem esta aprendendo fundamentos da web e topicos de system design.
 
