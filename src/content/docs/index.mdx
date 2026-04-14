@@ -1,0 +1,35 @@
+---
+title: Web Dev Labs
+description: Base de conhecimento sobre desenvolvimento web da Caramelo Tech, com foco em aprendizado pratico para iniciantes.
+template: splash
+hero:
+  tagline: Base de conhecimento sobre desenvolvimento web da Caramelo Tech, com foco em aprendizado pratico para iniciantes.
+  actions:
+    - text: Comecar agora
+      link: /web-dev-labs/02-html/
+      icon: right-arrow
+      variant: primary
+    - text: GitHub
+      link: https://github.com/caramelotech/web-dev-labs
+      icon: github
+      variant: minimal
+sidebar:
+  hidden: true
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+<CardGrid stagger>
+  <Card title="Notas" icon="open-book">
+    Conceitos explicados de forma clara e progressiva, do basico ao avancado.
+  </Card>
+  <Card title="Exemplos" icon="rocket">
+    Espaco para exemplos praticos e materiais de apoio em evolucao.
+  </Card>
+  <Card title="Exercicios" icon="pencil">
+    Desafios para consolidar o aprendizado. Disponiveis em `examples/exercises.md`.
+  </Card>
+  <Card title="Projetos" icon="star">
+    Projetos completos para aplicar tudo que foi aprendido. Disponiveis em `examples/projects.md`.
+  </Card>
+</CardGrid>

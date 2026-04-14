@@ -1,15 +1,22 @@
 # Exemplos
 
-Exemplos práticos de código para reforçar os conceitos das anotações.
+Esta pasta concentra os materiais praticos do repositorio.
+
+## Indice
+
+| Caminho | Tipo | Descricao |
+| --- | --- | --- |
+| `exercises.md` | Exercicios | Lista de desafios para praticar os conceitos das notas |
+| `projects.md` | Projetos | Propostas de mini projetos para consolidar o aprendizado |
 
 ## Como usar
 
-1. Cada exemplo está em sua própria pasta
-2. Leia o objetivo antes de executar o código
-3. Experimente modificar os exemplos para entender melhor o comportamento
+1. Leia a nota relacionada em `src/content/docs/`
+2. Resolva um exercicio em `exercises.md`
+3. Evolua para um projeto em `projects.md`
 
-## Exemplos disponíveis
+## Observacao
 
-<!-- Liste aqui os exemplos conforme forem sendo criados -->
+Os exemplos executaveis ainda estao em expansao. Quando novos materiais forem adicionados, este indice deve ser atualizado.
 
-**[← Voltar ao README Principal](../README.md)**
+Mais detalhes estao em [../.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md).
