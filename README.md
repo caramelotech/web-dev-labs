@@ -21,10 +21,10 @@ O Web Dev Labs foi pensado para combinar teoria e pratica em uma trilha progress
 
 ```text
 web-dev-labs/
-|- src/content/docs/   -> Anotacoes e estudos publicados no site
-|- examples/           -> Exemplos de codigo, exercicios e projetos praticos
-|- public/assets/      -> Imagens e arquivos estaticos publicados no site
-`- .github/            -> Workflows, templates e guias de contribuicao
+├── src/content/docs/   -> Anotacoes e estudos publicados no site
+├── examples/           -> Exemplos de codigo, exercicios e projetos praticos
+├── public/assets/      -> Imagens e arquivos estaticos publicados no site
+└── .github/            -> Workflows, templates e guias de contribuicao
 ```
 
 ## Como usar
