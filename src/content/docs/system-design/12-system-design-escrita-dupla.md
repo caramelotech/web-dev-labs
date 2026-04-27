@@ -3,7 +3,7 @@ title: "Dual-Write Problem"
 description: "Entenda o problema de escrita dupla e compare Outbox, CDC e event sourcing."
 lastUpdated: 2026-04-13
 sidebar:
-  order: 12
+  order: 3
 tags: ["system design", "outbox", "cdc", "consistencia"]
 ---
 
@@ -88,13 +88,13 @@ append event -> event store -> projecoes derivadas
 
 ## Comparacao
 
-| Estrategia | Consistencia | Complexidade | Controle |
-| --- | --- | --- | --- |
-| Dual-write ingenuo | Nenhuma | Baixa | Baixo |
-| 2PC | Forte | Muito alta | Alto |
-| Outbox | Eventual | Media | Alto |
-| CDC | Eventual | Alta | Medio |
-| Event sourcing | Forte | Muito alta | Muito alto |
+| Estrategia         | Consistencia | Complexidade | Controle   |
+| ------------------ | ------------ | ------------ | ---------- |
+| Dual-write ingenuo | Nenhuma      | Baixa        | Baixo      |
+| 2PC                | Forte        | Muito alta   | Alto       |
+| Outbox             | Eventual     | Media        | Alto       |
+| CDC                | Eventual     | Alta         | Medio      |
+| Event sourcing     | Forte        | Muito alta   | Muito alto |
 
 ## Insight principal
 

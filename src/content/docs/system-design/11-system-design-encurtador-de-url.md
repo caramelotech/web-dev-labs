@@ -3,7 +3,7 @@ title: "Encurtador de URL"
 description: "Estude requisitos, escala, cache e trade-offs para desenhar um encurtador de URL."
 lastUpdated: 2026-04-13
 sidebar:
-  order: 11
+  order: 2
 tags: ["system design", "cache", "arquitetura", "escalabilidade"]
 ---
 
@@ -128,12 +128,12 @@ flowchart LR
 
 ## Trade-offs
 
-| Decisao | Trade-off |
-| --- | --- |
-| Cache agressivo | Consistencia |
-| ID sequencial | Seguranca |
-| Hash | Colisao |
-| Banco unico | Escala |
+| Decisao           | Trade-off    |
+| ----------------- | ------------ |
+| Cache agressivo   | Consistencia |
+| ID sequencial     | Seguranca    |
+| Hash              | Colisao      |
+| Banco unico       | Escala       |
 | Banco distribuido | Complexidade |
 
 ## Resumo

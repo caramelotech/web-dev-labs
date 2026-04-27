@@ -74,6 +74,19 @@ tags: ["web", "tema", "iniciante"]
 
 Se precisar de imagens, coloque os arquivos em `public/assets/` e referencie com o caminho absoluto do site.
 
+**`sidebar.order` é sequencial por diretório**, não global. A ordem entre seções é controlada pelo array `sidebar` em `astro.config.mjs`. Dentro de cada pasta, numere os arquivos a partir de 1.
+
+Para adicionar uma nova seção superior (ex: `nova-categoria/`):
+1. Crie o diretório em `src/content/docs/nova-categoria/`
+2. Adicione um arquivo `index.md` como página de entrada
+3. Adicione uma entrada `autogenerate` em `astro.config.mjs`:
+   ```javascript
+   {
+     label: "Título da Seção",
+     autogenerate: { directory: "nova-categoria" },
+   }
+   ```
+
 ### Exemplos em `examples/`
 
 - Um conceito por pasta ou arquivo quando fizer sentido

@@ -3,7 +3,7 @@ title: "HTML"
 description: "Entenda a estrutura basica do HTML, as principais tags e o uso de semantica na web."
 lastUpdated: 2026-04-13
 sidebar:
-  order: 2
+  order: 1
 tags: ["html", "semantica", "web", "iniciante"]
 ---
 

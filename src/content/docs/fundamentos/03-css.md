@@ -3,7 +3,7 @@ title: "CSS"
 description: "Aprenda seletores, pseudo-classes, pseudo-elementos e transicoes para estilizar paginas web."
 lastUpdated: 2026-04-13
 sidebar:
-  order: 3
+  order: 2
 tags: ["css", "seletores", "transicoes", "web"]
 ---
 

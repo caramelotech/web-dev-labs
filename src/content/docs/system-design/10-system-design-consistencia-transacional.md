@@ -3,7 +3,7 @@ title: "Consistencia Transacional: Monolito vs Microsservicos"
 description: "Compare monolitos e microsservicos para entender consistencia, sagas e acoes compensatorias."
 lastUpdated: 2026-04-13
 sidebar:
-  order: 10
+  order: 1
 tags: ["system design", "microsservicos", "sagas", "consistencia"]
 ---
 
@@ -91,13 +91,13 @@ Nao existe controlador central. Cada servico reage a eventos.
 
 ## Comparacao direta
 
-| Aspecto | Orquestracao | Coreografia |
-| --- | --- | --- |
-| Controle | Centralizado | Distribuido |
-| Acoplamento | Medio | Baixo |
-| Observabilidade | Mais facil | Mais dificil |
-| Escalabilidade | Menor | Maior |
-| Complexidade mental | Baixa | Alta |
+| Aspecto             | Orquestracao | Coreografia  |
+| ------------------- | ------------ | ------------ |
+| Controle            | Centralizado | Distribuido  |
+| Acoplamento         | Medio        | Baixo        |
+| Observabilidade     | Mais facil   | Mais dificil |
+| Escalabilidade      | Menor        | Maior        |
+| Complexidade mental | Baixa        | Alta         |
 
 ## Insight principal
 
