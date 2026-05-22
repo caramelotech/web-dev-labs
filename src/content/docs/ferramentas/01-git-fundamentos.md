@@ -1,6 +1,6 @@
 ---
-title: "Git e GitHub"
-description: "Versionamento de código, repositórios, branches, comandos essenciais, pull requests e resolução de conflitos"
+title: "Git: Fundamentos"
+description: "Conceitos essenciais de versionamento, comandos básicos do Git, merge, resolução de conflitos e .gitignore."
 lastUpdated: 2026-04-26
 sidebar:
   order: 1
@@ -211,48 +211,6 @@ git commit -m "merge: resolver conflito no cálculo de taxa"
 ```
 
 IDEs como IntelliJ e VS Code têm interfaces visuais para resolução de conflitos que facilitam bastante.
-
-## Pull Requests
-
-Um Pull Request (PR) é uma solicitação para integrar mudanças de uma branch em outra. É o mecanismo central de code review em times.
-
-### Fluxo típico
-
-1. Criar uma branch para a funcionalidade ou correção
-2. Fazer commits com as alterações
-3. Fazer push da branch para o remoto
-4. Abrir um PR no GitHub apontando a branch para `main`
-5. Revisar o código com o time (comentários, sugestões)
-6. Fazer ajustes e atualizar o PR com novos commits
-7. Aprovar e fazer merge
-
-### Boas práticas para PRs
-
-- PRs pequenos são mais fáceis de revisar
-- Descreva claramente o que foi feito e por quê
-- Inclua contexto (screenshots, issue relacionada, etc.)
-- Responda aos comentários antes de pedir nova revisão
-
-## Fluxos de trabalho
-
-### Feature Branch Workflow
-
-O mais comum: cada funcionalidade em sua própria branch, mergeada via PR.
-
-```bash
-git switch -c feature/autenticacao
-# ... commits ...
-git push -u origin feature/autenticacao
-# abrir PR no GitHub
-```
-
-### Gitflow
-
-Mais estruturado, com branches fixas: `main`, `develop`, `feature/*`, `release/*`, `hotfix/*`. Útil para projetos com releases planejados.
-
-### Trunk-based development
-
-Todos trabalham em branches curtas e fazem merge frequente em `main`. Requer boa cobertura de testes.
 
 ## .gitignore
 
