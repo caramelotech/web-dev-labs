@@ -1,67 +1,53 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Orientações para agentes de IA que trabalham neste repositório.
 
-## Sobre o projeto
+## Visão geral
 
-Web Dev Labs é uma base de conhecimento sobre desenvolvimento web da Caramelo Tech, voltada para iniciantes. O conteúdo cobre HTML, CSS, JavaScript, System Design, Backend e Ferramentas, publicado com Astro + Starlight no GitHub Pages em `https://caramelotech.github.io/web-dev-labs`.
+Repositório de **conteúdo puro** do Web Dev Labs (Caramelo Tech). Contém apenas notas em Markdown - não há build, dependências, testes ou linting.
 
-## Comandos
+As notas são publicadas no site do Caramelo Labs em `https://caramelotech.com.br/labs/web-dev/`. Quem monta e publica o site é o repositório hub [labs](https://github.com/caramelotech/labs): a cada push em `main` que altere `notes/` ou `sidebar.json`, o workflow `.github/workflows/notify-hub.yml` dispara o rebuild do hub via `repository_dispatch`.
 
-```bash
-npm install        # Instalar dependências
-npm run dev        # Servidor local em http://localhost:4321
-npm run build      # Build de produção
-npm run preview    # Visualizar o build localmente
+## Estrutura
+
+```
+notes/           # Notas em Markdown puro - cada arquivo vira uma página no site
+  index.md       # Página de entrada do lab no site
+  fundamentos/          # HTML e CSS
+  backend/              # SQL, HTTP, APIs e REST
+  engenharia-de-software/  # Princípios SOLID
+  system-design/        # Consistência, encurtador de URL, dual-write
+  ferramentas/          # Git, commits, PRs, fluxos, GPG
+sidebar.json     # Seções da barra lateral no site (labels e ordem)
+examples/        # Exercícios e projetos práticos (não publicados no site)
 ```
 
-## Arquitetura
+## Escrevendo notas
 
-- `src/content/docs/` - Anotações publicadas no site Starlight
-  - `fundamentos/` - HTML, CSS e conceitos básicos da web
-  - `backend/` - SQL, HTTP/REST e tópicos de servidor
-  - `system-design/` - Padrões de arquitetura e problemas clássicos
-  - `ferramentas/` - Git e utilitários de desenvolvimento
-  - `index.mdx` - Página inicial do site
-- `examples/` - Exercícios e projetos práticos (Markdown puro, não publicados no Starlight)
-- `public/assets/` - Imagens e arquivos estáticos referenciados nas notas
-- `astro.config.mjs` - Configuração do Astro e do Starlight, incluindo sidebar e `base: '/web-dev-labs'`
-- `src/styles/custom.css` - Customizações de estilo do Starlight
+As notas NÃO usam frontmatter. Regras:
 
-## Deployment
+- **A primeira linha da nota deve ser o título como `# H1`** - no site, ela vira o `title` da página (o hub injeta o frontmatter automaticamente)
+- Use `##` e `###` para as demais seções (apenas um `#` por arquivo, na primeira linha)
+- Prefixo numérico no nome do arquivo controla a ordem na barra lateral dentro da pasta: `01-nome.md`, `02-nome.md`
+- Imagens ficam junto das notas (ex: `notes/secao/assets/img.png`), referenciadas com caminho relativo em sintaxe Markdown: `![descrição](./assets/img.png)` - nunca use tags HTML `<img>` nem caminhos absolutos
+- Links para outras notas do site usam o caminho completo: `/labs/web-dev/<secao>/<nota>/`
+- Frontmatter ainda é aceito para campos extras (`description`, `tags`), mas o padrão é não usar
 
-O site é publicado via GitHub Actions no GitHub Pages. O campo `base: '/web-dev-labs'` em `astro.config.mjs` é obrigatório para que os links e assets funcionem corretamente no subpath. Não remova esse campo.
+### Nova seção de tema
 
-## Convenções de conteúdo
-
-- **Idioma:** Português (pt-BR)
-- **Frontmatter** obrigatório em todas as notas Starlight:
-  ```yaml
-  ---
-  title: "Título da nota"
-  description: "Resumo curto explicando o foco da página."
-  lastUpdated: 2026-01-01
-  sidebar:
-    order: 1
-  tags: ["tema", "subtema"]
-  ---
-  ```
-- Não repita o `title` como `# h1` - o Starlight renderiza o título automaticamente.
-- Use `##` e `###` para seções dentro da nota.
-
-## Regra de sidebar.order
-
-**`sidebar.order` é sequencial por diretório**, não global. A ordem entre seções é controlada pelo array `sidebar` em `astro.config.mjs`. Dentro de cada pasta, numere os arquivos a partir de 1 (ex: `01-git.md`, `02-http-rest.md`).
-
-**Seções atuais:** Fundamentos Web, Backend, System Design, Ferramentas.
-
-Para adicionar uma nova seção:
-
-1. Crie o diretório em `src/content/docs/nova-categoria/`
-2. Adicione uma entrada `autogenerate` em `astro.config.mjs`:
-   ```javascript
-   {
-     label: "Título da Seção",
-     autogenerate: { directory: "nova-categoria" },
-   }
+1. Crie a subpasta em `notes/nova-secao/` com as notas
+2. Adicione a seção em `sidebar.json`:
+   ```json
+   { "label": "Título da Seção", "directory": "nova-secao" }
    ```
+
+## Convenções e preferências
+
+- Idioma: português brasileiro (pt-BR)
+- Usar hífens (-) em vez de travessões (—) em todos os textos
+- Em Markdown, NÃO usar `---` para separar seções (exceto para notas/atribuições no final do arquivo)
+- **Git:** Nunca fazer `git commit` ou `git push` automaticamente - apenas quando explicitamente solicitado
+
+## Recursos úteis
+
+- [labs (hub)](https://github.com/caramelotech/labs) - estrutura do site, script de fetch e deploy
