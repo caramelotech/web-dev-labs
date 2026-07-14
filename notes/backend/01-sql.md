@@ -1,11 +1,4 @@
----
-title: "SQL"
-description: "Fundamentos de SQL: criar tabelas, inserir, consultar, atualizar e deletar dados, e trabalhar com JOINs"
-lastUpdated: 2026-04-26
-sidebar:
-  order: 1
-tags: ["sql", "banco-de-dados", "postgresql", "mysql"]
----
+# SQL
 
 SQL (Structured Query Language) é a linguagem padrão para interagir com bancos de dados relacionais. Independente do banco que você usa - PostgreSQL, MySQL, SQLite, SQL Server - o SQL core é praticamente o mesmo.
 

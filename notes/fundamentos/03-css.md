@@ -1,11 +1,4 @@
----
-title: "CSS"
-description: "Aprenda seletores, pseudo-classes, pseudo-elementos e transicoes para estilizar paginas web."
-lastUpdated: 2026-04-13
-sidebar:
-  order: 2
-tags: ["css", "seletores", "transicoes", "web"]
----
+# CSS
 
 CSS (Cascading Style Sheets) e a linguagem usada para definir o estilo e o layout visual de paginas web escritas em HTML. Com CSS, pessoas desenvolvedoras controlam cores, fontes, tamanhos, espacamentos, animacoes e responsividade para diferentes dispositivos.
 
@@ -149,6 +142,6 @@ Exemplo de transicao:
 
 Resultado:
 
-<img src="/web-dev-labs/assets/transitions.gif" alt="Exemplo de transicao CSS" width="300">
+![Exemplo de transicao CSS](./assets/transitions.gif)
 
-[Voltar ao indice](/web-dev-labs/indice/)
+[Voltar ao início](/labs/web-dev/)

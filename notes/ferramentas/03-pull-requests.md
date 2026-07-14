@@ -1,11 +1,4 @@
----
-title: "Pull Requests e Code Review"
-description: "Fluxo de Pull Requests no GitHub, templates de PR, proteção de branches, CODEOWNERS e boas práticas de code review."
-lastUpdated: 2026-05-21
-sidebar:
-  order: 3
-tags: ["git", "github", "pull-request", "code-review", "codeowners"]
----
+# Pull Requests e Code Review
 
 Um Pull Request (PR) é uma solicitação para integrar mudanças de uma branch em outra. É o mecanismo central de code review em times e o ponto onde colaboração, qualidade e rastreabilidade se encontram.
 

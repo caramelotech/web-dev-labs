@@ -1,11 +1,4 @@
----
-title: "Assinatura de Commits com GPG"
-description: "Assinatura criptográfica de commits com GPG: geração de chaves, configuração do Git e integração com o GitHub."
-lastUpdated: 2026-05-21
-sidebar:
-  order: 5
-tags: ["git", "gpg", "segurança", "assinatura"]
----
+# Assinatura de Commits com GPG
 
 Por padrão, o Git não verifica a identidade de quem faz um commit - qualquer pessoa pode criar um commit usando o seu nome e e-mail. A assinatura com GPG resolve isso: cada commit assinado carrega uma prova criptográfica de autoria, e o GitHub exibe um selo "Verified" nesses commits.
 

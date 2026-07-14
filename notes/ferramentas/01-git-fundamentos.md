@@ -1,11 +1,4 @@
----
-title: "Git: Fundamentos"
-description: "Conceitos essenciais de versionamento, comandos básicos do Git, merge, resolução de conflitos e .gitignore."
-lastUpdated: 2026-04-26
-sidebar:
-  order: 1
-tags: ["git", "github", "versionamento", "controle-de-versão"]
----
+# Git: Fundamentos
 
 Git é um sistema de controle de versão distribuído que rastreia mudanças no código ao longo do tempo. GitHub é uma plataforma que hospeda repositórios Git e adiciona ferramentas de colaboração como pull requests e code review.
 

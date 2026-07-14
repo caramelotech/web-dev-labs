@@ -1,11 +1,4 @@
----
-title: "HTML"
-description: "Entenda a estrutura basica do HTML, as principais tags e o uso de semantica na web."
-lastUpdated: 2026-04-13
-sidebar:
-  order: 1
-tags: ["html", "semantica", "web", "iniciante"]
----
+# HTML
 
 HTML (HyperText Markup Language) e a linguagem padrao usada para criar paginas e documentos na web. Ele define a estrutura basica do conteudo de uma pagina por meio de tags usadas para formatar texto, adicionar imagens, criar links, formularios e muito mais.
 
@@ -154,4 +147,4 @@ As tags `<div>` e `<span>` sao usadas para agrupar conteudo:
 - [W3Schools - HTML](https://www.w3schools.com/html/)
 - [O Essencial de HTML - Fundamentos Essenciais para o Desenvolvimento de Aplicacoes | Cod3r Cursos](https://www.youtube.com/watch?v=BRd8_yFzQiA)
 
-[Voltar ao indice](/web-dev-labs/indice/)
+[Voltar ao início](/labs/web-dev/)

@@ -1,0 +1,10 @@
+{
+  "sections": [
+    { "label": "Visão geral", "slug": "." },
+    { "label": "Fundamentos Web", "directory": "fundamentos" },
+    { "label": "Backend", "directory": "backend" },
+    { "label": "Engenharia de Software", "directory": "engenharia-de-software" },
+    { "label": "System Design", "directory": "system-design" },
+    { "label": "Ferramentas", "directory": "ferramentas" }
+  ]
+}

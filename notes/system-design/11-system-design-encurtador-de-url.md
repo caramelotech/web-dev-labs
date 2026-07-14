@@ -1,11 +1,4 @@
----
-title: "Encurtador de URL"
-description: "Estude requisitos, escala, cache e trade-offs para desenhar um encurtador de URL."
-lastUpdated: 2026-04-13
-sidebar:
-  order: 2
-tags: ["system design", "cache", "arquitetura", "escalabilidade"]
----
+# Encurtador de URL
 
 Um encurtador de URL e um sistema que:
 
@@ -147,4 +140,4 @@ flowchart LR
 
 - [System Design: Encurtador de URL - Desafio Real de Entrevista RESOLVIDO | Leonardo Zamariola](https://www.youtube.com/watch?v=JHavVCLQT4k)
 
-[Voltar ao indice](/web-dev-labs/indice/)
+[Voltar ao início](/labs/web-dev/)

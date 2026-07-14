@@ -1,11 +1,4 @@
----
-title: "Fluxos de Trabalho com Git"
-description: "Feature Branch Workflow, Git Flow, GitHub Flow, GitLab Flow e Trunk-based Development: como escolher a estratégia de branching certa para cada contexto."
-lastUpdated: 2026-05-21
-sidebar:
-  order: 4
-tags: ["git", "gitflow", "github-flow", "trunk-based", "branching"]
----
+# Fluxos de Trabalho com Git
 
 Saber usar Git é só o começo. A pergunta mais importante para um time é: _como_ vamos organizar o trabalho nas branches? Esta página cobre as estratégias mais usadas, do mais simples ao mais estruturado.
 

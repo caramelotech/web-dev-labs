@@ -1,19 +1,4 @@
----
-title: "Conventional Commits e SemVer"
-description: "Versionamento Semântico (SemVer), Conventional Commits e ferramentas para padronizar mensagens de commit: commitlint e commitizen."
-lastUpdated: 2026-05-21
-sidebar:
-  order: 2
-tags:
-  [
-    "git",
-    "conventional-commits",
-    "semver",
-    "versionamento",
-    "commitlint",
-    "commitizen",
-  ]
----
+# Conventional Commits e SemVer
 
 Boas mensagens de commit são a diferença entre um histórico Git que conta a história do projeto e um que apenas acumula entradas sem sentido. Esta página cobre o padrão Conventional Commits, o versionamento semântico que ele sustenta e as ferramentas que automatizam o processo no dia a dia.
 

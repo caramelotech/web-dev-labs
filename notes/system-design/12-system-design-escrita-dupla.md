@@ -1,11 +1,4 @@
----
-title: "Dual-Write Problem"
-description: "Entenda o problema de escrita dupla e compare Outbox, CDC e event sourcing."
-lastUpdated: 2026-04-13
-sidebar:
-  order: 3
-tags: ["system design", "outbox", "cdc", "consistencia"]
----
+# Dual-Write Problem
 
 O problema de dual-write acontece quando um sistema tenta **persistir a mesma mudanca em dois sistemas diferentes** ao mesmo tempo, por exemplo:
 
@@ -119,4 +112,4 @@ append event -> event store -> projecoes derivadas
 
 - [Bug da Escrita-Dupla: como EVITAR o Erro Fatal de Dual-Write em Sistemas Distribuidos | Leonardo Zamariola](https://www.youtube.com/watch?v=E_j__O7j07Y)
 
-[Voltar ao indice](/web-dev-labs/indice/)
+[Voltar ao início](/labs/web-dev/)

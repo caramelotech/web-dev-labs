@@ -1,11 +1,4 @@
----
-title: "HTTP, APIs e REST"
-description: "Protocolo HTTP, APIs, arquitetura REST, status codes e como consumir APIs"
-lastUpdated: 2026-04-26
-sidebar:
-  order: 2
-tags: ["http", "api", "rest", "backend", "web"]
----
+# HTTP, APIs e REST
 
 Aplicações modernas raramente vivem isoladas. Elas se comunicam com outras aplicações, consomem dados de serviços externos e expõem suas próprias funcionalidades. O protocolo HTTP é o meio de transporte e REST é a arquitetura que organiza como essa comunicação acontece.
 

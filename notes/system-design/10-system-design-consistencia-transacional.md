@@ -1,11 +1,4 @@
----
-title: "Consistencia Transacional: Monolito vs Microsservicos"
-description: "Compare monolitos e microsservicos para entender consistencia, sagas e acoes compensatorias."
-lastUpdated: 2026-04-13
-sidebar:
-  order: 1
-tags: ["system design", "microsservicos", "sagas", "consistencia"]
----
+# Consistencia Transacional: Monolito vs Microsservicos
 
 ## Monolito
 
@@ -123,4 +116,4 @@ Nao existe controlador central. Cada servico reage a eventos.
 
 - [System Design Interview. A pergunta mais comum em entrevista sobre microsservicos | Leonardo Zamariola](https://www.youtube.com/watch?v=bBYjxqLSXeU)
 
-[Voltar ao indice](/web-dev-labs/indice/)
+[Voltar ao início](/labs/web-dev/)
