@@ -1,10 +1,13 @@
 {
   "sections": [
-    { "label": "Visão geral", "slug": "." },
-    { "label": "Fundamentos Web", "directory": "fundamentos" },
-    { "label": "Backend", "directory": "backend" },
-    { "label": "Engenharia de Software", "directory": "engenharia-de-software" },
-    { "label": "System Design", "directory": "system-design" },
-    { "label": "Ferramentas", "directory": "ferramentas" }
+    { "label": "Visão geral",              "slug": "." },
+    { "label": "Fundamentos Web",          "directory": "fundamentos" },
+    { "label": "Engenharia de Software",   "directory": "engenharia-de-software"},
+    { "label": "APIs",                     "directory": "apis" },
+    { "label": "Databases",                "directory": "banco-de-dados" },
+    { "label": "Escalabilidade",           "directory": "escalabilidade" },
+    { "label": "Transações Distribuídas",  "directory": "transacoes-distribuidas"},
+    { "label": "System Design na Prática", "directory": "estudos-de-caso" },
+    { "label": "Ferramentas",              "directory": "ferramentas" }
   ]
 }

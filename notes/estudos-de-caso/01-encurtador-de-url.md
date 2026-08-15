@@ -140,4 +140,3 @@ flowchart LR
 
 - [System Design: Encurtador de URL - Desafio Real de Entrevista RESOLVIDO | Leonardo Zamariola](https://www.youtube.com/watch?v=JHavVCLQT4k)
 
-[Voltar ao início](/labs/web-dev/)

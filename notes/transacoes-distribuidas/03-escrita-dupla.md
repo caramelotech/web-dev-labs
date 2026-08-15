@@ -112,4 +112,3 @@ append event -> event store -> projecoes derivadas
 
 - [Bug da Escrita-Dupla: como EVITAR o Erro Fatal de Dual-Write em Sistemas Distribuidos | Leonardo Zamariola](https://www.youtube.com/watch?v=E_j__O7j07Y)
 
-[Voltar ao início](/labs/web-dev/)

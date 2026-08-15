@@ -116,4 +116,3 @@ Nao existe controlador central. Cada servico reage a eventos.
 
 - [System Design Interview. A pergunta mais comum em entrevista sobre microsservicos | Leonardo Zamariola](https://www.youtube.com/watch?v=bBYjxqLSXeU)
 
-[Voltar ao início](/labs/web-dev/)

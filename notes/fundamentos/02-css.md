@@ -144,4 +144,3 @@ Resultado:
 
 ![Exemplo de transicao CSS](./assets/transitions.gif)
 
-[Voltar ao início](/labs/web-dev/)

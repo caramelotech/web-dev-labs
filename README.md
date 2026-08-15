@@ -9,13 +9,18 @@ As notas deste repositório são publicadas no site do [Caramelo Labs](https://c
 
 ## Conteúdo
 
-| Tópico | Descrição |
-| ------ | --------- |
-| Fundamentos Web | HTML e CSS |
-| Backend | SQL, HTTP, APIs e REST |
-| Engenharia de Software | Princípios SOLID |
-| System Design | Consistência transacional, encurtador de URL, dual-write |
-| Ferramentas | Git, Conventional Commits, Pull Requests, fluxos e GPG |
+| Tópico                   | Descrição                                              |
+| ------------------------ | ------------------------------------------------------ |
+| Fundamentos Web          | HTML e CSS                                             |
+| Engenharia de Software   | Design de código, princípios SOLID                     |
+| APIs                     | HTTP e REST                                            |
+| Databases                | SQL e ACID                                             |
+| Escalabilidade           | Escala vertical, horizontal e organizacional           |
+| Transações Distribuídas  | Consistência entre microsserviços, Sagas, dual-write   |
+| System Design na Prática | Estudos de caso resolvidos (encurtador de URL)         |
+| Ferramentas              | Git, Conventional Commits, Pull Requests, fluxos e GPG |
+
+A ordem das seções segue uma progressão pensada para entrevistas de backend: da escrita de código (Engenharia de Software) até sistemas distribuídos em escala (Transações Distribuídas e System Design na Prática).
 
 ## Estrutura do repositório
 
