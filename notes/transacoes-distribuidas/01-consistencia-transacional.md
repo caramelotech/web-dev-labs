@@ -1,53 +1,53 @@
-# Consistencia Transacional: Monolito vs Microsservicos
+# Consistência Transacional: Monolito vs Microsserviços
 
 ## Monolito
 
-No monolito, consistencia e simples porque existe **um unico banco de dados** e transacoes ACID resolvem boa parte do problema.
+No monolito, consistência é simples porque existe **um único banco de dados** e transações ACID resolvem boa parte do problema.
 
-Caracteristicas:
+Características:
 
 - Atomicidade
-- Consistencia forte
-- Rollback automatico
+- Consistência forte
+- Rollback automático
 
-Exemplo: criar pedido e debitar saldo na mesma transacao.
+Exemplo: criar pedido e debitar saldo na mesma transação.
 
-## Microsservicos
+## Microsserviços
 
-Cada servico tem seu proprio banco e sua propria responsabilidade. O resultado e que **nao existe transacao ACID global**.
+Cada serviço tem seu próprio banco e sua própria responsabilidade. O resultado é que **não existe transação ACID global**.
 
-Voce entra no mundo de:
+Você entra no mundo de:
 
-- Consistencia eventual
-- Sistemas distribuidos
+- Consistência eventual
+- Sistemas distribuídos
 - Falhas parciais
 
 ## Problema central
 
-Como garantir consistencia em um fluxo como:
+Como garantir consistência em um fluxo como:
 
 1. Criar pedido
 2. Cobrar pagamento
 3. Atualizar estoque
 
-Se cada passo esta em um servico diferente?
+Se cada passo está em um serviço diferente?
 
 ## Sagas
 
-Uma saga e uma sequencia de transacoes locais:
+Uma saga é uma sequência de transações locais:
 
-- Cada servico executa sua parte
-- Em caso de erro, executa acoes compensatorias
+- Cada serviço executa sua parte
+- Em caso de erro, executa ações compensatórias
 
 Exemplo:
 
 1. Pedido criado
 2. Pagamento falhou
-3. Pedido cancelado como compensacao
+3. Pedido cancelado como compensação
 
-## Orquestracao vs Coreografia
+## Orquestração vs Coreografia
 
-### Orquestracao
+### Orquestração
 
 ```mermaid
 flowchart LR
@@ -61,9 +61,9 @@ flowchart LR
 
 Existe um orquestrador central que controla o fluxo.
 
-**Vantagens**: fluxo explicito, mais facil de depurar, controle total.
+**Vantagens**: fluxo explícito, mais fácil de depurar, controle total.
 
-**Desvantagens**: ponto unico de falha e maior acoplamento.
+**Desvantagens**: ponto único de falha e maior acoplamento.
 
 ### Coreografia
 
@@ -76,29 +76,29 @@ flowchart LR
     Payment --> Broker
 ```
 
-Nao existe controlador central. Cada servico reage a eventos.
+Não existe controlador central. Cada serviço reage a eventos.
 
-**Vantagens**: baixo acoplamento, alta escalabilidade, resiliencia maior.
+**Vantagens**: baixo acoplamento, alta escalabilidade, resiliência maior.
 
-**Desvantagens**: debug e observabilidade mais dificeis.
+**Desvantagens**: debug e observabilidade mais difíceis.
 
-## Comparacao direta
+## Comparação direta
 
-| Aspecto             | Orquestracao | Coreografia  |
+| Aspecto             | Orquestração | Coreografia  |
 | ------------------- | ------------ | ------------ |
-| Controle            | Centralizado | Distribuido  |
-| Acoplamento         | Medio        | Baixo        |
-| Observabilidade     | Mais facil   | Mais dificil |
+| Controle            | Centralizado | Distribuído  |
+| Acoplamento         | Médio        | Baixo        |
+| Observabilidade     | Mais fácil   | Mais difícil |
 | Escalabilidade      | Menor        | Maior        |
 | Complexidade mental | Baixa        | Alta         |
 
 ## Insight principal
 
-> Consistencia em microsservicos nao e sobre evitar falhas. E sobre saber lidar com elas.
+> Consistência em microsserviços não é sobre evitar falhas. É sobre saber lidar com elas.
 
-## Boas praticas
+## Boas práticas
 
-- Idempotencia
+- Idempotência
 - Retries com backoff
 - Dead letter queues
 - Observabilidade
@@ -107,12 +107,12 @@ Nao existe controlador central. Cada servico reage a eventos.
 ## Resumo
 
 - Monolito: simples e consistente
-- Microsservicos: distribuidos e sujeitos a falhas parciais
-- Sagas: forma comum de coordenar consistencia
-- Orquestracao: controle central
-- Coreografia: eventos distribuidos
+- Microsserviços: distribuídos e sujeitos a falhas parciais
+- Sagas: forma comum de coordenar consistência
+- Orquestração: controle central
+- Coreografia: eventos distribuídos
 
-## Referencias
+## Referências
 
 - [System Design Interview. A pergunta mais comum em entrevista sobre microsservicos | Leonardo Zamariola](https://www.youtube.com/watch?v=bBYjxqLSXeU)
 

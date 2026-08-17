@@ -1,6 +1,6 @@
 # Dual-Write Problem
 
-O problema de dual-write acontece quando um sistema tenta **persistir a mesma mudanca em dois sistemas diferentes** ao mesmo tempo, por exemplo:
+O problema de dual-write acontece quando um sistema tenta **persistir a mesma mudança em dois sistemas diferentes** ao mesmo tempo, por exemplo:
 
 - Banco de dados + broker
 - Banco + cache
@@ -8,9 +8,9 @@ O problema de dual-write acontece quando um sistema tenta **persistir a mesma mu
 
 ## Por que isso acontece
 
-### Falta de atomicidade distribuida
+### Falta de atomicidade distribuída
 
-Nao existe transacao ACID entre banco e broker de forma confiavel em sistemas distribuidos.
+Não existe transação ACID entre banco e broker de forma confiável em sistemas distribuídos.
 
 ```text
 BEGIN TRANSACTION
@@ -21,55 +21,55 @@ COMMIT
 
 ### Falhas parciais
 
-Entre as operacoes podem acontecer falha de rede, timeout, crash da aplicacao e retries duplicados.
+Entre as operações podem acontecer falha de rede, timeout, crash da aplicação e retries duplicados.
 
-### Retries sozinhos nao resolvem
+### Retries sozinhos não resolvem
 
-Tentativas de correcao podem gerar eventos duplicados e efeitos colaterais inesperados.
+Tentativas de correção podem gerar eventos duplicados e efeitos colaterais inesperados.
 
 ## Impacto real
 
-- Dados inconsistentes entre servicos
+- Dados inconsistentes entre serviços
 - Eventos fantasmas
-- Quebra de invariantes de negocio
-- Bugs dificeis de reproduzir
+- Quebra de invariantes de negócio
+- Bugs difíceis de reproduzir
 
-## Abordagens ingenuas
+## Abordagens ingênuas
 
-**So fazer dois writes**
+**Só fazer dois writes**
 
 ```text
 save DB
 publish event
 ```
 
-Nao garante consistencia.
+Não garante consistência.
 
 **2PC**
 
-Tem alta complexidade e baixa adocao em microsservicos modernos.
+Tem alta complexidade e baixa adoção em microsserviços modernos.
 
-## Estrategias corretas
+## Estratégias corretas
 
 ### Outbox Pattern
 
-Persiste dados e evento no mesmo banco, na mesma transacao. Um processo separado le a tabela `outbox` e publica no broker. Aprofundamento dedicado em [Transactional Outbox Pattern](/labs/web-dev/transacoes-distribuidas/outbox-pattern/).
+Persiste dados e evento no mesmo banco, na mesma transação. Um processo separado lê a tabela `outbox` e publica no broker. Aprofundamento dedicado em [Transactional Outbox Pattern](/labs/web-dev/transacoes-distribuidas/outbox-pattern/).
 
-**Vantagens**: atomicidade local, eventos nao se perdem, desacoplamento.
+**Vantagens**: atomicidade local, eventos não se perdem, desacoplamento.
 
-**Trade-offs**: latencia maior e complexidade operacional.
+**Trade-offs**: latência maior e complexidade operacional.
 
 ### CDC
 
-Ferramentas como Debezium observam mudancas direto no banco.
+Ferramentas como Debezium observam mudanças direto no banco.
 
-**Vantagens**: transparente para a aplicacao.
+**Vantagens**: transparente para a aplicação.
 
 **Desvantagens**: infraestrutura mais complexa.
 
 ### Listen to Yourself
 
-O proprio servico publica e consome os eventos, derivando o estado a partir deles.
+O próprio serviço publica e consome os eventos, derivando o estado a partir deles.
 
 ### Event Sourcing
 
@@ -79,35 +79,35 @@ Eventos se tornam a fonte de verdade:
 append event -> event store -> projecoes derivadas
 ```
 
-## Comparacao
+## Comparação
 
-| Estrategia         | Consistencia | Complexidade | Controle   |
+| Estratégia         | Consistência | Complexidade | Controle   |
 | ------------------ | ------------ | ------------ | ---------- |
-| Dual-write ingenuo | Nenhuma      | Baixa        | Baixo      |
+| Dual-write ingênuo | Nenhuma      | Baixa        | Baixo      |
 | 2PC                | Forte        | Muito alta   | Alto       |
-| Outbox             | Eventual     | Media        | Alto       |
-| CDC                | Eventual     | Alta         | Medio      |
+| Outbox             | Eventual     | Média        | Alto       |
+| CDC                | Eventual     | Alta         | Médio      |
 | Event sourcing     | Forte        | Muito alta   | Muito alto |
 
 ## Insight principal
 
-> O problema nao e escrever duas vezes. E tentar garantir consistencia sem um mecanismo confiavel.
+> O problema não é escrever duas vezes. É tentar garantir consistência sem um mecanismo confiável.
 
-## Boas praticas
+## Boas práticas
 
-- Idempotencia em consumidores
+- Idempotência em consumidores
 - Retry seguro
-- Ordenacao de eventos quando necessario
-- Monitoramento de inconsistencias
+- Ordenação de eventos quando necessário
+- Monitoramento de inconsistências
 - Dead letter queues
 
 ## Resumo
 
-- Dual-write gera inconsistencias entre sistemas
-- A causa principal e a falta de transacao distribuida
-- Retry sozinho nao resolve
-- Outbox, CDC e event sourcing sao caminhos reais
+- Dual-write gera inconsistências entre sistemas
+- A causa principal é a falta de transação distribuída
+- Retry sozinho não resolve
+- Outbox, CDC e event sourcing são caminhos reais
 
-## Referencias
+## Referências
 
 - [Bug da Escrita-Dupla: como EVITAR o Erro Fatal de Dual-Write em Sistemas Distribuidos | Leonardo Zamariola](https://www.youtube.com/watch?v=E_j__O7j07Y)

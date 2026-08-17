@@ -109,6 +109,6 @@ Eventos já publicados com sucesso não precisam ficar para sempre na tabela. Se
 - A tabela outbox não é uma dependência nova (já está no banco que a aplicação usa), mas o processo publisher é uma peça nova que precisa de monitoramento próprio.
 - O ganho de resiliência e atomicidade vem ao custo de latência extra na publicação e mais complexidade operacional.
 
-## Referencias
+## Referências
 
 - [Padrões de Resiliência - Transactional Outbox Pattern | André Secco](https://www.youtube.com/watch?v=Fl_zXWvK2F8)
