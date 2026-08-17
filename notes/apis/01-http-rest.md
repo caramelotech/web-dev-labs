@@ -36,7 +36,7 @@ Composta de:
 | `PATCH`  | Atualizar parcialmente      | Não         | Sim      |
 | `DELETE` | Remover recurso             | Sim         | Não      |
 
-**Idempotente** significa que chamar o mesmo endpoint múltiplas vezes tem o mesmo efeito que chamar uma vez. `PUT /usuarios/1` com os mesmos dados sempre resulta no mesmo estado, independente de quantas vezes é chamado.
+**Idempotente** significa que chamar o mesmo endpoint múltiplas vezes tem o mesmo efeito que chamar uma vez. `PUT /usuarios/1` com os mesmos dados sempre resulta no mesmo estado, independentemente de quantas vezes é chamado.
 
 ### Status codes
 
