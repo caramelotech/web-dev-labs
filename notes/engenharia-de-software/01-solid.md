@@ -1,2 +1,2 @@
-# Principios SOLID
+# Princípios SOLID
 
