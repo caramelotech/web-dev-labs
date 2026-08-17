@@ -152,10 +152,10 @@ A pergunta certa não é "devo usar Git Flow?" mas sim: **qual é o meu ciclo de
 
 ### Outras metodologias de branching
 
-**GitHub Flow** - O mais simples. Só uma regra prática: `main` está sempre pronto para produção. Qualquer trabalho vai numa branch com PR. Sem `develop`, sem branches de release. Ideal para deploys contínuos.
+**GitHub Flow** - O mais simples. Só uma regra prática: `main` está sempre pronta para produção. Qualquer trabalho vai numa branch com PR. Sem `develop`, sem branches de release. Ideal para deploys contínuos.
 
 **GitLab Flow** - Meio-termo entre GitHub Flow e Git Flow. Em vez de branches de release, usa branches de ambiente (`staging`, `production`). O código flui: `feature` → `main` → `staging` → `production`.
 
-**Trunk-based Development** - Todo mundo trabalha em branches curtíssimas (horas, não dias) e mergeiam frequente em `main`. Features incompletas ficam escondidas atrás de **feature flags**. Requer boa cobertura de testes e CI/CD maduro. É o modelo que empresas como Google e Meta usam internamente.
+**Trunk-based Development** - Todo mundo trabalha em branches curtíssimas (horas, não dias) e mergeia frequentemente em `main`. Features incompletas ficam escondidas atrás de **feature flags**. Requer boa cobertura de testes e CI/CD maduro. É o modelo que empresas como Google e Meta usam internamente.
 
 Leitura complementar: [Comparing Workflows - Atlassian](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow)

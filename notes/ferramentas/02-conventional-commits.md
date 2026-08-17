@@ -4,7 +4,7 @@ Boas mensagens de commit são a diferença entre um histórico Git que conta a h
 
 ## Versionamento Semântico (SemVer)
 
-Toda biblioteca, API ou software que outras pessoas dependem precisa de um sistema de versão previsível. O **SemVer (Semantic Versioning)** define um padrão amplamente adotado: o número de versão comunica o _tipo_ de mudança, não apenas "houve mudança".
+Toda biblioteca, API ou software de que outras pessoas dependem precisa de um sistema de versão previsível. O **SemVer (Semantic Versioning)** define um padrão amplamente adotado: o número de versão comunica o _tipo_ de mudança, não apenas "houve mudança".
 
 O formato é sempre:
 
