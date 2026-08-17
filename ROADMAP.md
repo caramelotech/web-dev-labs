@@ -37,8 +37,12 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 
 - ✅ SQL (`01-sql.md`)
 - ✅ ACID (`02-acid.md`)
+- ✅ CAP Theorem (`03-teorema-de-cap.md`)
+- ✅ PACELC (`04-teorema-de-pacelc.md`)
+- ✅ Tabela de decisão prática de bancos por classificação PACELC (`05-escolha-de-banco-de-dados.md`)
+- ✅ Isolation levels na prática: race conditions, locking pessimista/otimista, mutex (`06-controle-de-concorrencia.md`)
+- ✅ Ledger Pattern (`07-ledger-pattern.md`)
 - ⬜ Índices e planos de execução
-- ⬜ Isolation levels na prática (deadlocks, locking)
 - ⬜ NoSQL: key-value, document, wide-column, graph
 - ⬜ Data modeling (relacional vs NoSQL)
 
@@ -53,7 +57,7 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 
 ### Distributed Systems (pasta ainda não criada, ex: `sistemas-distribuidos/`)
 
-- ⬜ CAP Theorem e PACELC
+- ✅ CAP Theorem e PACELC (cobertos em `banco-de-dados/03-teorema-de-cap.md` e `04-teorema-de-pacelc.md`, não numa pasta dedicada)
 - ⬜ Consistência: strong, eventual, causal
 - ⬜ Replication (leader/follower), consensus, quorum
 
@@ -71,6 +75,7 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 - ✅ Consistência transacional: monolito vs microsserviços, orquestração vs coreografia (`01-consistencia-transacional.md`)
 - 🚧 Saga pattern em detalhe (`02-saga.md` existe, vazio - a nota `01` já cobre o básico, esta seria um aprofundamento dedicado)
 - ✅ Dual-write problem, Outbox, CDC, Event Sourcing (`03-escrita-dupla.md`)
+- ✅ Transactional Outbox Pattern em detalhe (`04-outbox-pattern.md`)
 - ⬜ Two-Phase Commit (2PC)
 
 ### Messaging (pasta ainda não criada, ex: `mensageria/`)
