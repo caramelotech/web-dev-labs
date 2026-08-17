@@ -1,6 +1,6 @@
 # CSS
 
-CSS (Cascading Style Sheets) e a linguagem usada para definir o estilo e o layout visual de paginas web escritas em HTML. Com CSS, pessoas desenvolvedoras controlam cores, fontes, tamanhos, espacamentos, animacoes e responsividade para diferentes dispositivos.
+CSS (Cascading Style Sheets) é a linguagem usada para definir o estilo e o layout visual de páginas web escritas em HTML. Com CSS, pessoas desenvolvedoras controlam cores, fontes, tamanhos, espaçamentos, animações e responsividade para diferentes dispositivos.
 
 ## Seletores
 
@@ -39,7 +39,7 @@ CSS (Cascading Style Sheets) e a linguagem usada para definir o estilo e o layou
     list-style-type: square;
   }
   ```
-- **Seletor de irmao adjacente**:
+- **Seletor de irmão adjacente**:
   ```css
   h1 + p {
     font-weight: bold;
@@ -91,9 +91,9 @@ input[type="text"] {
   }
   ```
 
-## Transicoes
+## Transições
 
-Exemplo de transicao:
+Exemplo de transição:
 
 ```html
 <!DOCTYPE html>
@@ -142,5 +142,5 @@ Exemplo de transicao:
 
 Resultado:
 
-![Exemplo de transicao CSS](./assets/transitions.gif)
+![Exemplo de transição CSS](./assets/transitions.gif)
 
