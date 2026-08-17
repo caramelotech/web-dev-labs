@@ -83,6 +83,6 @@ O CAP só descreve o que acontece **durante** uma partição, mas a maior parte 
 - A escolha prática do CAP é entre CP (recusa responder para não errar) e AP (responde mesmo com risco de dado velho).
 - Fora de uma partição, a troca deixa de ser C vs A e passa a ser consistência vs latência, o que o PACELC explica.
 
-## Referencias
+## Referências
 
 - [Como Escolher o Banco de Dados Correto pra sua Aplicação | System Design & Arquitetura de Software](https://www.youtube.com/watch?v=bhw4-Kq_RPs)

@@ -103,6 +103,6 @@ O Teorema de CAP já ajuda a entender o comportamento de um banco numa situaçã
 - Bancos como HBase e MongoDB (por padrão) são PC/EC (consistência acima de tudo).
 - Entender o PACELC ajuda a escolher banco de dados olhando não só para falhas raras, mas para o comportamento do dia a dia.
 
-## Referencias
+## Referências
 
 - [Como Escolher o Banco de Dados Correto pra sua Aplicação | System Design & Arquitetura de Software](https://www.youtube.com/watch?v=bhw4-Kq_RPs)

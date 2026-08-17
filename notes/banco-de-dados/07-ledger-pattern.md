@@ -17,7 +17,7 @@ Venda de azeitonas: +R$ 30
 O saldo deixa de ser um dado guardado diretamente, e passa a ser **calculado**, como a soma de todas as movimentações:
 
 ```text
-saldo = soma de todas as transacoes da conta
+saldo = soma de todas as transações da conta
 ```
 
 ## Por que isso resolve o problema de concorrência
@@ -27,8 +27,8 @@ Lembrando as quatro condições de uma race condition, vistas na nota anterior: 
 Com o ledger, a quarta condição deixa de existir. Cada operação concorrente não lê mais um saldo, calcula um novo valor e sobrescreve um campo compartilhado. Ela apenas **insere uma nova linha independente** na tabela de movimentações:
 
 ```text
-Processo A: INSERT movimentacao (+30)
-Processo B: INSERT movimentacao (+20)
+Processo A: INSERT movimentação (+30)
+Processo B: INSERT movimentação (+20)
 ```
 
 Não importa qual das duas operações chega no banco primeiro. Um `INSERT` não sobrescreve o outro, ambos coexistem, e o saldo final (a soma) está correto de qualquer jeito:
@@ -59,7 +59,7 @@ Recalcular a soma de todas as transações desde o início da conta, toda vez qu
 
 ```text
 Snapshot de ontem:  R$ 1.950
-Transacao de hoje:  +R$ 50
+Transação de hoje:  +R$ 50
 Saldo atual:        R$ 2.000
 ```
 

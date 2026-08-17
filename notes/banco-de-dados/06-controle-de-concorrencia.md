@@ -34,8 +34,8 @@ Processo B: quer somar R$ 20
 
 Linha do tempo:
 
-  A le saldo = 50
-  B le saldo = 50          <- B ainda não viu a mudança de A, porque A nem escreveu ainda
+  A lê saldo = 50
+  B lê saldo = 50          <- B ainda não viu a mudança de A, porque A nem escreveu ainda
   A calcula 50 + 30 = 80
   B calcula 50 + 20 = 70
   A salva 80
@@ -179,7 +179,7 @@ Enquanto essa transação estiver aberta, qualquer outra transação que tentar 
 3. Processo A calcula e salva R$ 80
 4. Processo A libera o lock (COMMIT)
 5. Processo B trava a linha
-6. Processo B le R$ 80 (ja atualizado) e aplica sua propria alteracao
+6. Processo B lê R$ 80 (já atualizado) e aplica sua própria alteração
 ```
 
 Repare que agora B lê o valor já atualizado por A, porque B só consegue travar a linha depois que A libera. O lost update desaparece.
@@ -208,12 +208,12 @@ WHERE id = 123
 Se outra transação já tiver alterado essa conta (e a versão já não for mais 7), o `WHERE` não bate com nenhuma linha, e o `UPDATE` não altera nada:
 
 ```text
-1. Processo A le a versao 7
-2. Processo B tambem le a versao 7
-3. A salva usando WHERE version = 7, e muda a versao para 8   -> sucesso
+1. Processo A lê a versão 7
+2. Processo B também lê a versão 7
+3. A salva usando WHERE version = 7, e muda a versão para 8   -> sucesso
 4. B tenta salvar usando WHERE version = 7
-5. A atualizacao de B falha, porque a versao atual ja e 8
-6. B precisa reler os dados, recalcular, e tentar de novo (ou retornar um conflito pro usuario)
+5. A atualização de B falha, porque a versão atual já é 8
+6. B precisa reler os dados, recalcular, e tentar de novo (ou retornar um conflito pro usuário)
 ```
 
 Diferente do lock pessimista, o lock otimista não bloqueia ninguém enquanto a leitura acontece, ele só detecta o conflito na hora de escrever, e devolve a responsabilidade de decidir o que fazer (tentar de novo, avisar o usuário) para a aplicação. Em JPA/Hibernate, essa estratégia normalmente é implementada com a anotação `@Version`.

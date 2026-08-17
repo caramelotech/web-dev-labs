@@ -22,7 +22,7 @@ Esses nomes aparecem na coluna "Mecanismo interno" e são os algoritmos de repli
 - **Quorum:** em vez de esperar todas as réplicas confirmarem uma escrita, o banco espera só a maioria. A fórmula clássica é `N / 2 + 1`, onde `N` é o número de réplicas. Por exemplo, com fator de replicação 10: `10 / 2 = 5 + 1 = 6` réplicas precisam confirmar. É mais rápido que esperar todo mundo, e ainda garante que qualquer maioria vai sempre "enxergar" a escrita mais recente.
 - **Raft:** algoritmo de consenso baseado em eleição de um líder. Um nó é eleito líder, recebe as escritas e as replica para os seguidores. Foi desenhado para ser mais fácil de entender e implementar do que o Paxos.
 - **Paxos:** o algoritmo de consenso distribuído clássico (mais antigo que o Raft), também baseado em maioria de votos entre os nós, mas com uma formulação mais complexa. Usado em sistemas que precisam de consistência forte em escala global.
-- **Sentinel:** mecanismo do Redis para monitorar o nó primário e promover um réplica a primário automaticamente em caso de falha (failover). Não é um algoritmo de consenso por maioria como Raft/Paxos, é mais um "vigia" de alta disponibilidade.
+- **Sentinel:** mecanismo do Redis para monitorar o nó primário e promover uma réplica a primário automaticamente em caso de falha (failover). Não é um algoritmo de consenso por maioria como Raft/Paxos, é mais um "vigia" de alta disponibilidade.
 - **Replicação baseada em WAL:** o PostgreSQL replica dados enviando o _write-ahead log_ (o mesmo log usado para garantir durabilidade, ver [ACID](/labs/web-dev/banco-de-dados/acid/)) para as réplicas, que o reproduzem para chegar no mesmo estado.
 
 ## Tabela comparativa
@@ -110,6 +110,6 @@ Ao escolher um banco de dados para um sistema, a pergunta não é "qual banco é
 - Muitos bancos permitem ajustar esse comportamento padrão via configuração (WriteConcern, ReadConcern, consistency level, quorum de confirmação), outros não (PostgreSQL, Redis).
 - Na prática, a escolha depende do trade-off que o sistema pode pagar: dado sempre correto (CP/EC) ou sistema sempre no ar mesmo com dado levemente atrasado (AP/EL).
 
-## Referencias
+## Referências
 
 - [Tabela de decisão CAP/PACELC (Miro)](https://miro.com/app/board/uXjVJCL6b64=/?share_link_id=911501521268&focusWidget=3458764643057124514)

@@ -1,6 +1,6 @@
 # SQL
 
-SQL (Structured Query Language) é a linguagem padrão para interagir com bancos de dados relacionais. Independente do banco que você usa - PostgreSQL, MySQL, SQLite, SQL Server - o SQL core é praticamente o mesmo.
+SQL (Structured Query Language) é a linguagem padrão para interagir com bancos de dados relacionais. Independentemente do banco que você usa - PostgreSQL, MySQL, SQLite, SQL Server - o núcleo do SQL é praticamente o mesmo.
 
 ## Estrutura de um banco relacional
 
