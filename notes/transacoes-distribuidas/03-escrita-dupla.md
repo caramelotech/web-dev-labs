@@ -53,7 +53,7 @@ Tem alta complexidade e baixa adocao em microsservicos modernos.
 
 ### Outbox Pattern
 
-Persiste dados e evento no mesmo banco, na mesma transacao. Um processo separado le a tabela `outbox` e publica no broker.
+Persiste dados e evento no mesmo banco, na mesma transacao. Um processo separado le a tabela `outbox` e publica no broker. Aprofundamento dedicado em [Transactional Outbox Pattern](/labs/web-dev/transacoes-distribuidas/outbox-pattern/).
 
 **Vantagens**: atomicidade local, eventos nao se perdem, desacoplamento.
 
@@ -111,4 +111,3 @@ append event -> event store -> projecoes derivadas
 ## Referencias
 
 - [Bug da Escrita-Dupla: como EVITAR o Erro Fatal de Dual-Write em Sistemas Distribuidos | Leonardo Zamariola](https://www.youtube.com/watch?v=E_j__O7j07Y)
-
