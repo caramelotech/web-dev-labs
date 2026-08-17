@@ -1,18 +1,18 @@
 # Encurtador de URL
 
-Um encurtador de URL e um sistema que:
+Um encurtador de URL é um sistema que:
 
 - Recebe uma URL longa
-- Gera uma URL curta unica
-- Redireciona usuarios da URL curta para a original
+- Gera uma URL curta única
+- Redireciona usuários da URL curta para a original
 
-## Estrutura de raciocinio
+## Estrutura de raciocínio
 
-Um framework util para entrevistas de system design e o FENCAFA:
+Um framework útil para entrevistas de system design é o FENCAFA:
 
 1. Funcional
 2. Escala
-3. Nao-funcional
+3. Não-funcional
 4. Componentes
 5. Arquitetura
 6. Fluxo
@@ -24,57 +24,57 @@ Um framework util para entrevistas de system design e o FENCAFA:
 
 - Criar URL curta
 - Redirecionar URL
-- Metricas de acesso
+- Métricas de acesso
 
-### Nao-funcionais
+### Não-funcionais
 
 - Alta disponibilidade
-- Baixa latencia
+- Baixa latência
 - Escalabilidade massiva
-- Consistencia eventual aceitavel
+- Consistência eventual aceitável
 
 ## Estimativa de escala
 
-Voce deve pensar em:
+Você deve pensar em:
 
-- Numero de URLs criadas por dia
-- Numero de redirecionamentos
+- Número de URLs criadas por dia
+- Número de redirecionamentos
 - Volume de armazenamento
 
-> Esse e um sistema read-heavy.
+> Esse é um sistema read-heavy.
 
-## Modelo basico
+## Modelo básico
 
-1. Usuario envia URL longa
-2. Sistema gera codigo curto
+1. Usuário envia URL longa
+2. Sistema gera código curto
 3. Salva o mapping `short_code -> original_url`
 4. O redirecionamento consulta esse mapping
 
-## Geracao da URL curta
+## Geração da URL curta
 
-### Estrategias
+### Estratégias
 
 **Auto-increment + Base62**
 
-Simples e deterministico, mas previsivel.
+Simples e determinístico, mas previsível.
 
 **Hash da URL**
 
 Pode colidir e dificulta controle.
 
-**ID distribuido**
+**ID distribuído**
 
-Escalavel e evita gargalo central.
+Escalável e evita gargalo central.
 
-## Escala e otimizacoes
+## Escala e otimizações
 
 Como a leitura domina o sistema, o gargalo principal costuma estar no redirecionamento.
 
-### Otimizacoes
+### Otimizações
 
-- **Cache** para reduzir latencia
-- **CDN** para distribuicao geografica
-- **Banco distribuido** com sharding por chave
+- **Cache** para reduzir latência
+- **CDN** para distribuição geográfica
+- **Banco distribuído** com sharding por chave
 
 ## Arquitetura proposta
 
@@ -111,32 +111,32 @@ flowchart LR
     Shortener --> DB
 ```
 
-## Problemas avancados
+## Problemas avançados
 
 - Cache invalidation
 - Hot keys
-- Consistencia eventual
-- Abuso e seguranca
+- Consistência eventual
+- Abuso e segurança
 - Analytics em sistema separado
 
 ## Trade-offs
 
-| Decisao           | Trade-off    |
+| Decisão           | Trade-off    |
 | ----------------- | ------------ |
-| Cache agressivo   | Consistencia |
-| ID sequencial     | Seguranca    |
-| Hash              | Colisao      |
-| Banco unico       | Escala       |
-| Banco distribuido | Complexidade |
+| Cache agressivo   | Consistência |
+| ID sequencial     | Segurança    |
+| Hash              | Colisão      |
+| Banco único       | Escala       |
+| Banco distribuído | Complexidade |
 
 ## Resumo
 
-- Sistema simples conceitualmente, dificil na escala
+- Sistema simples conceitualmente, difícil na escala
 - Leitura domina o sistema
-- Cache e essencial
-- Geracao de ID e critica
+- Cache é essencial
+- Geração de ID é crítica
 
-## Referencias
+## Referências
 
 - [System Design: Encurtador de URL - Desafio Real de Entrevista RESOLVIDO | Leonardo Zamariola](https://www.youtube.com/watch?v=JHavVCLQT4k)
 
