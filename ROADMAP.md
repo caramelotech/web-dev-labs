@@ -42,8 +42,8 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 - ✅ Tabela de decisão prática de bancos por classificação PACELC (`05-escolha-de-banco-de-dados.md`)
 - ✅ Isolation levels na prática: race conditions, locking pessimista/otimista, mutex (`06-controle-de-concorrencia.md`)
 - ✅ Ledger Pattern (`07-ledger-pattern.md`)
+- 🚧 NoSQL: key-value, document, wide-column, graph; SQL vs NoSQL (`08-nosql.md` criado via `/labs-organize`, aguardando `/labs-fill`)
 - ⬜ Índices e planos de execução
-- ⬜ NoSQL: key-value, document, wide-column, graph
 - ⬜ Data modeling (relacional vs NoSQL)
 
 ### Testing (pasta ainda não criada, ex: `testes/`)

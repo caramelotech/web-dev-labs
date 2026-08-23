@@ -7,7 +7,7 @@ Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao
 - **Fundamentos Web** - HTML e CSS
 - **Engenharia de Software** - design de código, princípios SOLID
 - **APIs** - HTTP e REST
-- **Databases** - SQL e ACID
+- **Databases** - SQL, ACID, CAP/PACELC e NoSQL
 - **Escalabilidade** - escala vertical, horizontal e organizacional
 - **Transações Distribuídas** - consistência entre microsserviços, Sagas, dual-write
 - **System Design na Prática** - estudos de caso resolvidos (ex: encurtador de URL)

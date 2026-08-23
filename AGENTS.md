@@ -16,7 +16,7 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   fundamentos/                # HTML e CSS
   engenharia-de-software/     # Design de código, princípios SOLID
   apis/                       # HTTP e REST
-  banco-de-dados/             # SQL e ACID
+  banco-de-dados/             # SQL, ACID, CAP/PACELC e NoSQL
   escalabilidade/             # Escala vertical, horizontal e organizacional
   transacoes-distribuidas/    # Consistência entre microsserviços, Sagas, dual-write
   estudos-de-caso/            # System design na prática (ex: encurtador de URL)
