@@ -55,20 +55,34 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 
 ## Trilha 2: System Design
 
-### Distributed Systems (pasta ainda não criada, ex: `sistemas-distribuidos/`)
+### `system-design/` (criada via `/labs-organize`)
 
-- ✅ CAP Theorem e PACELC (cobertos em `banco-de-dados/03-teorema-de-cap.md` e `04-teorema-de-pacelc.md`, não numa pasta dedicada)
-- ⬜ Consistência: strong, eventual, causal
-- ⬜ Replication (leader/follower), consensus, quorum
+- 🚧 O que é System Design, requisitos funcionais/não funcionais, pilares (escalabilidade, disponibilidade, confiabilidade, consistência, latência, throughput, custo) (`01-o-que-e-system-design.md`)
+- 🚧 Arquitetura de referência de uma aplicação distribuída (`02-arquitetura-de-referencia.md`)
+- 🚧 Capacity planning e capacity math (`03-capacity-planning.md`)
+- 🚧 Latência, throughput, performance e latency budget (`04-latencia-e-performance.md`)
+- 🚧 Trade-offs arquiteturais (`05-trade-offs-arquiteturais.md`)
+- 🚧 Metodologia de design + failure scenarios + catálogo de padrões (`06-metodologia-de-design.md`)
+- Todas aguardando `/labs-fill`
 
-### `escalabilidade/`
+### `sistemas-distribuidos/` (criada via `/labs-organize`)
+
+- ✅ CAP Theorem e PACELC (cobertos em `banco-de-dados/03-teorema-de-cap.md` e `04-teorema-de-pacelc.md`, não nesta pasta)
+- 🚧 Consistência (strong/eventual) e replicação: read-after-write, replication lag, quorum (`01-consistencia-e-replicacao.md`, aguardando `/labs-fill`)
+- ⬜ Consistência causal
+- ⬜ Consensus (Raft/Paxos) em profundidade
+
+### `escalabilidade/` (rótulo do sidebar: "Escalabilidade e Infraestrutura")
 
 - ✅ Escala vertical, horizontal e organizacional (`01-escalabilidade.md`)
-- ⬜ Load balancing
-- ⬜ Sharding e partitioning
-- ⬜ Consistent hashing
-- ⬜ CDN e cache
-- ⬜ Rate limiting e backpressure
+- 🚧 Stateless, particionamento, sharding, leitura vs escrita, gargalos (`02-stateless-e-particionamento.md`)
+- 🚧 Replicação e escalabilidade do banco, database bottlenecks (`03-replicacao-de-banco-de-dados.md`)
+- 🚧 CDN (`04-cdn.md`)
+- 🚧 Load balancer, incl. consistent hashing (`05-load-balancer.md`)
+- 🚧 API Gateway (`06-api-gateway.md`)
+- 🚧 Cache, Redis, cache-aside, cache stampede (`07-cache-e-redis.md`)
+- 🚧 Rate limiting (token bucket e outros algoritmos) e backpressure (`08-rate-limiting.md`)
+- Notas `02`-`08` criadas via `/labs-organize`, aguardando `/labs-fill`
 
 ### `transacoes-distribuidas/`
 
@@ -78,31 +92,33 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 - ✅ Transactional Outbox Pattern em detalhe (`04-outbox-pattern.md`)
 - ⬜ Two-Phase Commit (2PC)
 
-### Messaging (pasta ainda não criada, ex: `mensageria/`)
+### `mensageria/` (criada via `/labs-organize`)
 
-- ⬜ Message queues, Pub/Sub, event streaming
-- ⬜ Kafka, RabbitMQ, SQS/SNS
-- ⬜ Delivery semantics (at-most-once, at-least-once, exactly-once)
-- ⬜ Ordering, consumer groups, dead letter queue, idempotência
+- 🚧 Filas, producer/consumer/broker, comunicação assíncrona (`01-filas-e-mensageria.md`)
+- 🚧 Kafka: topic, partition, offset, consumer group, replication (`02-kafka.md`)
+- 🚧 DLQ, ordenação e semânticas de entrega (at-most/at-least/exactly-once) (`03-garantias-de-entrega.md`)
+- Todas aguardando `/labs-fill`
+- ⬜ RabbitMQ, SQS/SNS em detalhe (fora do escopo desta rodada)
 
-### Resilience (pasta ainda não criada, ex: `resiliencia/`)
+### `resiliencia/` (criada via `/labs-organize`)
 
-- ⬜ Timeout, retry, exponential backoff
-- ⬜ Circuit breaker, bulkhead
-- ⬜ Graceful degradation, failover, disaster recovery
+- 🚧 Timeout, retry (exponential backoff, jitter), circuit breaker, bulkhead, graceful degradation (`01-timeout-retry-circuit-breaker-e-bulkhead.md`)
+- 🚧 Idempotência: idempotency key, idempotency store, exemplos (`02-idempotencia.md`)
+- 🚧 Disponibilidade: SLA/SLO/SLI, os "noves", redundância, failover, multi-region, DR (`03-disponibilidade.md`)
+- Todas aguardando `/labs-fill`
 
-### Microservices (pasta ainda não criada, ex: `microsservicos/`)
+### `microsservicos/` (criada via `/labs-organize`)
 
-- ⬜ Service boundaries, service discovery
-- ⬜ API Gateway, BFF, service mesh
+- 🚧 Fundamentos: monólito vs microsserviços, stateless services (`01-fundamentos-de-microsservicos.md`)
+- 🚧 Comunicação síncrona/assíncrona, service-to-service (service discovery, timeouts, retries, circuit breaker, bulkhead) (`02-comunicacao-entre-servicos.md`)
+- Ambas aguardando `/labs-fill`
+- ⬜ API Gateway aprofundado, BFF, service mesh (API Gateway básico já está em `escalabilidade/06-api-gateway.md`)
 - ⬜ Database per service
 - ⬜ Strangler Fig Pattern
 
-### Observability (pasta ainda não criada, ex: `observabilidade/`)
+### `observabilidade/` (criada via `/labs-organize`)
 
-- ⬜ Logs, metrics, traces
-- ⬜ Distributed tracing, correlation ID
-- ⬜ SLI, SLO, SLA
+- 🚧 Logs, metrics, traces, correlação (correlation ID/trace ID), observabilidade distribuída (`01-logs-metrics-e-traces.md`, aguardando `/labs-fill`)
 
 ### Cloud & Infra (pasta ainda não criada, ex: `cloud-e-infra/`)
 

@@ -5,8 +5,14 @@
     { "label": "Engenharia de Software",   "directory": "engenharia-de-software"},
     { "label": "APIs",                     "directory": "apis" },
     { "label": "Databases",                "directory": "banco-de-dados" },
-    { "label": "Escalabilidade",           "directory": "escalabilidade" },
+    { "label": "System Design",            "directory": "system-design" },
+    { "label": "Escalabilidade e Infraestrutura", "directory": "escalabilidade" },
+    { "label": "Sistemas Distribuídos",    "directory": "sistemas-distribuidos" },
     { "label": "Transações Distribuídas",  "directory": "transacoes-distribuidas"},
+    { "label": "Mensageria",               "directory": "mensageria" },
+    { "label": "Microsserviços",           "directory": "microsservicos" },
+    { "label": "Resiliência",              "directory": "resiliencia" },
+    { "label": "Observabilidade",          "directory": "observabilidade" },
     { "label": "System Design na Prática", "directory": "estudos-de-caso" },
     { "label": "Ferramentas",              "directory": "ferramentas" }
   ]
