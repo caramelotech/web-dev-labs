@@ -49,3 +49,32 @@ Isso é o que dá ao Kafka a capacidade de escalar o consumo horizontalmente (ve
 Vale notar que grupos diferentes são independentes entre si: o consumer group do serviço de e-mail e o consumer group do serviço de estoque podem ler o mesmo topic `pedidos-criados` do começo ao fim, cada um no seu próprio ritmo, sem interferir um no outro.
 
 **Replication**: cada partição não vive numa única máquina do cluster Kafka, ela é replicada em várias, uma delas é a **líder** (recebe todas as escritas e leituras) e as outras são **réplicas** que copiam os dados dela. Se a máquina líder cair, uma das réplicas assume o posto automaticamente, e o topic continua disponível sem perder mensagens já confirmadas. O nível de replicação (quantas cópias existem) é configurável por topic, e é o principal mecanismo do Kafka para tolerar falha de máquina sem perder dado.
+
+## Evolução de schema
+
+Um evento publicado no Kafka tem um formato: quais campos existem, que tipo cada um tem, quais são obrigatórios. Esse formato é o schema do evento, e ele raramente fica parado. Uma regra de negócio nova exige um campo a mais, um campo muda de tipo, um relacionamento fica mais complexo. O problema é que producer e consumer não fazem deploy juntos: são times diferentes, com ritmos de deploy diferentes, e no meio do caminho é comum ter um producer já publicando no schema novo enquanto um consumer ainda espera o schema antigo, ou o inverso, um consumer atualizado lendo mensagens que foram escritas há dias com o schema antigo (lembra que o Kafka guarda as mensagens por um tempo configurável, não apaga assim que alguém lê). Se essa mudança de schema não for pensada, o consumer quebra: um campo que ele espera não existe mais, um tipo não bate, a deserialização falha.
+
+Isso é diferente de uma API REST, onde cliente e servidor costumam conversar em tempo real e dá para simplesmente forçar os dois lados a atualizar juntos. No Kafka não tem esse luxo: uma mensagem publicada hoje pode ser lida daqui a uma semana, por um consumer que nem existia quando ela foi escrita. O schema precisa aguentar esse desencontro no tempo.
+
+**Compatibilidade** é o nome que se dá à capacidade de um schema novo conviver com um schema antigo sem quebrar quem está lendo ou escrevendo. Existem quatro tipos:
+
+- **Backward**: um consumer com o schema novo consegue ler mensagens escritas com o schema antigo. É o tipo mais buscado na prática, porque permite atualizar o consumer sem depender do producer, e ainda deixa reprocessar o histórico de mensagens antigas com o código novo.
+- **Forward**: um consumer com o schema antigo consegue ler mensagens escritas com o schema novo. Útil quando o producer precisa evoluir rápido e nem todo consumer atualizou ainda.
+- **Full**: as duas garantias ao mesmo tempo, backward e forward. É o cenário mais seguro, mas também o mais restritivo sobre o que pode mudar no schema.
+- **Incompatível**: a mudança quebra o contrato em pelo menos uma direção, e algum consumer (novo ou antigo, dependendo do caso) para de conseguir ler a mensagem.
+
+| Tipo | Consumer novo lê mensagem antiga? | Consumer antigo lê mensagem nova? | Exemplo de mudança permitida |
+| --- | --- | --- | --- |
+| Backward | Sim | Não garantido | Remover um campo, ou adicionar um campo opcional com valor default |
+| Forward | Não garantido | Sim | Adicionar um campo, ou remover um campo opcional |
+| Full | Sim | Sim | Só adicionar campos opcionais com default, nunca remover nem renomear |
+| Incompatível | Não | Não | Renomear um campo, mudar o tipo de um campo existente, tornar um campo opcional em obrigatório |
+
+Na prática, a recomendação geral é mirar em compatibilidade backward como padrão. Algumas boas práticas seguem direto dessa lógica:
+
+- **Adicionar campos em vez de remover ou renomear.** Um campo novo, se for opcional, não quebra quem ainda não sabe da existência dele. Remover ou renomear um campo existente é a mudança mais arriscada, porque qualquer consumer que dependa daquele campo quebra na hora.
+- **Campos opcionais com valor default.** Quando um campo precisa ser adicionado, dar um valor default evita que mensagens antigas, que nunca tiveram esse campo, causem erro de deserialização: o consumer usa o default para o que não veio.
+- **Versionar eventos** quando a mudança é grande demais para caber numa evolução compatível, como reestruturar o payload inteiro. Nesse caso, um campo de versão no próprio evento, ou até um topic novo (`pedidos-criados-v2`), deixa explícito que aquilo é um contrato diferente e dá tempo para migrar os consumers de um lado para o outro sem quebra.
+
+Nada disso fica garantido sozinho: alguém, ou alguma ferramenta, precisa checar se uma mudança de schema realmente respeita a regra de compatibilidade antes de ir para produção. É aí que entra o **Schema Registry**, o mais usado é o Confluent Schema Registry: um serviço central que guarda todas as versões de schema de cada topic, normalmente escritas em **Avro** ou **Protobuf**, formatos binários compactos com schema bem definido, ao contrário de um JSON solto sem contrato nenhum. Antes de aceitar um schema novo, o registry valida contra a regra de compatibilidade configurada para aquele topic (backward, forward ou full) e recusa a publicação se a mudança quebrar o contrato. Isso tira a checagem de compatibilidade da cabeça de cada dev e coloca num ponto único, automatizado, que barra o problema antes dele virar incidente em produção.
+
