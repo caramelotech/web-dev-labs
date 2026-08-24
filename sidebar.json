@@ -13,6 +13,7 @@
     { "label": "Microsserviços",           "directory": "microsservicos" },
     { "label": "Resiliência",              "directory": "resiliencia" },
     { "label": "Observabilidade",          "directory": "observabilidade" },
+    { "label": "Entrega Contínua",         "directory": "entrega-continua" },
     { "label": "System Design na Prática", "directory": "estudos-de-caso" },
     { "label": "Ferramentas",              "directory": "ferramentas" }
   ]

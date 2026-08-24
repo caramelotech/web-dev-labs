@@ -18,13 +18,14 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   apis/                       # HTTP e REST
   banco-de-dados/             # SQL, ACID, CAP/PACELC e NoSQL
   system-design/               # Fundamentos, capacity planning, latência e metodologia de projeto
-  escalabilidade/             # Escala vertical/horizontal, CDN, load balancer, API Gateway, cache, rate limiting
+  escalabilidade/             # Escala vertical/horizontal, CDN, load balancer, service discovery, API Gateway, cache, rate limiting
   sistemas-distribuidos/      # Consistência forte vs eventual e replicação
   transacoes-distribuidas/    # Consistência entre microsserviços, Sagas, dual-write
-  mensageria/                 # Filas, Kafka e garantias de entrega
-  microsservicos/             # Fundamentos e comunicação entre serviços
+  mensageria/                 # Filas, Kafka, evolução de schema e garantias de entrega
+  microsservicos/             # Fundamentos, decomposição/bounded context, comunicação entre serviços, config server
   resiliencia/                # Timeout, retry, circuit breaker, idempotência, disponibilidade
-  observabilidade/            # Logs, metrics e traces
+  observabilidade/            # Logs, metrics, traces e ferramentas (Zipkin, Prometheus, Grafana, ELK, OpenTelemetry)
+  entrega-continua/           # Docker, Kubernetes e CI/CD para microsserviços
   estudos-de-caso/            # System design na prática (ex: encurtador de URL)
   ferramentas/                # Git, commits, PRs, fluxos, GPG
 sidebar.json     # Seções da barra lateral no site (labels e ordem)
@@ -32,7 +33,7 @@ examples/        # Exercícios e projetos práticos (não publicados no site)
 ROADMAP.md       # Backlog de próximos tópicos a abordar (não publicado no site)
 ```
 
-A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da escrita de código (Fundamentos, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade e System Design na Prática).
+A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da escrita de código (Fundamentos, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade, Entrega Contínua e System Design na Prática).
 
 ## Padrão de nomenclatura de pastas e arquivos
 
@@ -45,7 +46,7 @@ A ordem das seções segue uma progressão de estudo pensada para entrevistas de
 
 ### Adicionar uma nova nota
 
-1. **Escolha o local:** `fundamentos/`, `engenharia-de-software/`, `apis/`, `banco-de-dados/`, `system-design/`, `escalabilidade/`, `sistemas-distribuidos/`, `transacoes-distribuidas/`, `mensageria/`, `microsservicos/`, `resiliencia/`, `observabilidade/`, `estudos-de-caso/` ou `ferramentas/`
+1. **Escolha o local:** `fundamentos/`, `engenharia-de-software/`, `apis/`, `banco-de-dados/`, `system-design/`, `escalabilidade/`, `sistemas-distribuidos/`, `transacoes-distribuidas/`, `mensageria/`, `microsservicos/`, `resiliencia/`, `observabilidade/`, `entrega-continua/`, `estudos-de-caso/` ou `ferramentas/`
 2. **Nomeie com prefixo numérico** para controlar a ordem na barra lateral: `01-nome.md`, `02-nome.md`
 3. **Primeira linha = título:** comece o arquivo com `# Título da Nota` - o site usa esse H1 como título da página
 4. **Sem frontmatter:** escreva direto o Markdown (frontmatter ainda é aceito para campos extras como `description` e `tags`, mas o padrão é não usar)

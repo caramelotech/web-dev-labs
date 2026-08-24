@@ -29,7 +29,7 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 ### `apis/`
 
 - ✅ HTTP e REST (`01-http-rest.md`)
-- ⬜ Versionamento de API
+- 🚧 Segurança (authn/authz, mTLS, zero trust) e evolução/versionamento de API (`02-seguranca-e-evolucao-de-apis.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
 - ⬜ gRPC
 - ⬜ GraphQL
 
@@ -46,12 +46,11 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 - ⬜ Índices e planos de execução
 - ⬜ Data modeling (relacional vs NoSQL)
 
-### Testing (pasta ainda não criada, ex: `testes/`)
+### Testing (`engenharia-de-software/`)
 
-- ⬜ Unit tests
-- ⬜ Integration tests, E2E, contract tests
-- ⬜ Test doubles (mock, stub, spy, fake)
-- ⬜ Test pyramid e TDD
+- 🚧 Pirâmide de testes, contract testing, Testcontainers, desafios de testar sistemas distribuídos (`02-testes-em-microsservicos.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
+- ⬜ Test doubles (mock, stub, spy, fake) em detalhe
+- ⬜ TDD
 
 ## Trilha 2: System Design
 
@@ -79,10 +78,11 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 - 🚧 Replicação e escalabilidade do banco, database bottlenecks (`03-replicacao-de-banco-de-dados.md`)
 - 🚧 CDN (`04-cdn.md`)
 - 🚧 Load balancer, incl. consistent hashing (`05-load-balancer.md`)
-- 🚧 API Gateway (`06-api-gateway.md`)
-- 🚧 Cache, Redis, cache-aside, cache stampede (`07-cache-e-redis.md`)
-- 🚧 Rate limiting (token bucket e outros algoritmos) e backpressure (`08-rate-limiting.md`)
-- Notas `02`-`08` criadas via `/labs-organize`, aguardando `/labs-fill`
+- 🚧 Service Discovery: Eureka/Consul, client-side vs server-side discovery (`06-service-discovery.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
+- 🚧 API Gateway (`07-api-gateway.md`)
+- 🚧 Cache, Redis, cache-aside, cache stampede (`08-cache-e-redis.md`)
+- 🚧 Rate limiting (token bucket e outros algoritmos) e backpressure (`09-rate-limiting.md`)
+- Notas `02`-`09` criadas via `/labs-organize`, aguardando `/labs-fill`
 
 ### `transacoes-distribuidas/`
 
@@ -95,7 +95,7 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 ### `mensageria/` (criada via `/labs-organize`)
 
 - 🚧 Filas, producer/consumer/broker, comunicação assíncrona (`01-filas-e-mensageria.md`)
-- 🚧 Kafka: topic, partition, offset, consumer group, replication (`02-kafka.md`)
+- 🚧 Kafka: topic, partition, offset, consumer group, replication, evolução de schema/Schema Registry (`02-kafka.md`, seção de evolução de schema adicionada via `/labs-organize`)
 - 🚧 DLQ, ordenação e semânticas de entrega (at-most/at-least/exactly-once) (`03-garantias-de-entrega.md`)
 - Todas aguardando `/labs-fill`
 - ⬜ RabbitMQ, SQS/SNS em detalhe (fora do escopo desta rodada)
@@ -109,20 +109,23 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 
 ### `microsservicos/` (criada via `/labs-organize`)
 
-- 🚧 Fundamentos: monólito vs microsserviços, stateless services (`01-fundamentos-de-microsservicos.md`)
-- 🚧 Comunicação síncrona/assíncrona, service-to-service (service discovery, timeouts, retries, circuit breaker, bulkhead) (`02-comunicacao-entre-servicos.md`)
-- Ambas aguardando `/labs-fill`
-- ⬜ API Gateway aprofundado, BFF, service mesh (API Gateway básico já está em `escalabilidade/06-api-gateway.md`)
-- ⬜ Database per service
-- ⬜ Strangler Fig Pattern
+- 🚧 Fundamentos: monólito vs microsserviços, stateless services, Strangler Fig Pattern (`01-fundamentos-de-microsservicos.md`, seção de Strangler Fig adicionada via `/labs-organize`)
+- 🚧 Decomposição de serviços, DDD/bounded context, database per service (`02-decomposicao-e-bounded-context.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
+- 🚧 Comunicação síncrona/assíncrona, service-to-service (timeouts, retries, circuit breaker, bulkhead) (`03-comunicacao-entre-servicos.md`, renumerada de `02` para `03`)
+- 🚧 Config Server e endpoints operacionais (Actuator/health/metrics) (`04-config-server-e-endpoints-operacionais.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
+- Todas aguardando `/labs-fill`
+- ⬜ API Gateway aprofundado, BFF, service mesh (API Gateway básico já está em `escalabilidade/07-api-gateway.md`)
 
 ### `observabilidade/` (criada via `/labs-organize`)
 
 - 🚧 Logs, metrics, traces, correlação (correlation ID/trace ID), observabilidade distribuída (`01-logs-metrics-e-traces.md`, aguardando `/labs-fill`)
+- 🚧 Ferramentas: Zipkin, Prometheus, Grafana, ELK Stack, OpenTelemetry, pipeline de observabilidade (`02-ferramentas-de-observabilidade.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
 
-### Cloud & Infra (pasta ainda não criada, ex: `cloud-e-infra/`)
+### `entrega-continua/` (criada via `/labs-organize`)
 
-- ⬜ Containers e Kubernetes
+- 🚧 Docker: containers, Dockerfile, Docker Compose (`01-docker.md`, aguardando `/labs-fill`)
+- 🚧 Kubernetes: pods, deployments, services, configmap/secret, ingress (`02-kubernetes.md`, aguardando `/labs-fill`)
+- 🚧 CI/CD para microsserviços: etapas do pipeline, boas práticas (`03-ci-cd-para-microsservicos.md`, aguardando `/labs-fill`)
 - ⬜ Categorias de serviço AWS (compute, storage, rede) - sem precisar aprofundar em cada serviço
 - ⬜ IaC (Terraform)
 
@@ -137,5 +140,5 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 
 ## Notas de escopo
 
-- Segurança (authn/authz, OWASP, OAuth2, JWT) e Performance aparecem em ambas as trilhas no material original. Avaliar se cada uma merece pasta própria ou se ficam distribuídas dentro das notas que já as usam na prática (ex: JWT dentro de APIs, índices dentro de Databases).
+- Segurança (authn/authz, OWASP, OAuth2, JWT) ganhou uma primeira cobertura em `apis/02-seguranca-e-evolucao-de-apis.md`. Performance ainda aparece espalhada nas notas que já a usam na prática (ex: índices dentro de Databases).
 - Prioridade sugerida: fechar os stubs vazios (SOLID, Saga) antes de abrir pastas novas.
