@@ -29,8 +29,8 @@ Os dois estão relacionados, mas não são a mesma coisa, e otimizar um às veze
 
 ```mermaid
 flowchart LR
-    A[Sem batching] -->|latência baixa por request<br/>throughput menor| B((]))
-    C[Com batching] -->|latência maior por request<br/>throughput maior| D((]))
+    A[Sem batching] -->|latência baixa por request<br/>throughput menor| B(("]"))
+    C[Com batching] -->|latência maior por request<br/>throughput maior| D(("]"))
 ```
 
 Um sistema bem dimensionado normalmente define um teto aceitável de latência (via SLO, veja [Disponibilidade](/labs/web-dev/resiliencia/disponibilidade/)) e otimiza throughput dentro desse limite, em vez de tratar as duas métricas como se fossem independentes.
