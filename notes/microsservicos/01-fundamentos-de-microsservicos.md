@@ -74,3 +74,55 @@ Se o processo do serviço não pode guardar estado, esse estado precisa morar em
 - **Banco de dados**: é o destino natural para qualquer dado que precisa ser durável e consistente entre requisições, independente de qual instância atendeu cada uma
 
 Regra prática: se matar a instância agora e subir uma nova no lugar dela quebraria alguma coisa para o usuário, tem estado escondido em algum lugar que não deveria estar ali.
+
+## Migração de monolito: Strangler Fig Pattern
+
+Boa parte dos sistemas que hoje usam microsserviços não nasceram assim, começaram como monólito e migraram depois que a dor de manter tudo junto ficou grande demais. A pergunta prática nesse momento não é só "para onde migrar", é "como migrar sem parar o sistema no meio do caminho". É esse o problema que o Strangler Fig Pattern resolve.
+
+### Problemas típicos do monólito que motivam a migração
+
+Alguns sintomas costumam aparecer juntos quando chega a hora de considerar a migração:
+
+- **Acoplamento**: mudanças em uma parte do código quebram outras partes sem relação aparente, e times diferentes mexendo no mesmo código-base travam uns nos outros em revisão e deploy.
+- **Dificuldade de escalar**: como o sistema inteiro sobe como um processo só, escalar a parte que está sob carga significa escalar tudo junto, mesmo o que não precisa.
+- **Lock-in de tecnologia**: todo o sistema preso à mesma linguagem, framework e versão de banco, tornando inviável modernizar só uma parte sem mexer no resto.
+- **Deploys lentos e arriscados**: uma mudança pequena obriga rodar a suíte de testes do sistema inteiro e publicar tudo junto, aumentando o raio de impacto de qualquer bug introduzido.
+
+### A ideia do Strangler Fig
+
+O nome vem da figueira-estranguladora, uma trepadeira que cresce em volta de uma árvore hospedeira e, aos poucos, a substitui por completo, sem nunca derrubar a árvore de uma vez. A analogia técnica, popularizada por Martin Fowler, segue a mesma lógica: em vez de reescrever o monólito do zero, extrai-se um bounded context por vez (ver [Decomposição de Serviços e Bounded Context](/labs/web-dev/microsservicos/decomposicao-e-bounded-context/)), esse pedaço passa a rodar como um microsserviço novo, e o tráfego daquela funcionalidade é redirecionado para o serviço novo, enquanto o resto do sistema continua rodando no monólito, sem alteração. O processo se repete, contexto por contexto, até o monólito não ter mais nada relevante rodando dentro dele, ou sobrar só um núcleo pequeno demais para valer a pena extrair.
+
+Na prática, isso é feito colocando um proxy ou gateway na frente de todo o tráfego, decidindo requisição por requisição se ela vai para o monólito antigo ou para um dos serviços novos já extraídos. No início da migração, quase tudo ainda vai para o monólito. Conforme mais contextos são extraídos, mais fatias do tráfego são desviadas para os serviços novos, até o monólito virar uma fração pequena do sistema (ou sumir de vez).
+
+```mermaid
+flowchart TB
+    subgraph Estagio1["Estágio 1: só o monólito"]
+        direction LR
+        P1[Proxy / Gateway] --> Mono1["Monólito<br/>Catálogo + Pedidos + Pagamento + Notificações"]
+    end
+
+    subgraph Estagio2["Estágio 2: primeiro serviço extraído"]
+        direction LR
+        P2[Proxy / Gateway] -->|tráfego de Notificações| Serv2[Serviço de Notificações]
+        P2 -->|resto do tráfego| Mono2["Monólito<br/>Catálogo + Pedidos + Pagamento"]
+    end
+
+    subgraph Estagio3["Estágio 3: migração avançada"]
+        direction LR
+        P3[Proxy / Gateway] -->|tráfego de Notificações| Serv3a[Serviço de Notificações]
+        P3 -->|tráfego de Pagamento| Serv3b[Serviço de Pagamento]
+        P3 -->|resto do tráfego| Mono3["Monólito<br/>Catálogo + Pedidos"]
+    end
+
+    Estagio1 --> Estagio2 --> Estagio3
+```
+
+O ponto chave é que, em qualquer momento da migração, o sistema inteiro continua no ar e continua sendo publicado normalmente. Não existe um período em que "está tudo quebrado enquanto migramos", cada extração é um passo pequeno e reversível.
+
+### Princípios da migração
+
+- **Começar por features não críticas**: extrair primeiro a funcionalidade de menor risco e menor tráfego, algo bem desacoplado do resto, serve para validar o processo (proxy, deploy do serviço novo, monitoramento) sem apostar o negócio inteiro nisso. As partes mais centrais e arriscadas do sistema (checkout, pagamento) ficam para depois, quando o time já tem confiança no processo.
+- **Definir fronteiras claras de serviço**: extrair um pedaço do monólito sem antes aplicar o raciocínio de [decomposição e bounded context](/labs/web-dev/microsservicos/decomposicao-e-bounded-context/) só transporta a bagunça para um lugar distribuído, o que costuma ser pior e mais difícil de corrigir do que deixar como monólito.
+- **Extrair, testar, repetir**: cada extração deve ser validada em produção (com monitoramento e, se possível, uma fração de tráfego por vez) antes de seguir para a próxima. Manter o caminho antigo disponível por um tempo como plano B, redirecionando o tráfego de volta ao monólito se algo der errado, reduz bastante o risco de cada etapa.
+- **Nunca fazer big bang rewrite**: reescrever tudo de uma vez significa meses (ou anos) sem entregar valor novo, uma base de código congelada nesse período, e o risco de descobrir um problema sério no projeto novo só perto do fim, quando já foi gasto o investimento inteiro sem nada em produção para mostrar. O Strangler Fig evita esse risco justamente por manter o sistema entregável e funcional a cada passo da migração, não só no final dela.
+
