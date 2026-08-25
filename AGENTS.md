@@ -14,6 +14,7 @@ As notas são publicadas no site do Caramelo Labs em `https://caramelotech.com.b
 notes/           # Notas em Markdown puro - cada arquivo vira uma página no site
   index.md                    # Página de entrada do lab no site
   fundamentos/                # HTML e CSS
+  atomic-design/              # Arquitetura de componentes de interface (átomos, moléculas, organismos, templates, páginas)
   engenharia-de-software/     # Design de código, princípios SOLID
   apis/                       # HTTP e REST
   banco-de-dados/             # SQL, ACID, CAP/PACELC e NoSQL
@@ -33,7 +34,7 @@ examples/        # Exercícios e projetos práticos (não publicados no site)
 ROADMAP.md       # Backlog de próximos tópicos a abordar (não publicado no site)
 ```
 
-A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da escrita de código (Fundamentos, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade, Entrega Contínua e System Design na Prática).
+A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da base de frontend (Fundamentos, Atomic Design) e escrita de código (Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade, Entrega Contínua e System Design na Prática).
 
 ## Padrão de nomenclatura de pastas e arquivos
 
@@ -46,7 +47,7 @@ A ordem das seções segue uma progressão de estudo pensada para entrevistas de
 
 ### Adicionar uma nova nota
 
-1. **Escolha o local:** `fundamentos/`, `engenharia-de-software/`, `apis/`, `banco-de-dados/`, `system-design/`, `escalabilidade/`, `sistemas-distribuidos/`, `transacoes-distribuidas/`, `mensageria/`, `microsservicos/`, `resiliencia/`, `observabilidade/`, `entrega-continua/`, `estudos-de-caso/` ou `ferramentas/`
+1. **Escolha o local:** `fundamentos/`, `atomic-design/`, `engenharia-de-software/`, `apis/`, `banco-de-dados/`, `system-design/`, `escalabilidade/`, `sistemas-distribuidos/`, `transacoes-distribuidas/`, `mensageria/`, `microsservicos/`, `resiliencia/`, `observabilidade/`, `entrega-continua/`, `estudos-de-caso/` ou `ferramentas/`
 2. **Nomeie com prefixo numérico** para controlar a ordem na barra lateral: `01-nome.md`, `02-nome.md`
 3. **Primeira linha = título:** comece o arquivo com `# Título da Nota` - o site usa esse H1 como título da página
 4. **Sem frontmatter:** escreva direto o Markdown (frontmatter ainda é aceito para campos extras como `description` e `tags`, mas o padrão é não usar)
