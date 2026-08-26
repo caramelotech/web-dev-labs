@@ -1,6 +1,6 @@
 # Escolha de Banco de Dados na Prática
 
-As notas de [Teorema de CAP](/labs/web-dev/banco-de-dados/teorema-de-cap/) e [Teorema de PACELC](/labs/web-dev/banco-de-dados/teorema-de-pacelc/) explicam a teoria: todo banco distribuído troca consistência por disponibilidade (durante uma partição) e consistência por latência (no dia a dia). Mas na hora de escolher uma tecnologia de verdade, a pergunta muda de forma: não é "o que é CP?", é "qual desses bancos eu uso pro meu problema?".
+As notas de [Teorema de CAP](/labs/web-dev/banco-de-dados/03-teorema-de-cap/) e [Teorema de PACELC](/labs/web-dev/banco-de-dados/04-teorema-de-pacelc/) explicam a teoria: todo banco distribuído troca consistência por disponibilidade (durante uma partição) e consistência por latência (no dia a dia). Mas na hora de escolher uma tecnologia de verdade, a pergunta muda de forma: não é "o que é CP?", é "qual desses bancos eu uso pro meu problema?".
 
 Esta nota é uma tabela de decisão prática: pega bancos de dados reais, classifica cada um pela sigla do PACELC, explica o mecanismo interno que sustenta essa classificação e lista para quais casos de uso cada um costuma ser escolhido.
 
@@ -8,8 +8,8 @@ Esta nota é uma tabela de decisão prática: pega bancos de dados reais, classi
 
 Cada banco é descrito por seis informações:
 
-- **Classificação PACELC:** a combinação (ex: `AP/EL`, `CP/EC`) explicada na nota de [PACELC](/labs/web-dev/banco-de-dados/teorema-de-pacelc/). Resume se o banco prioriza disponibilidade/latência ou consistência.
-- **Tipo de banco:** o modelo de dados (colunar, documento, chave-valor, relacional). Quando o tipo vem marcado com **(ACID)**, é porque esse banco também oferece as garantias de [ACID](/labs/web-dev/banco-de-dados/acid/) em transações, além da classificação PACELC.
+- **Classificação PACELC:** a combinação (ex: `AP/EL`, `CP/EC`) explicada na nota de [PACELC](/labs/web-dev/banco-de-dados/04-teorema-de-pacelc/). Resume se o banco prioriza disponibilidade/latência ou consistência.
+- **Tipo de banco:** o modelo de dados (colunar, documento, chave-valor, relacional). Quando o tipo vem marcado com **(ACID)**, é porque esse banco também oferece as garantias de [ACID](/labs/web-dev/banco-de-dados/02-acid/) em transações, além da classificação PACELC.
 - **Casos de uso:** para que tipo de sistema esse banco costuma ser a escolha certa.
 - **Mecanismo interno:** o algoritmo que o banco usa por baixo dos panos para manter as réplicas sincronizadas (explicado no glossário abaixo).
 - **Classificação é ajustável?:** muitos bancos não são 100% travados na sua categoria PACELC, eles expõem configurações que deslocam o comportamento padrão para mais perto de consistência ou de disponibilidade/latência.
@@ -23,7 +23,7 @@ Esses nomes aparecem na coluna "Mecanismo interno" e são os algoritmos de repli
 - **Raft:** algoritmo de consenso baseado em eleição de um líder. Um nó é eleito líder, recebe as escritas e as replica para os seguidores. Foi desenhado para ser mais fácil de entender e implementar do que o Paxos.
 - **Paxos:** o algoritmo de consenso distribuído clássico (mais antigo que o Raft), também baseado em maioria de votos entre os nós, mas com uma formulação mais complexa. Usado em sistemas que precisam de consistência forte em escala global.
 - **Sentinel:** mecanismo do Redis para monitorar o nó primário e promover uma réplica a primário automaticamente em caso de falha (failover). Não é um algoritmo de consenso por maioria como Raft/Paxos, é mais um "vigia" de alta disponibilidade.
-- **Replicação baseada em WAL:** o PostgreSQL replica dados enviando o _write-ahead log_ (o mesmo log usado para garantir durabilidade, ver [ACID](/labs/web-dev/banco-de-dados/acid/)) para as réplicas, que o reproduzem para chegar no mesmo estado.
+- **Replicação baseada em WAL:** o PostgreSQL replica dados enviando o _write-ahead log_ (o mesmo log usado para garantir durabilidade, ver [ACID](/labs/web-dev/banco-de-dados/02-acid/)) para as réplicas, que o reproduzem para chegar no mesmo estado.
 
 ## Tabela comparativa
 
@@ -81,7 +81,7 @@ Banco relacional distribuído da Google, com consistência forte em escala globa
 
 ### PostgreSQL (CP/EC)
 
-Banco relacional tradicional, o mais usado neste lab (veja a nota de [SQL](/labs/web-dev/banco-de-dados/sql/)).
+Banco relacional tradicional, o mais usado neste lab (veja a nota de [SQL](/labs/web-dev/banco-de-dados/01-sql/)).
 
 - **Casos de uso:** aplicações web, sistemas empresariais, comércio eletrônico, ERP, CMS, sites dinâmicos e qualquer sistema que precise de muita consistência, garantia, relacionamento e estruturação dos dados.
 - **Mecanismo interno:** replicação baseada em WAL (write-ahead log).
@@ -105,7 +105,7 @@ Ao escolher um banco de dados para um sistema, a pergunta não é "qual banco é
 
 ## Recapitulando
 
-- Esta nota aplica a teoria do [CAP](/labs/web-dev/banco-de-dados/teorema-de-cap/) e do [PACELC](/labs/web-dev/banco-de-dados/teorema-de-pacelc/) a bancos de dados reais.
+- Esta nota aplica a teoria do [CAP](/labs/web-dev/banco-de-dados/03-teorema-de-cap/) e do [PACELC](/labs/web-dev/banco-de-dados/04-teorema-de-pacelc/) a bancos de dados reais.
 - Cada banco tem uma classificação PACELC padrão (ex: Cassandra e DynamoDB são AP/EL, PostgreSQL e Spanner são CP/EC), sustentada por um mecanismo interno de replicação/consenso (Quorum, Raft, Paxos, Sentinel ou WAL).
 - Muitos bancos permitem ajustar esse comportamento padrão via configuração (WriteConcern, ReadConcern, consistency level, quorum de confirmação), outros não (PostgreSQL, Redis).
 - Na prática, a escolha depende do trade-off que o sistema pode pagar: dado sempre correto (CP/EC) ou sistema sempre no ar mesmo com dado levemente atrasado (AP/EL).

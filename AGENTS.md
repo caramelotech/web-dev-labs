@@ -16,13 +16,13 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   fundamentos/                # HTML e CSS
   atomic-design/              # Arquitetura de componentes de interface (átomos, moléculas, organismos, templates, páginas)
   engenharia-de-software/     # Design de código, princípios SOLID
-  apis/                       # HTTP e REST
+  apis/                       # HTTP, REST, segurança/evolução, outros estilos de comunicação e classificação por público
   banco-de-dados/             # SQL, ACID, CAP/PACELC e NoSQL
   system-design/               # Fundamentos, capacity planning, latência e metodologia de projeto
   escalabilidade/             # Escala vertical/horizontal, CDN, load balancer, service discovery, API Gateway, cache, rate limiting
   sistemas-distribuidos/      # Consistência forte vs eventual e replicação
   transacoes-distribuidas/    # Consistência entre microsserviços, Sagas, dual-write
-  mensageria/                 # Filas, Kafka, evolução de schema e garantias de entrega
+  mensageria/                 # Filas, Kafka, RabbitMQ, evolução de schema e garantias de entrega
   microsservicos/             # Fundamentos, decomposição/bounded context, comunicação entre serviços, config server
   resiliencia/                # Timeout, retry, circuit breaker, idempotência, disponibilidade
   observabilidade/            # Logs, metrics, traces e ferramentas (Zipkin, Prometheus, Grafana, ELK, OpenTelemetry)

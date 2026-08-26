@@ -30,8 +30,8 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 
 - ✅ HTTP e REST (`01-http-rest.md`)
 - 🚧 Segurança (authn/authz, mTLS, zero trust) e evolução/versionamento de API (`02-seguranca-e-evolucao-de-apis.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
-- ⬜ gRPC
-- ⬜ GraphQL
+- 🚧 Outros estilos de comunicação: GraphQL, gRPC, WebSocket, SSE, Webhooks (`03-estilos-de-comunicacao.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
+- 🚧 Classificação por público: Open API (REST/SOAP/GraphQL), Internal API, Partner API (`04-classificacao-de-apis-por-publico.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
 
 ### `banco-de-dados/`
 
@@ -79,7 +79,7 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 - 🚧 CDN (`04-cdn.md`)
 - 🚧 Load balancer, incl. consistent hashing (`05-load-balancer.md`)
 - 🚧 Service Discovery: Eureka/Consul, client-side vs server-side discovery (`06-service-discovery.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
-- 🚧 API Gateway (`07-api-gateway.md`)
+- 🚧 API Gateway, incluindo BFF/agregação de requisições e adaptação de payload (`07-api-gateway.md`, seções de BFF e adaptação adicionadas via `/labs-organize`)
 - 🚧 Cache, Redis, cache-aside, cache stampede (`08-cache-e-redis.md`)
 - 🚧 Rate limiting (token bucket e outros algoritmos) e backpressure (`09-rate-limiting.md`)
 - Notas `02`-`09` criadas via `/labs-organize`, aguardando `/labs-fill`
@@ -96,9 +96,10 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 
 - 🚧 Filas, producer/consumer/broker, comunicação assíncrona (`01-filas-e-mensageria.md`)
 - 🚧 Kafka: topic, partition, offset, consumer group, replication, evolução de schema/Schema Registry (`02-kafka.md`, seção de evolução de schema adicionada via `/labs-organize`)
-- 🚧 DLQ, ordenação e semânticas de entrega (at-most/at-least/exactly-once) (`03-garantias-de-entrega.md`)
+- 🚧 RabbitMQ: exchanges, filas, bindings, push-based, comparação com Kafka (`03-rabbitmq.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
+- 🚧 DLQ, ordenação e semânticas de entrega (at-most/at-least/exactly-once) (`04-garantias-de-entrega.md`, renumerada de `03` para `04` via `/labs-organize`)
 - Todas aguardando `/labs-fill`
-- ⬜ RabbitMQ, SQS/SNS em detalhe (fora do escopo desta rodada)
+- ⬜ SQS/SNS em detalhe (fora do escopo desta rodada)
 
 ### `resiliencia/` (criada via `/labs-organize`)
 
@@ -114,7 +115,7 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 - 🚧 Comunicação síncrona/assíncrona, service-to-service (timeouts, retries, circuit breaker, bulkhead) (`03-comunicacao-entre-servicos.md`, renumerada de `02` para `03`)
 - 🚧 Config Server e endpoints operacionais (Actuator/health/metrics) (`04-config-server-e-endpoints-operacionais.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
 - Todas aguardando `/labs-fill`
-- ⬜ API Gateway aprofundado, BFF, service mesh (API Gateway básico já está em `escalabilidade/07-api-gateway.md`)
+- ⬜ Service mesh (BFF e adaptação de payload já cobertos em `escalabilidade/07-api-gateway.md`)
 
 ### `observabilidade/` (criada via `/labs-organize`)
 

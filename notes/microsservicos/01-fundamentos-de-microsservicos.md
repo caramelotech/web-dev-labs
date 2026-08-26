@@ -32,8 +32,8 @@ flowchart TB
 | Escalabilidade           | Escala a aplicação inteira, mesmo que só uma parte precise | Escala só o serviço que está sob carga                                                                                                                   |
 | Times                    | Um time (ou vários mexendo no mesmo código)                | Um time por serviço (ou por grupo de serviços)                                                                                                           |
 | Comunicação interna      | Chamada de função, na memória                              | Chamada de rede, com toda a instabilidade que isso traz                                                                                                  |
-| Consistência de dados    | Transação ACID cobrindo tudo                               | Cada serviço com seu banco, sem transação única entre eles ([Transações Distribuídas](/labs/web-dev/transacoes-distribuidas/consistencia-transacional/)) |
-| Debug                    | Um stack trace só                                          | Precisa de tracing distribuído ([Observabilidade](/labs/web-dev/observabilidade/logs-metrics-e-traces/)) para seguir uma requisição entre serviços       |
+| Consistência de dados    | Transação ACID cobrindo tudo                               | Cada serviço com seu banco, sem transação única entre eles ([Transações Distribuídas](/labs/web-dev/transacoes-distribuidas/01-consistencia-transacional/)) |
+| Debug                    | Um stack trace só                                          | Precisa de tracing distribuído ([Observabilidade](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/)) para seguir uma requisição entre serviços       |
 | Complexidade operacional | Baixa                                                      | Alta: mais serviços para monitorar, versionar e manter no ar                                                                                             |
 
 Nenhum dos dois é "melhor" de forma absoluta, são otimizados para problemas diferentes.
@@ -42,7 +42,7 @@ Nenhum dos dois é "melhor" de forma absoluta, são otimizados para problemas di
 
 Microsserviços tendem a valer a pena quando:
 
-- O time cresceu a ponto de várias equipes mexerem no mesmo monólito e travarem umas nas outras em deploy e revisão de código (o problema de [escalabilidade organizacional](/labs/web-dev/escalabilidade/escalabilidade/))
+- O time cresceu a ponto de várias equipes mexerem no mesmo monólito e travarem umas nas outras em deploy e revisão de código (o problema de [escalabilidade organizacional](/labs/web-dev/escalabilidade/01-escalabilidade/))
 - Partes diferentes do sistema têm necessidades de escala muito diferentes (ex: o serviço de busca recebe 100x mais tráfego que o de configurações de conta, e faz sentido escalar só ele)
 - Times precisam de autonomia para escolher stack, ritmo de deploy e ciclo de vida próprios para sua área
 
@@ -51,7 +51,7 @@ Microsserviços tendem a valer a pena quando:
 O que você ganha em autonomia de time e escalabilidade seletiva, você paga em:
 
 - **Complexidade de rede**: chamadas que antes eram uma função virando função viram chamadas HTTP/gRPC sujeitas a latência, timeout e falha parcial
-- **Consistência de dados**: sem uma transação única cobrindo tudo, problemas como o [dual-write](/labs/web-dev/transacoes-distribuidas/escrita-dupla/) aparecem
+- **Consistência de dados**: sem uma transação única cobrindo tudo, problemas como o [dual-write](/labs/web-dev/transacoes-distribuidas/03-escrita-dupla/) aparecem
 - **Overhead operacional**: cada serviço novo é mais um pipeline de deploy, mais um conjunto de métricas, mais um ponto de falha para monitorar
 - **Testes de integração mais caros**: testar o fluxo completo exige subir vários serviços, não só rodar uma suíte local
 
@@ -63,14 +63,14 @@ Por isso, times pequenos ou produtos ainda em validação costumam começar com 
 
 Um serviço stateless não guarda, na própria memória do processo, nenhuma informação que precise sobreviver entre requisições diferentes ou ser vista por outra instância do mesmo serviço. Cada requisição chega com tudo que o serviço precisa para respondê-la (token de autenticação, ID do recurso, payload), e a resposta não depende de nada que ficou guardado de uma chamada anterior naquela instância específica.
 
-Isso importa especialmente em microsserviços porque cada serviço normalmente roda em várias instâncias atrás de um load balancer, e essas instâncias sobem e descem o tempo todo (deploy, autoscaling, crash e restart). Se o serviço guardasse estado na memória local, uma requisição atendida pela instância 2 não teria acesso ao que ficou guardado na instância 1, e um restart simplesmente apagaria esse estado. O critério completo de como desenhar isso (e os problemas de sincronizar estado entre instâncias) está em [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/stateless-e-particionamento/).
+Isso importa especialmente em microsserviços porque cada serviço normalmente roda em várias instâncias atrás de um load balancer, e essas instâncias sobem e descem o tempo todo (deploy, autoscaling, crash e restart). Se o serviço guardasse estado na memória local, uma requisição atendida pela instância 2 não teria acesso ao que ficou guardado na instância 1, e um restart simplesmente apagaria esse estado. O critério completo de como desenhar isso (e os problemas de sincronizar estado entre instâncias) está em [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/).
 
 ### Onde armazenar estado
 
 Se o processo do serviço não pode guardar estado, esse estado precisa morar em algum lugar compartilhado e acessível por qualquer instância:
 
 - **Sessões de usuário**: em vez de guardar a sessão na memória do serviço, ela fica num store compartilhado como Redis, acessível por qualquer instância que receber a próxima requisição daquele usuário
-- **Cache**: da mesma forma, um cache local por instância gera inconsistência entre elas. Um cache distribuído (ver [Cache e Redis](/labs/web-dev/escalabilidade/cache-e-redis/)) resolve isso
+- **Cache**: da mesma forma, um cache local por instância gera inconsistência entre elas. Um cache distribuído (ver [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/)) resolve isso
 - **Banco de dados**: é o destino natural para qualquer dado que precisa ser durável e consistente entre requisições, independente de qual instância atendeu cada uma
 
 Regra prática: se matar a instância agora e subir uma nova no lugar dela quebraria alguma coisa para o usuário, tem estado escondido em algum lugar que não deveria estar ali.
@@ -90,7 +90,7 @@ Alguns sintomas costumam aparecer juntos quando chega a hora de considerar a mig
 
 ### A ideia do Strangler Fig
 
-O nome vem da figueira-estranguladora, uma trepadeira que cresce em volta de uma árvore hospedeira e, aos poucos, a substitui por completo, sem nunca derrubar a árvore de uma vez. A analogia técnica, popularizada por Martin Fowler, segue a mesma lógica: em vez de reescrever o monólito do zero, extrai-se um bounded context por vez (ver [Decomposição de Serviços e Bounded Context](/labs/web-dev/microsservicos/decomposicao-e-bounded-context/)), esse pedaço passa a rodar como um microsserviço novo, e o tráfego daquela funcionalidade é redirecionado para o serviço novo, enquanto o resto do sistema continua rodando no monólito, sem alteração. O processo se repete, contexto por contexto, até o monólito não ter mais nada relevante rodando dentro dele, ou sobrar só um núcleo pequeno demais para valer a pena extrair.
+O nome vem da figueira-estranguladora, uma trepadeira que cresce em volta de uma árvore hospedeira e, aos poucos, a substitui por completo, sem nunca derrubar a árvore de uma vez. A analogia técnica, popularizada por Martin Fowler, segue a mesma lógica: em vez de reescrever o monólito do zero, extrai-se um bounded context por vez (ver [Decomposição de Serviços e Bounded Context](/labs/web-dev/microsservicos/02-decomposicao-e-bounded-context/)), esse pedaço passa a rodar como um microsserviço novo, e o tráfego daquela funcionalidade é redirecionado para o serviço novo, enquanto o resto do sistema continua rodando no monólito, sem alteração. O processo se repete, contexto por contexto, até o monólito não ter mais nada relevante rodando dentro dele, ou sobrar só um núcleo pequeno demais para valer a pena extrair.
 
 Na prática, isso é feito colocando um proxy ou gateway na frente de todo o tráfego, decidindo requisição por requisição se ela vai para o monólito antigo ou para um dos serviços novos já extraídos. No início da migração, quase tudo ainda vai para o monólito. Conforme mais contextos são extraídos, mais fatias do tráfego são desviadas para os serviços novos, até o monólito virar uma fração pequena do sistema (ou sumir de vez).
 
@@ -122,7 +122,7 @@ O ponto chave é que, em qualquer momento da migração, o sistema inteiro conti
 ### Princípios da migração
 
 - **Começar por features não críticas**: extrair primeiro a funcionalidade de menor risco e menor tráfego, algo bem desacoplado do resto, serve para validar o processo (proxy, deploy do serviço novo, monitoramento) sem apostar o negócio inteiro nisso. As partes mais centrais e arriscadas do sistema (checkout, pagamento) ficam para depois, quando o time já tem confiança no processo.
-- **Definir fronteiras claras de serviço**: extrair um pedaço do monólito sem antes aplicar o raciocínio de [decomposição e bounded context](/labs/web-dev/microsservicos/decomposicao-e-bounded-context/) só transporta a bagunça para um lugar distribuído, o que costuma ser pior e mais difícil de corrigir do que deixar como monólito.
+- **Definir fronteiras claras de serviço**: extrair um pedaço do monólito sem antes aplicar o raciocínio de [decomposição e bounded context](/labs/web-dev/microsservicos/02-decomposicao-e-bounded-context/) só transporta a bagunça para um lugar distribuído, o que costuma ser pior e mais difícil de corrigir do que deixar como monólito.
 - **Extrair, testar, repetir**: cada extração deve ser validada em produção (com monitoramento e, se possível, uma fração de tráfego por vez) antes de seguir para a próxima. Manter o caminho antigo disponível por um tempo como plano B, redirecionando o tráfego de volta ao monólito se algo der errado, reduz bastante o risco de cada etapa.
 - **Nunca fazer big bang rewrite**: reescrever tudo de uma vez significa meses (ou anos) sem entregar valor novo, uma base de código congelada nesse período, e o risco de descobrir um problema sério no projeto novo só perto do fim, quando já foi gasto o investimento inteiro sem nada em produção para mostrar. O Strangler Fig evita esse risco justamente por manter o sistema entregável e funcional a cada passo da migração, não só no final dela.
 

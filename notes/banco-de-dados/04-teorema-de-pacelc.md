@@ -1,6 +1,6 @@
 # Teorema de PACELC
 
-O [Teorema de CAP](/labs/web-dev/banco-de-dados/teorema-de-cap/) descreve o que acontece com um sistema distribuído durante uma partição de rede: ou ele prioriza consistência, ou prioriza disponibilidade. Mas partições de rede são raras, a maior parte do tempo um sistema distribuído está operando normalmente, sem nenhum nó isolado. O que o CAP diz sobre esses momentos "normais"? Nada, e é exatamente essa lacuna que o Teorema de PACELC preenche.
+O [Teorema de CAP](/labs/web-dev/banco-de-dados/03-teorema-de-cap/) descreve o que acontece com um sistema distribuído durante uma partição de rede: ou ele prioriza consistência, ou prioriza disponibilidade. Mas partições de rede são raras, a maior parte do tempo um sistema distribuído está operando normalmente, sem nenhum nó isolado. O que o CAP diz sobre esses momentos "normais"? Nada, e é exatamente essa lacuna que o Teorema de PACELC preenche.
 
 Proposto pelo engenheiro Daniel Abadi em 2010, o PACELC parte do princípio de que a troca (trade-off) mais interessante de um banco distribuído não acontece só durante falhas, ela também acontece o tempo todo, mesmo quando tudo está funcionando bem.
 
@@ -32,7 +32,7 @@ flowchart TD
     EChoice -->|Consistência C| EC["EC<br/>Espera confirmação das réplicas antes de responder"]
 ```
 
-A primeira metade (PAC) é literalmente o Teorema de CAP: com a rede particionada, o sistema decide entre continuar respondendo (mesmo com dado velho) ou recusar a resposta até garantir que o dado está correto. Esse trade-off já está detalhado na nota de [CAP](/labs/web-dev/banco-de-dados/teorema-de-cap/) e não precisa ser repetido aqui.
+A primeira metade (PAC) é literalmente o Teorema de CAP: com a rede particionada, o sistema decide entre continuar respondendo (mesmo com dado velho) ou recusar a resposta até garantir que o dado está correto. Esse trade-off já está detalhado na nota de [CAP](/labs/web-dev/banco-de-dados/03-teorema-de-cap/) e não precisa ser repetido aqui.
 
 A parte nova é o **Else**: o que o sistema faz quando a rede está saudável e todos os nós conseguem se comunicar.
 

@@ -1,6 +1,6 @@
 # Teorema de CAP
 
-Enquanto um banco de dados roda numa única máquina, a vida é simples: só existe uma cópia dos dados, então não há como ela discordar de si mesma. O problema aparece quando esse banco passa a ser distribuído, ou seja, os dados são replicados em várias máquinas diferentes (os **nós**) para suportar mais carga (veja [Escalabilidade](/labs/web-dev/escalabilidade/escalabilidade/)) ou para sobreviver à queda de uma máquina.
+Enquanto um banco de dados roda numa única máquina, a vida é simples: só existe uma cópia dos dados, então não há como ela discordar de si mesma. O problema aparece quando esse banco passa a ser distribuído, ou seja, os dados são replicados em várias máquinas diferentes (os **nós**) para suportar mais carga (veja [Escalabilidade](/labs/web-dev/escalabilidade/01-escalabilidade/)) ou para sobreviver à queda de uma máquina.
 
 Nesse cenário surge uma pergunta que um banco único nunca precisa responder: e se dois nós não conseguirem se comunicar por um instante? O Teorema de CAP, formulado pelo cientista da computação Eric Brewer em 2000, descreve o limite fundamental que todo sistema distribuído enfrenta nessa situação.
 
@@ -21,7 +21,7 @@ Escreve X = 10 no nó 1
 Lê X no nó 2 -> precisa retornar 10 (nunca o valor antigo)
 ```
 
-Vale reforçar: essa consistência não é a mesma coisa que o **C** de [ACID](/labs/web-dev/banco-de-dados/acid/). A consistência do ACID garante que uma transação respeite as regras de negócio (chaves estrangeiras, `CHECK`, `NOT NULL`). Já a consistência do CAP é sobre todos os nós concordarem sobre qual é o valor atual de um dado, quase como se existisse uma única cópia dos dados mesmo estando replicados.
+Vale reforçar: essa consistência não é a mesma coisa que o **C** de [ACID](/labs/web-dev/banco-de-dados/02-acid/). A consistência do ACID garante que uma transação respeite as regras de negócio (chaves estrangeiras, `CHECK`, `NOT NULL`). Já a consistência do CAP é sobre todos os nós concordarem sobre qual é o valor atual de um dado, quase como se existisse uma única cópia dos dados mesmo estando replicados.
 
 ### Disponibilidade (A)
 

@@ -1,6 +1,6 @@
 # Controle de Concorrência e Race Conditions
 
-A nota de [ACID](/labs/web-dev/banco-de-dados/acid/) explica que o **I** (Isolamento) garante que transações concorrentes não se atrapalhem, e que o banco oferece **níveis de isolamento** para isso. Só que escolher um nível de isolamento não resolve tudo sozinho: mesmo com o nível certo configurado, a forma como a aplicação lê, calcula e escreve um dado pode continuar gerando bugs de concorrência. Esta nota é sobre esse problema na prática: o que é uma **race condition**, por que ela aparece mesmo em código aparentemente simples, e quais estratégias existem para evitá-la.
+A nota de [ACID](/labs/web-dev/banco-de-dados/02-acid/) explica que o **I** (Isolamento) garante que transações concorrentes não se atrapalhem, e que o banco oferece **níveis de isolamento** para isso. Só que escolher um nível de isolamento não resolve tudo sozinho: mesmo com o nível certo configurado, a forma como a aplicação lê, calcula e escreve um dado pode continuar gerando bugs de concorrência. Esta nota é sobre esse problema na prática: o que é uma **race condition**, por que ela aparece mesmo em código aparentemente simples, e quais estratégias existem para evitá-la.
 
 ## O que é uma race condition
 
@@ -51,7 +51,7 @@ O problema é que o processo B nunca leu o resultado de A, ele leu o mesmo saldo
 
 É tentador achar que esse problema só existe em programação multithread, mas isso não é verdade. Mesmo uma aplicação que processa uma requisição por vez, sem threads concorrentes de verdade, pode sofrer race condition quando:
 
-- A aplicação roda em várias instâncias ao mesmo tempo (ex: 3 réplicas atrás de um load balancer, veja [Escalabilidade horizontal](/labs/web-dev/escalabilidade/escalabilidade/))
+- A aplicação roda em várias instâncias ao mesmo tempo (ex: 3 réplicas atrás de um load balancer, veja [Escalabilidade horizontal](/labs/web-dev/escalabilidade/01-escalabilidade/))
 - O serviço está distribuído em máquinas diferentes
 - O runtime usa múltiplos processos-trabalhadores (ex: cluster do Node.js)
 - Existem callbacks ou Promises concorrentes dentro do mesmo processo
@@ -232,7 +232,7 @@ Quando o recurso compartilhado não vive dentro do banco de dados (por exemplo, 
 | Lock pessimista     | Bloqueia a linha no banco antes de alterar                | Conflitos frequentes, regras que dependem do estado atual                                                  | Contenção e risco de deadlock                     |
 | Lock otimista       | Detecta alteração por número de versão, na hora de salvar | Conflitos pouco frequentes                                                                                 | Exige lógica de retry / tratamento de conflito    |
 | Lock distribuído    | Coordena instâncias via um serviço externo compartilhado  | Recursos compartilhados fora do banco                                                                      | Exige infraestrutura extra e tratamento de falhas |
-| Ledger              | Registra eventos em vez de sobrescrever um valor único    | Dinheiro, auditoria, rastreabilidade (veja [Ledger Pattern](/labs/web-dev/banco-de-dados/ledger-pattern/)) | Maior complexidade arquitetural                   |
+| Ledger              | Registra eventos em vez de sobrescrever um valor único    | Dinheiro, auditoria, rastreabilidade (veja [Ledger Pattern](/labs/web-dev/banco-de-dados/07-ledger-pattern/)) | Maior complexidade arquitetural                   |
 
 ## Escolhendo uma estratégia na prática
 
@@ -278,4 +278,4 @@ Vale um cuidado aqui: `@Transactional` sozinho garante atomicidade da transaçã
 - O problema clássico causado por isso é o **lost update**: uma escrita sobrescreve outra sem nenhum erro visível.
 - Mesmo aplicações "single-threaded" sofrem race condition quando rodam em múltiplas instâncias, porque o controle de concorrência precisa acontecer numa camada compartilhada, geralmente o banco de dados.
 - Execução sequencial resolve mas custa paralelismo; atualização atômica resolve bem casos simples; mutex protege dentro de um processo só; lock pessimista e otimista protegem entre instâncias diferentes usando o banco como fonte de verdade; lock distribuído resolve quando o recurso não está no banco.
-- Para domínios financeiros com necessidade de auditoria, vale considerar trocar a abordagem por um [Ledger Pattern](/labs/web-dev/banco-de-dados/ledger-pattern/) em vez de proteger um saldo mutável.
+- Para domínios financeiros com necessidade de auditoria, vale considerar trocar a abordagem por um [Ledger Pattern](/labs/web-dev/banco-de-dados/07-ledger-pattern/) em vez de proteger um saldo mutável.

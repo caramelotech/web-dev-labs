@@ -6,7 +6,7 @@
 
 Sem esse limite, um único cliente mal comportado (ou malicioso) pode consumir uma fatia desproporcional da capacidade do sistema, degradando a experiência de todo mundo. Os motivos mais comuns para limitar requisições:
 
-- Proteger o sistema contra picos que ultrapassem sua capacidade planejada (veja [Capacity Planning](/labs/web-dev/system-design/capacity-planning/))
+- Proteger o sistema contra picos que ultrapassem sua capacidade planejada (veja [Capacity Planning](/labs/web-dev/system-design/03-capacity-planning/))
 - Evitar abuso deliberado, como scraping agressivo ou tentativas de força bruta em login
 - Garantir uso justo entre clientes de uma API paga, respeitando o plano contratado por cada um
 - Proteger serviços internos mais frágeis (como um banco de dados) de receberem mais carga do que aguentam
@@ -47,7 +47,7 @@ O detalhe importante desse algoritmo é o **burst**: como o bucket acumula token
 
 Rate limiting pode ser configurado em vários níveis, e sistemas maduros normalmente combinam mais de um:
 
-- **API Gateway**: o ponto mais comum de aplicar, porque centraliza todo o tráfego que entra no sistema (veja [API Gateway](/labs/web-dev/escalabilidade/api-gateway/)).
+- **API Gateway**: o ponto mais comum de aplicar, porque centraliza todo o tráfego que entra no sistema (veja [API Gateway](/labs/web-dev/escalabilidade/07-api-gateway/)).
 - **Serviço**: um limite específico de um microsserviço particularmente sensível a carga, além do limite geral do gateway.
 - **Usuário**: limite por conta autenticada, o mais justo quando o sistema já sabe quem está fazendo a requisição.
 - **IP**: útil antes mesmo de autenticação existir (ex: proteção contra força bruta no próprio endpoint de login), mas menos preciso, porque vários usuários podem compartilhar o mesmo IP (ex: numa rede corporativa).
@@ -56,4 +56,4 @@ Rate limiting pode ser configurado em vários níveis, e sistemas maduros normal
 
 ## Backpressure
 
-Rate limiting rejeita requisições que ultrapassam um limite definido de antemão. **Backpressure** é um mecanismo complementar: em vez de um limite fixo decidido com antecedência, o próprio sistema sinaliza, em tempo real, que está sobrecarregado e que quem está mandando trabalho para ele precisa desacelerar. Isso aparece, por exemplo, quando uma fila cresce além de um limite saudável e passa a rejeitar novas mensagens até os consumers darem conta do que já está acumulado (veja [Filas e Mensageria](/labs/web-dev/mensageria/filas-e-mensageria/)), em vez de aceitar mensagens indefinidamente até a memória do broker se esgotar.
+Rate limiting rejeita requisições que ultrapassam um limite definido de antemão. **Backpressure** é um mecanismo complementar: em vez de um limite fixo decidido com antecedência, o próprio sistema sinaliza, em tempo real, que está sobrecarregado e que quem está mandando trabalho para ele precisa desacelerar. Isso aparece, por exemplo, quando uma fila cresce além de um limite saudável e passa a rejeitar novas mensagens até os consumers darem conta do que já está acumulado (veja [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/)), em vez de aceitar mensagens indefinidamente até a memória do broker se esgotar.

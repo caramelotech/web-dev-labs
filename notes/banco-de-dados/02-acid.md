@@ -13,7 +13,7 @@ UPDATE contas SET saldo = saldo + 500 WHERE id = 2; -- entra na conta B
 COMMIT;
 ```
 
-A sintaxe de `BEGIN`, `COMMIT` e `ROLLBACK` está detalhada na nota de [SQL](/labs/web-dev/banco-de-dados/sql/). Aqui o foco é entender o que cada letra do ACID garante.
+A sintaxe de `BEGIN`, `COMMIT` e `ROLLBACK` está detalhada na nota de [SQL](/labs/web-dev/banco-de-dados/01-sql/). Aqui o foco é entender o que cada letra do ACID garante.
 
 ## Atômica (Atomicity)
 

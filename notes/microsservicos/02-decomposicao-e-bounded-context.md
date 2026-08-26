@@ -1,6 +1,6 @@
 # Decomposição de Serviços e Bounded Context
 
-Depois de entender o que é um microsserviço (ver [Fundamentos de Microsserviços](/labs/web-dev/microsservicos/fundamentos-de-microsservicos/)), a pergunta que sobra é a mais difícil de responder na prática: onde exatamente cortar o sistema? Decompor mal um domínio gera o pior dos dois mundos, um monte de serviços separados que continuam profundamente acoplados entre si, só que agora conversando pela rede em vez de por chamada de função. Esta nota é sobre como pensar esse corte.
+Depois de entender o que é um microsserviço (ver [Fundamentos de Microsserviços](/labs/web-dev/microsservicos/01-fundamentos-de-microsservicos/)), a pergunta que sobra é a mais difícil de responder na prática: onde exatamente cortar o sistema? Decompor mal um domínio gera o pior dos dois mundos, um monte de serviços separados que continuam profundamente acoplados entre si, só que agora conversando pela rede em vez de por chamada de função. Esta nota é sobre como pensar esse corte.
 
 ## Por que decompor
 
@@ -8,8 +8,8 @@ Decompor não é picar o código em pedaços menores só para dizer que "agora �
 
 - **Alinhamento com o negócio**: cada serviço passa a representar uma capacidade real da empresa (pedidos, pagamento, catálogo), em vez de uma divisão técnica arbitrária (camada de banco, camada de API). Isso facilita conversar sobre o sistema com quem não é dev, e facilita mapear qual time é dono de qual parte.
 - **Desenvolvimento e deploy independentes**: se o corte é bom, o time de pagamento consegue mudar e publicar o serviço de pagamento sem esperar o time de catálogo terminar nada, e vice-versa.
-- **Escalabilidade seletiva**: como já visto em [Fundamentos de Microsserviços](/labs/web-dev/microsservicos/fundamentos-de-microsservicos/), a vantagem de separar serviços só se realiza se cada um puder escalar de acordo com sua própria carga, não a carga do sistema inteiro.
-- **Isolamento de falhas**: um bug ou uma sobrecarga no serviço de notificações não deveria conseguir derrubar o serviço de pagamento junto, se as fronteiras estiverem bem desenhadas (mais sobre lidar com isso em [Comunicação entre Serviços](/labs/web-dev/microsservicos/comunicacao-entre-servicos/) e nas notas de resiliência).
+- **Escalabilidade seletiva**: como já visto em [Fundamentos de Microsserviços](/labs/web-dev/microsservicos/01-fundamentos-de-microsservicos/), a vantagem de separar serviços só se realiza se cada um puder escalar de acordo com sua própria carga, não a carga do sistema inteiro.
+- **Isolamento de falhas**: um bug ou uma sobrecarga no serviço de notificações não deveria conseguir derrubar o serviço de pagamento junto, se as fronteiras estiverem bem desenhadas (mais sobre lidar com isso em [Comunicação entre Serviços](/labs/web-dev/microsservicos/03-comunicacao-entre-servicos/) e nas notas de resiliência).
 - **Manutenção e evolução**: serviços menores e focados em uma responsabilidade são mais fáceis de entender, testar e reescrever quando necessário, sem que essa mudança se espalhe para o resto do sistema.
 
 Nenhum desses ganhos aparece de graça: eles só existem se o corte entre os serviços seguir fronteiras de negócio reais. Um corte ruim (por exemplo, um serviço por tabela do banco) produz serviços tecnicamente separados que continuam presos uns aos outros, sem nenhum desses benefícios.
@@ -89,7 +89,7 @@ Uma consequência direta de levar bounded context a sério é que cada serviço 
 
 Isso parece rígido à primeira vista (e é), mas é o que preserva a fronteira. Se o serviço de Pedidos pode consultar direto a tabela `clientes` do serviço de Cliente, os dois serviços estão de fato acoplados no nível de schema: qualquer mudança na estrutura dessa tabela (renomear uma coluna, mudar um tipo) pode quebrar o serviço de Pedidos sem aviso nenhum, mesmo que ninguém tenha tocado no código dele. Nesse ponto, "microsserviços" é só uma separação cosmética, o acoplamento real do monólito continua todo lá.
 
-A alternativa é qualquer dado que um serviço precise de outro contexto ser obtido através de uma API bem definida (ver [Comunicação entre Serviços](/labs/web-dev/microsservicos/comunicacao-entre-servicos/)) ou de eventos assíncronos. É comum, e esperado, que isso gere alguma duplicação de dados entre serviços (o serviço de Pedidos guardar uma cópia local do nome e endereço do cliente no momento da compra, por exemplo), em vez de fazer uma consulta síncrona toda vez que precisar desse dado. Essa duplicação controlada é o preço de manter os serviços desacoplados, e é justamente o tipo de situação que exige lidar com consistência entre bancos diferentes, aprofundado em [Transações Distribuídas](/labs/web-dev/transacoes-distribuidas/consistencia-transacional/).
+A alternativa é qualquer dado que um serviço precise de outro contexto ser obtido através de uma API bem definida (ver [Comunicação entre Serviços](/labs/web-dev/microsservicos/03-comunicacao-entre-servicos/)) ou de eventos assíncronos. É comum, e esperado, que isso gere alguma duplicação de dados entre serviços (o serviço de Pedidos guardar uma cópia local do nome e endereço do cliente no momento da compra, por exemplo), em vez de fazer uma consulta síncrona toda vez que precisar desse dado. Essa duplicação controlada é o preço de manter os serviços desacoplados, e é justamente o tipo de situação que exige lidar com consistência entre bancos diferentes, aprofundado em [Transações Distribuídas](/labs/web-dev/transacoes-distribuidas/01-consistencia-transacional/).
 
 ```mermaid
 flowchart TB

@@ -1,6 +1,6 @@
 # Filas e Mensageria
 
-Até aqui, boa parte da comunicação entre serviços que este lab cobriu é síncrona: um serviço chama outro via HTTP (veja [HTTP, APIs e REST](/labs/web-dev/apis/http-rest/)) e fica esperando a resposta. Isso funciona bem para muita coisa, mas cria um acoplamento no tempo: se o serviço chamado está lento ou fora do ar, quem chamou trava ou falha junto.
+Até aqui, boa parte da comunicação entre serviços que este lab cobriu é síncrona: um serviço chama outro via HTTP (veja [HTTP, APIs e REST](/labs/web-dev/apis/01-http-rest/)) e fica esperando a resposta. Isso funciona bem para muita coisa, mas cria um acoplamento no tempo: se o serviço chamado está lento ou fora do ar, quem chamou trava ou falha junto.
 
 Filas resolvem esse problema colocando uma peça no meio: em vez de A chamar B diretamente, A deixa uma mensagem em algum lugar e B pega essa mensagem quando conseguir.
 

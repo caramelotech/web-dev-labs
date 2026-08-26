@@ -4,7 +4,7 @@
 
 Cache é uma cópia de um dado guardada num lugar de acesso mais rápido que a fonte original, para evitar refazer um trabalho caro (uma consulta pesada ao banco, uma chamada a uma API externa) toda vez que esse dado é pedido de novo.
 
-**Redis** é o banco de dados em memória mais usado como cache em sistemas web. Por guardar tudo em memória RAM em vez de disco, ele responde em microssegundos, muito mais rápido que uma consulta a um banco relacional tradicional. Além de cache, Redis também é usado para filas simples, contadores, rate limiting (veja [Rate Limiting](/labs/web-dev/escalabilidade/rate-limiting/)) e armazenamento de sessão (veja [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/stateless-e-particionamento/)), mas o uso mais comum de todos é como cache.
+**Redis** é o banco de dados em memória mais usado como cache em sistemas web. Por guardar tudo em memória RAM em vez de disco, ele responde em microssegundos, muito mais rápido que uma consulta a um banco relacional tradicional. Além de cache, Redis também é usado para filas simples, contadores, rate limiting (veja [Rate Limiting](/labs/web-dev/escalabilidade/09-rate-limiting/)) e armazenamento de sessão (veja [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/)), mas o uso mais comum de todos é como cache.
 
 Existem dois níveis de cache, e eles não são excludentes:
 
@@ -96,4 +96,4 @@ Cache resolve performance, mas introduz uma categoria de problemas própria:
 - **Stale data**: dado cacheado que ficou desatualizado em relação à fonte real, seja porque o TTL ainda não expirou, seja porque uma invalidação falhou silenciosamente.
 - **Cache eviction**: quando o cache está cheio e precisa liberar espaço para novos dados, ele remove entradas segundo alguma política (a mais comum é LRU, "least recently used", remover o que não é acessado há mais tempo).
 - **TTL**: escolher um TTL certo é um equilíbrio: muito curto e o cache quase não ajuda (muitos misses); muito longo e o risco de servir dado desatualizado cresce.
-- **Hot keys**: quando uma chave específica concentra uma fração desproporcional dos acessos (ex: o produto em promoção do dia), ela pode sobrecarregar um único nó do cache mesmo com o resto do cluster tranquilo, um problema parecido com o de hot partitions em bancos de dados (veja [Replicação e Escalabilidade do Banco de Dados](/labs/web-dev/escalabilidade/replicacao-de-banco-de-dados/)).
+- **Hot keys**: quando uma chave específica concentra uma fração desproporcional dos acessos (ex: o produto em promoção do dia), ela pode sobrecarregar um único nó do cache mesmo com o resto do cluster tranquilo, um problema parecido com o de hot partitions em bancos de dados (veja [Replicação e Escalabilidade do Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/)).
