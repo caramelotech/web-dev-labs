@@ -1,6 +1,6 @@
 # Idempotência
 
-A nota anterior, [Timeout, Retry, Circuit Breaker e Bulkhead](/labs/web-dev/resiliencia/timeout-retry-circuit-breaker-e-bulkhead/), deixou um problema em aberto: retry só é seguro se repetir a operação não causar dano. Essa nota resolve exatamente esse problema.
+A nota anterior, [Timeout, Retry, Circuit Breaker e Bulkhead](/labs/web-dev/resiliencia/01-timeout-retry-circuit-breaker-e-bulkhead/), deixou um problema em aberto: retry só é seguro se repetir a operação não causar dano. Essa nota resolve exatamente esse problema.
 
 ## Conceito
 
@@ -8,7 +8,7 @@ Uma operação é **idempotente** quando executá-la uma vez ou executá-la vár
 
 Em APIs, o exemplo clássico é `PUT /usuarios/123 { nome: "Ana" }`. Chamar esse endpoint uma vez ou dez vezes deixa o usuário 123 com o nome "Ana" no final, o estado não muda entre a primeira e a décima chamada. Já `POST /pedidos { produto: "X", quantidade: 1 }` normalmente não é idempotente: cada chamada cria um pedido novo, então dez chamadas geram dez pedidos.
 
-Por que isso importa em sistemas distribuídos? Porque a rede não é confiável. Uma requisição pode chegar ao servidor, ser processada com sucesso, e a resposta se perder no caminho de volta. Do ponto de vista de quem fez a chamada, isso é indistinguível de a requisição nunca ter chegado, então a reação natural é tentar de novo (veja [Retry](/labs/web-dev/resiliencia/timeout-retry-circuit-breaker-e-bulkhead/)). Sem idempotência, esse retry duplica o efeito de uma operação que, na verdade, já tinha funcionado.
+Por que isso importa em sistemas distribuídos? Porque a rede não é confiável. Uma requisição pode chegar ao servidor, ser processada com sucesso, e a resposta se perder no caminho de volta. Do ponto de vista de quem fez a chamada, isso é indistinguível de a requisição nunca ter chegado, então a reação natural é tentar de novo (veja [Retry](/labs/web-dev/resiliencia/01-timeout-retry-circuit-breaker-e-bulkhead/)). Sem idempotência, esse retry duplica o efeito de uma operação que, na verdade, já tinha funcionado.
 
 ## Retry seguro
 
@@ -30,7 +30,7 @@ sequenceDiagram
 Dois problemas concretos nascem daí:
 
 - **Double payment**: o exemplo mais citado. Um cliente tenta pagar, a confirmação se perde, o cliente (ou o app, automaticamente) tenta de novo, e agora duas cobranças foram feitas para uma única compra.
-- **Mensagens duplicadas**: o mesmo problema aparece em filas (veja [Filas e Mensageria](/labs/web-dev/mensageria/filas-e-mensageria/)) sempre que a entrega é "pelo menos uma vez" (at-least-once). Se o consumer processa a mensagem mas falha antes de confirmar o processamento ao broker, o broker reenvia a mesma mensagem, e o consumer processa de novo.
+- **Mensagens duplicadas**: o mesmo problema aparece em filas (veja [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/)) sempre que a entrega é "pelo menos uma vez" (at-least-once). Se o consumer processa a mensagem mas falha antes de confirmar o processamento ao broker, o broker reenvia a mesma mensagem, e o consumer processa de novo.
 
 ## Idempotency Key
 
@@ -69,4 +69,4 @@ Independente de onde a chave é guardada, dois detalhes são importantes:
 - **Pagamento**: o caso mais citado. Uma chave de idempotência por tentativa de cobrança garante que retries de rede não gerem cobranças duplicadas no cartão do cliente.
 - **Criação de pedido**: um app de delivery que reenvia a criação de um pedido por causa de uma conexão instável não deve gerar dois pedidos idênticos na cozinha do restaurante.
 - **Envio de e-mail**: um worker que processa a fila de e-mails de confirmação e é reiniciado no meio do processamento não deve mandar o mesmo e-mail de novo para o cliente ao reprocessar a mensagem.
-- **Processamento de eventos**: um consumer Kafka que recebe a mesma mensagem duas vezes (garantia at-least-once, ver [Garantias de Entrega](/labs/web-dev/mensageria/garantias-de-entrega/)) usa o ID do evento como chave de idempotência para não aplicar o mesmo efeito colateral (debitar estoque, por exemplo) duas vezes.
+- **Processamento de eventos**: um consumer Kafka que recebe a mesma mensagem duas vezes (garantia at-least-once, ver [Garantias de Entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/)) usa o ID do evento como chave de idempotência para não aplicar o mesmo efeito colateral (debitar estoque, por exemplo) duas vezes.

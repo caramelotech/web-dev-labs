@@ -12,7 +12,7 @@ Existem alguns tipos de timeout, cada um cobrindo uma fase diferente da comunica
 - **Read timeout** (também chamado de socket timeout): tempo máximo esperando por dados depois que a conexão já foi estabelecida e a requisição já foi enviada. Cobre o caso em que o servidor aceitou a conexão, mas está demorando demais para responder.
 - **Request timeout**: o teto total da operação, do início ao fim, somando conexão, envio, processamento do outro lado e leitura da resposta. É o limite que geralmente importa para quem está chamando: "eu não posso esperar mais que X segundos por essa operação, custe o que custar".
 
-Definir um timeout bom é um equilíbrio: baixo demais e você corta requisições legítimas que só estavam um pouco lentas; alto demais e você perde a proteção, porque a thread ainda fica presa por tempo suficiente para causar dano. Uma prática comum é olhar a latência p99 da dependência (veja [Latência, Throughput e Performance](/labs/web-dev/system-design/latencia-e-performance/)) e definir o timeout com alguma margem acima dela, não um número arbitrário.
+Definir um timeout bom é um equilíbrio: baixo demais e você corta requisições legítimas que só estavam um pouco lentas; alto demais e você perde a proteção, porque a thread ainda fica presa por tempo suficiente para causar dano. Uma prática comum é olhar a latência p99 da dependência (veja [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/)) e definir o timeout com alguma margem acima dela, não um número arbitrário.
 
 ## Retry
 
@@ -22,7 +22,7 @@ Retry **não** faz sentido, e pode até piorar as coisas, em alguns cenários:
 
 - **Erros do próprio pedido**: um 400 (requisição malformada) ou um 404 (recurso não existe) não vão mudar de resultado só porque você tentou de novo. Insistir é desperdício.
 - **Serviço já sobrecarregado**: se o serviço está lento porque está no limite da capacidade, uma onda de retries de todos os clientes que falharam é exatamente a pressão extra que pode derrubá-lo de vez. Esse efeito em cascata é conhecido como _retry storm_.
-- **Operações não idempotentes sem proteção**: se a primeira tentativa teve efeito (por exemplo, cobrou o cliente) mas a resposta se perdeu no caminho, repetir a chamada pode duplicar o efeito. Retry seguro depende de a operação ser idempotente, isso é tratado em detalhe em [Idempotência](/labs/web-dev/resiliencia/idempotencia/).
+- **Operações não idempotentes sem proteção**: se a primeira tentativa teve efeito (por exemplo, cobrou o cliente) mas a resposta se perdeu no caminho, repetir a chamada pode duplicar o efeito. Retry seguro depende de a operação ser idempotente, isso é tratado em detalhe em [Idempotência](/labs/web-dev/resiliencia/02-idempotencia/).
 
 Para evitar o problema de retries sincronizados martelando o serviço no mesmo instante, duas técnicas costumam andar juntas:
 

@@ -33,7 +33,7 @@ flowchart LR
     C[Com batching] -->|latência maior por request<br/>throughput maior| D(("]"))
 ```
 
-Um sistema bem dimensionado normalmente define um teto aceitável de latência (via SLO, veja [Disponibilidade](/labs/web-dev/resiliencia/disponibilidade/)) e otimiza throughput dentro desse limite, em vez de tratar as duas métricas como se fossem independentes.
+Um sistema bem dimensionado normalmente define um teto aceitável de latência (via SLO, veja [Disponibilidade](/labs/web-dev/resiliencia/03-disponibilidade/)) e otimiza throughput dentro desse limite, em vez de tratar as duas métricas como se fossem independentes.
 
 ## Performance e gargalos
 
@@ -43,8 +43,8 @@ Quando latência ou throughput pioram, o motivo está em algum recurso específi
 - **Memória**: falta de RAM força o sistema operacional a usar swap (disco), o que é ordens de magnitude mais lento, ou causa garbage collection agressivo em linguagens gerenciadas, pausando a aplicação por instantes.
 - **I/O de disco**: leituras e escritas em disco (logs, banco de dados local, arquivos) são muito mais lentas que operações em memória.
 - **Rede**: latência entre serviços, banda limitada, ou muitas conexões TCP sendo abertas e fechadas.
-- **Banco de dados**: queries mal otimizadas, falta de índice, ou o banco simplesmente recebendo mais tráfego do que consegue processar (veja [Database bottlenecks](/labs/web-dev/escalabilidade/replicacao-de-banco-de-dados/)).
-- **Cache**: quando o cache tem baixa taxa de acerto (hit rate), a maioria das requisições acaba caindo no banco de qualquer forma, perdendo o benefício de ter um cache (veja [Cache e Redis](/labs/web-dev/escalabilidade/cache-e-redis/)).
+- **Banco de dados**: queries mal otimizadas, falta de índice, ou o banco simplesmente recebendo mais tráfego do que consegue processar (veja [Database bottlenecks](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/)).
+- **Cache**: quando o cache tem baixa taxa de acerto (hit rate), a maioria das requisições acaba caindo no banco de qualquer forma, perdendo o benefício de ter um cache (veja [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/)).
 - **Filas**: consumers processando mais devagar do que producers publicam fazem a fila crescer sem parar, e o atraso entre publicar e processar (que também é uma forma de latência) aumenta continuamente.
 
 Identificar o gargalo certo é mais importante que otimizar o que é fácil de otimizar. Adicionar mais CPU a um serviço que está travado esperando resposta de um banco lento não resolve nada, o gargalo real está em outro lugar.
@@ -76,4 +76,4 @@ O problema fica mais sério quando as chamadas são **síncronas em cadeia**: se
 Duas estratégias comuns para não deixar o latency budget estourar:
 
 - **Paralelizar chamadas independentes**: se o serviço de pedidos precisa consultar estoque e frete, e essas duas consultas não dependem uma da outra, chamá-las em paralelo custa o tempo da mais lenta das duas, não a soma das duas.
-- **Tirar do caminho síncrono o que pode ser assíncrono**: enviar um e-mail de confirmação não precisa acontecer antes de responder ao usuário que o pedido foi criado, esse tipo de trabalho pode ir para uma fila (veja [Filas e Mensageria](/labs/web-dev/mensageria/filas-e-mensageria/)) e sair do orçamento de latência da requisição principal.
+- **Tirar do caminho síncrono o que pode ser assíncrono**: enviar um e-mail de confirmação não precisa acontecer antes de responder ao usuário que o pedido foi criado, esse tipo de trabalho pode ir para uma fila (veja [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/)) e sair do orçamento de latência da requisição principal.

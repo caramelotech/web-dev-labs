@@ -1,6 +1,6 @@
 # Ferramentas de Observabilidade
 
-A nota anterior ([Logs, Metrics e Traces](/labs/web-dev/observabilidade/logs-metrics-e-traces/)) explica os três pilares de observabilidade do ponto de vista conceitual: o que cada um responde e por que eles se complementam. Esta nota é sobre o outro lado da moeda: quais ferramentas de verdade coletam, armazenam, visualizam e alertam em cima desses dados no dia a dia de um time.
+A nota anterior ([Logs, Metrics e Traces](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/)) explica os três pilares de observabilidade do ponto de vista conceitual: o que cada um responde e por que eles se complementam. Esta nota é sobre o outro lado da moeda: quais ferramentas de verdade coletam, armazenam, visualizam e alertam em cima desses dados no dia a dia de um time.
 
 Nenhuma dessas ferramentas faz observabilidade sozinha. Elas são peças de um pipeline, e entender o pipeline ajuda a entender por que existe tanta ferramenta diferente em vez de uma única "ferramenta de observabilidade" que resolve tudo.
 

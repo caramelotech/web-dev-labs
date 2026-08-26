@@ -2,7 +2,7 @@
 
 ## Conceitos
 
-Um **Load Balancer** (balanceador de carga) é o componente que fica na frente de várias instâncias de um serviço e decide, a cada requisição, para qual instância mandá-la. É a peça que torna a [escalabilidade horizontal](/labs/web-dev/escalabilidade/escalabilidade/) possível de verdade: sem ele, o cliente precisaria saber, sozinho, quantas instâncias existem e escolher uma.
+Um **Load Balancer** (balanceador de carga) é o componente que fica na frente de várias instâncias de um serviço e decide, a cada requisição, para qual instância mandá-la. É a peça que torna a [escalabilidade horizontal](/labs/web-dev/escalabilidade/01-escalabilidade/) possível de verdade: sem ele, o cliente precisaria saber, sozinho, quantas instâncias existem e escolher uma.
 
 ```mermaid
 flowchart LR
@@ -26,7 +26,7 @@ O algoritmo é a regra que o load balancer usa para escolher qual instância rec
 - **Round Robin**: distribui as requisições em sequência, uma para cada instância, voltando ao início depois da última. Simples, mas ignora se uma instância está mais ocupada que outra.
 - **Weighted Round Robin**: igual ao Round Robin, mas cada instância recebe um peso, e instâncias com peso maior recebem proporcionalmente mais requisições. Útil quando as máquinas têm capacidades diferentes (uma mais potente que a outra).
 - **Least Connections**: manda a requisição para a instância que tem menos conexões ativas no momento. Se adapta melhor a requisições que demoram tempos diferentes para processar, porque não assume que todo request custa o mesmo.
-- **IP Hash**: calcula um hash do IP de quem está fazendo a requisição e usa esse hash para sempre mandar o mesmo cliente para a mesma instância. Garante uma forma simples de "sticky session" (sessão fixa numa instância), útil quando um serviço ainda não é totalmente stateless (veja [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/stateless-e-particionamento/)).
+- **IP Hash**: calcula um hash do IP de quem está fazendo a requisição e usa esse hash para sempre mandar o mesmo cliente para a mesma instância. Garante uma forma simples de "sticky session" (sessão fixa numa instância), útil quando um serviço ainda não é totalmente stateless (veja [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/)).
 - **Consistent Hashing**: uma técnica mais sofisticada de distribuir chaves (uma sessão, um cliente, um shard) entre instâncias, projetada para que, quando uma instância entra ou sai do grupo, só uma pequena fração das chaves precise ser redistribuída, em vez de todas. Num hashing simples (`hash(chave) % número de instâncias`), adicionar ou remover uma única instância muda o resultado de quase todo mundo, porque o número usado no módulo mudou. No consistent hashing, as instâncias e as chaves são posicionadas num mesmo círculo imaginário de valores de hash, e cada chave é atribuída à próxima instância encontrada andando no sentido horário desse círculo:
 
 ```mermaid

@@ -38,11 +38,11 @@ Essa separação importa porque os requisitos não funcionais são normalmente o
 
 Todo requisito não funcional de um sistema distribuído acaba se apoiando em um pequeno conjunto de propriedades. Vale ter o vocabulário de cada uma antes de seguir para o resto do material, porque elas voltam a aparecer em praticamente toda nota desta seção.
 
-- **Escalabilidade**: capacidade de o sistema continuar funcionando bem quando a carga aumenta (mais usuários, mais dados, mais requisições). Aprofundada em [Escalabilidade e Infraestrutura](/labs/web-dev/escalabilidade/escalabilidade/).
-- **Disponibilidade**: fração do tempo em que o sistema está no ar e respondendo. Aprofundada em [Disponibilidade](/labs/web-dev/resiliencia/disponibilidade/).
+- **Escalabilidade**: capacidade de o sistema continuar funcionando bem quando a carga aumenta (mais usuários, mais dados, mais requisições). Aprofundada em [Escalabilidade e Infraestrutura](/labs/web-dev/escalabilidade/01-escalabilidade/).
+- **Disponibilidade**: fração do tempo em que o sistema está no ar e respondendo. Aprofundada em [Disponibilidade](/labs/web-dev/resiliencia/03-disponibilidade/).
 - **Confiabilidade**: capacidade de o sistema continuar operando corretamente mesmo diante de falhas de componentes individuais, sem corromper dados nem se comportar de forma imprevisível.
-- **Consistência**: garantia sobre o que diferentes partes do sistema (ou diferentes usuários) enxergam como o estado atual dos dados. Aprofundada em [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/consistencia-e-replicacao/) e no [Teorema de CAP](/labs/web-dev/banco-de-dados/teorema-de-cap/).
-- **Latência**: tempo que uma única operação leva para ser concluída. Aprofundada em [Latência, Throughput e Performance](/labs/web-dev/system-design/latencia-e-performance/).
+- **Consistência**: garantia sobre o que diferentes partes do sistema (ou diferentes usuários) enxergam como o estado atual dos dados. Aprofundada em [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/) e no [Teorema de CAP](/labs/web-dev/banco-de-dados/03-teorema-de-cap/).
+- **Latência**: tempo que uma única operação leva para ser concluída. Aprofundada em [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/).
 - **Throughput**: quantidade de operações que o sistema processa por unidade de tempo. Também aprofundado na mesma nota de latência e performance.
 - **Custo**: dinheiro gasto em infraestrutura, operação e manutenção. Toda decisão de design tem um preço, e ignorar essa variável é um erro comum de quem está começando em system design.
 
@@ -54,4 +54,4 @@ Não existe arquitetura que maximize todos os pilares ao mesmo tempo. Mais consi
 
 Por isso, a habilidade central de quem faz system design não é conhecer os componentes (CDN, cache, fila, banco), é saber qual trade-off faz sentido para o problema específico que está na mesa. Um sistema de pagamentos prioriza consistência mesmo que isso custe latência. Um contador de curtidas em uma rede social prioriza disponibilidade e latência baixa, e aceita que o número mostrado esteja um pouco desatualizado.
 
-Essa nota fica só na superfície do assunto: a lista completa dos trade-offs mais cobrados e como raciocinar sobre cada um está detalhada em [Trade-offs Arquiteturais](/labs/web-dev/system-design/trade-offs-arquiteturais/), depois que os componentes individuais (cache, filas, réplicas etc.) já tiverem sido apresentados nas próximas notas.
+Essa nota fica só na superfície do assunto: a lista completa dos trade-offs mais cobrados e como raciocinar sobre cada um está detalhada em [Trade-offs Arquiteturais](/labs/web-dev/system-design/05-trade-offs-arquiteturais/), depois que os componentes individuais (cache, filas, réplicas etc.) já tiverem sido apresentados nas próximas notas.

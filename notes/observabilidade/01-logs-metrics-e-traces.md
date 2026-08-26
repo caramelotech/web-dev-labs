@@ -44,7 +44,7 @@ As métricas mais comuns de monitorar em um serviço:
 
 - **CPU** e **memória**: uso de recursos da máquina ou do container, sinal de que algo pode estar prestes a saturar
 - **QPS** (queries/requests por segundo): quanto tráfego o serviço está recebendo
-- **Latência**: quanto tempo as requisições estão levando (normalmente em percentis, veja a nota de [Latência, Throughput e Performance](/labs/web-dev/system-design/latencia-e-performance/) para entender por que p99 importa mais que a média)
+- **Latência**: quanto tempo as requisições estão levando (normalmente em percentis, veja a nota de [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/) para entender por que p99 importa mais que a média)
 - **Error rate**: porcentagem de requisições que terminam em erro
 - **Saturation**: o quão "cheio" um recurso está em relação à sua capacidade máxima, por exemplo uma fila que está quase estourando o buffer, ou um pool de conexões quase no limite
 

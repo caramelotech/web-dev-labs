@@ -105,7 +105,7 @@ O `refresh token` existe porque access tokens costumam ter vida curta (minutos a
 
 ### Segurança no API Gateway
 
-O gateway é o ponto natural para concentrar autenticação, autorização de alto nível e rate limiting, porque toda requisição externa passa por ele antes de chegar em qualquer serviço. Isso evita que cada microsserviço reimplemente validação de token do zero. Esse papel do gateway é aprofundado em [API Gateway](/labs/web-dev/escalabilidade/api-gateway/), incluindo a diferença entre o que o gateway resolve e o que um load balancer resolve.
+O gateway é o ponto natural para concentrar autenticação, autorização de alto nível e rate limiting, porque toda requisição externa passa por ele antes de chegar em qualquer serviço. Isso evita que cada microsserviço reimplemente validação de token do zero. Esse papel do gateway é aprofundado em [API Gateway](/labs/web-dev/escalabilidade/07-api-gateway/), incluindo a diferença entre o que o gateway resolve e o que um load balancer resolve.
 
 Vale reforçar um ponto: o gateway validar o token não elimina a necessidade de autorização mais granular dentro de cada serviço. O gateway normalmente confirma "esse token é válido e pertence a alguém autenticado", mas a regra de negócio específica ("esse usuário pode editar esse pedido em particular") costuma viver no serviço dono do recurso.
 
@@ -126,7 +126,7 @@ Senhas de banco, chaves de API de terceiros, chaves usadas para assinar JWT: tud
 
 ### Monitoramento e auditoria
 
-Prevenção nunca é 100% eficaz, então detectar rápido quando algo deu errado é parte da segurança tanto quanto impedir o ataque. Monitoramento de segurança envolve logar tentativas de autenticação (sucesso e falha), acessos a recursos sensíveis e mudanças de permissão, e alimentar isso em ferramentas que consigam sinalizar padrões anormais (muitas tentativas de login falhando na mesma conta em segundos, um IP fazendo requisições em volume muito acima do normal). Auditoria é a trilha permanente desses eventos, guardada de um jeito que não pode ser alterada depois, usada tanto para investigar incidentes quanto para atender exigências de compliance (LGPD, PCI-DSS). Esse tema tem uma camada própria, aprofundada em [Logs, Metrics e Traces](/labs/web-dev/observabilidade/logs-metrics-e-traces/).
+Prevenção nunca é 100% eficaz, então detectar rápido quando algo deu errado é parte da segurança tanto quanto impedir o ataque. Monitoramento de segurança envolve logar tentativas de autenticação (sucesso e falha), acessos a recursos sensíveis e mudanças de permissão, e alimentar isso em ferramentas que consigam sinalizar padrões anormais (muitas tentativas de login falhando na mesma conta em segundos, um IP fazendo requisições em volume muito acima do normal). Auditoria é a trilha permanente desses eventos, guardada de um jeito que não pode ser alterada depois, usada tanto para investigar incidentes quanto para atender exigências de compliance (LGPD, PCI-DSS). Esse tema tem uma camada própria, aprofundada em [Logs, Metrics e Traces](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/).
 
 ## Ameaças comuns
 
@@ -138,7 +138,7 @@ Prevenção nunca é 100% eficaz, então detectar rápido quando algo deu errado
 | Exposição excessiva de dados         | O endpoint devolve o objeto inteiro (incluindo campos sensíveis como senha com hash, CPF, dados internos) e deixa o filtro do que mostrar a cargo do cliente, em vez de já retornar só o necessário |
 | Man-in-the-middle                    | Alguém intercepta a comunicação entre cliente e servidor para ler ou alterar dados em trânsito; mitigado com HTTPS/mTLS e, em casos críticos, certificate pinning |
 | Injeção                              | Entrada do usuário é interpretada como código ou comando (SQL injection, command injection) porque a aplicação concatena a entrada direto numa query ou comando em vez de tratá-la como dado |
-| DoS (Denial of Service)              | Volume de requisições (intencional ou não) suficiente para esgotar os recursos do serviço e tirá-lo do ar; mitigado com rate limiting na borda, aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/rate-limiting/) |
+| DoS (Denial of Service)              | Volume de requisições (intencional ou não) suficiente para esgotar os recursos do serviço e tirá-lo do ar; mitigado com rate limiting na borda, aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/09-rate-limiting/) |
 | Dependências inseguras               | Bibliotecas de terceiros com vulnerabilidades conhecidas (ou comprometidas por um ataque de supply chain) acabam rodando dentro da própria aplicação; mitigado mantendo dependências atualizadas e rodando scanners (`npm audit`, Dependabot, Snyk) no pipeline |
 
 ## Por que evoluir APIs
