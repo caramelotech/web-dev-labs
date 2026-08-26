@@ -1,6 +1,6 @@
 # Garantias de Entrega: Ordenação, DLQ e Idempotência
 
-Depois de entender como uma mensagem trafega (veja [Filas e Mensageria](/labs/web-dev/mensageria/filas-e-mensageria/) e [Kafka](/labs/web-dev/mensageria/kafka/)), a próxima pergunta é: o que acontece quando algo dá errado no meio do caminho? Um consumer trava ao processar uma mensagem, a rede engasga, o mesmo evento chega duas vezes. Esta nota cobre os mecanismos que lidam com essas falhas.
+Depois de entender como uma mensagem trafega (veja [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/) e [Kafka](/labs/web-dev/mensageria/02-kafka/)), a próxima pergunta é: o que acontece quando algo dá errado no meio do caminho? Um consumer trava ao processar uma mensagem, a rede engasga, o mesmo evento chega duas vezes. Esta nota cobre os mecanismos que lidam com essas falhas.
 
 ## Dead Letter Queue
 
@@ -36,4 +36,4 @@ Quando se fala em "garantia de entrega" de um broker, existem três níveis poss
 
 - **Exactly-once** ("exatamente uma vez"): a mensagem é entregue e processada uma única vez, garantido. Na teoria é o ideal, mas é a garantia mais difícil e cara de implementar de ponta a ponta, exige coordenação entre o broker e o efeito colateral do processamento (ex: uma escrita em banco), e a maioria dos sistemas reais não oferece isso de forma completa e sem custo de performance.
 
-Na prática, a saída mais comum não é perseguir exactly-once no broker, é aceitar **at-least-once** (que é mais simples e mais barato) e fazer o consumer tratar duplicatas do lado dele. Essa técnica tem nome próprio, idempotência, e está detalhada na nota de [Idempotência](/labs/web-dev/resiliencia/idempotencia/): reprocessar a mesma mensagem duas vezes tem que produzir o mesmo resultado que processá-la uma vez só.
+Na prática, a saída mais comum não é perseguir exactly-once no broker, é aceitar **at-least-once** (que é mais simples e mais barato) e fazer o consumer tratar duplicatas do lado dele. Essa técnica tem nome próprio, idempotência, e está detalhada na nota de [Idempotência](/labs/web-dev/resiliencia/02-idempotencia/): reprocessar a mesma mensagem duas vezes tem que produzir o mesmo resultado que processá-la uma vez só.
