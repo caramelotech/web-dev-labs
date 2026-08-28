@@ -111,7 +111,7 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 
 ### `microsservicos/` (criada via `/labs-organize`)
 
-- 🚧 Fundamentos: monólito vs microsserviços, stateless services, Strangler Fig Pattern (`01-fundamentos-de-microsservicos.md`, seção de Strangler Fig adicionada via `/labs-organize`)
+- 🚧 Fundamentos: monólito vs microsserviços, stateless services, Strangler Fig Pattern, cinco princípios de design (serviços independentes, fronteiras de negócio, regra das 2 pizzas, smart endpoints/dumb pipes, sync vs async) (`01-fundamentos-de-microsservicos.md`, seções de Strangler Fig e princípios de design adicionadas via `/labs-organize`)
 - 🚧 Decomposição de serviços, DDD/bounded context, database per service (`02-decomposicao-e-bounded-context.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
 - 🚧 Comunicação síncrona/assíncrona, service-to-service (timeouts, retries, circuit breaker, bulkhead) (`03-comunicacao-entre-servicos.md`, renumerada de `02` para `03`)
 - 🚧 Config Server e endpoints operacionais (Actuator/health/metrics) (`04-config-server-e-endpoints-operacionais.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
