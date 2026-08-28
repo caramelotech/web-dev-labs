@@ -50,6 +50,142 @@ Vale notar que grupos diferentes são independentes entre si: o consumer group d
 
 **Replication**: cada partição não vive numa única máquina do cluster Kafka, ela é replicada em várias, uma delas é a **líder** (recebe todas as escritas e leituras) e as outras são **réplicas** que copiam os dados dela. Se a máquina líder cair, uma das réplicas assume o posto automaticamente, e o topic continua disponível sem perder mensagens já confirmadas. O nível de replicação (quantas cópias existem) é configurável por topic, e é o principal mecanismo do Kafka para tolerar falha de máquina sem perder dado.
 
+## Arquitetura do cluster
+
+Um cluster Kafka é um conjunto de máquinas chamadas **brokers**. Cada broker guarda um pedaço dos dados e atende parte do tráfego, e é essa divisão de trabalho que faz o Kafka escalar para muitos gigabytes por segundo.
+
+As partições de cada topic são espalhadas entre os brokers. Como visto na seção de replication, cada partição tem uma cópia **líder** e uma ou mais cópias **seguidoras**, em brokers diferentes. Toda escrita e toda leitura daquela partição passam pelo líder; os seguidores só ficam copiando os dados do líder e de prontidão para assumir se ele cair.
+
+```mermaid
+flowchart TB
+    subgraph B1["Broker 1"]
+        P0L["Partição 0 (líder)"]
+        P1F["Partição 1 (seguidora)"]
+    end
+    subgraph B2["Broker 2"]
+        P1L["Partição 1 (líder)"]
+        P2F["Partição 2 (seguidora)"]
+    end
+    subgraph B3["Broker 3"]
+        P2L["Partição 2 (líder)"]
+        P0F["Partição 0 (seguidora)"]
+    end
+```
+
+O **replication factor** é quantas cópias de cada partição o cluster mantém. Com replication factor 3, cada partição existe em 3 brokers: 1 líder e 2 seguidoras.
+
+**ISR (In-Sync Replicas)** é o conjunto de réplicas que estão em dia com o líder, ou seja, já copiaram tudo que o líder tem (ou estão a poucos milissegundos disso). Uma réplica que ficou muito para trás (porque o broker dela está lento ou teve um soluço de rede) sai do ISR até se recuperar. O ISR importa por dois motivos: a confirmação de escrita mais forte espera todo o ISR gravar (mais sobre isso no fluxo do producer), e só uma réplica que está no ISR pode ser promovida a líder. Promover uma réplica atrasada significaria perder as mensagens que ela ainda não tinha copiado.
+
+Quando o broker que era líder de uma partição cai, o cluster escolhe uma das réplicas do ISR daquela partição para ser o novo líder. Os producers e consumers percebem a mudança e passam a falar com o novo líder. Se a replicação estava saudável, isso acontece em segundos e sem perder mensagem já confirmada.
+
+Alguém precisa coordenar tudo isso: saber quais brokers estão vivos, qual é o líder de cada partição, quais topics existem e com que configuração. Esse papel é do **controller**:
+
+- Nas versões antigas do Kafka, essa coordenação dependia do **ZooKeeper**, um serviço separado que precisava ser instalado e operado à parte.
+- A partir do Kafka 4.0 (março de 2025), o ZooKeeper foi removido de vez e o padrão passou a ser o **KRaft** (Kafka Raft): o controller roda dentro do próprio cluster de brokers, usando um algoritmo de consenso parecido com o Raft para manter os metadados replicados. Menos uma peça para instalar e monitorar.
+
+Do ponto de vista de quem usa o Kafka, ZooKeeper e KRaft fazem a mesma coisa; a diferença é operacional.
+
+## Fluxo do producer
+
+Publicar uma mensagem não é só "manda pro Kafka". O producer faz algumas etapas antes:
+
+```mermaid
+flowchart LR
+    A[Serializar<br/>chave e valor] --> B[Partitioner<br/>escolhe a partição]
+    B --> C[Agrupar em<br/>record batch]
+    C --> D[Enviar ao<br/>líder da partição]
+```
+
+1. **Serialização**: a chave e o valor da mensagem viram bytes (JSON, Avro, Protobuf, string simples).
+2. **Partitioner**: decide para qual partição a mensagem vai. Se a mensagem tem chave, o partitioner faz um hash da chave, então mensagens com a mesma chave sempre caem na mesma partição (o que preserva a ordem entre elas). Sem chave, ele distribui de forma equilibrada entre as partições.
+3. **Batching**: em vez de mandar uma mensagem por vez, o producer junta várias num lote (record batch) e envia de uma vez, o que é muito mais eficiente. As configs que controlam isso são `batch.size` (tamanho máximo do lote) e `linger.ms` (quanto tempo esperar juntando mensagens antes de mandar mesmo que o lote não tenha enchido). O lote ainda pode ser comprimido com `compression.type` (lz4, snappy, zstd).
+4. **Envio ao líder** da partição de destino.
+
+Depois de enviar, o producer espera uma confirmação. O nível dessa confirmação é o parâmetro **`acks`**, e ele é a decisão mais importante do lado do producer:
+
+| `acks` | O producer considera a mensagem enviada quando... | Risco                                                               |
+| ------ | ------------------------------------------------- | ------------------------------------------------------------------- |
+| `0`    | ele soltou a mensagem na rede, sem esperar nada   | perde mensagem se o líder não recebeu                               |
+| `1`    | o líder gravou a mensagem                         | perde mensagem se o líder cair antes de replicar para os seguidores |
+| `all`  | o líder e todos os seguidores do ISR gravaram     | mais lento, mas não perde mensagem confirmada                       |
+
+`acks=all` sozinho não basta: se o ISR encolheu para só o líder (todos os seguidores estão atrasados), "todos do ISR" vira "só o líder", e você está de volta ao risco do `acks=1`. Por isso `acks=all` costuma vir junto com **`min.insync.replicas=2`** na configuração do topic: se não houver pelo menos 2 réplicas no ISR, o Kafka recusa a escrita em vez de aceitar uma mensagem que pode se perder.
+
+Quando um envio falha por um motivo temporário (o líder mudou, deu timeout), o producer tenta de novo automaticamente, controlado por **`retries`**. O problema é que um retry pode duplicar a mensagem: o Kafka recebeu a primeira tentativa, a confirmação se perdeu no caminho, o producer reenvia. Para resolver isso existe **`enable.idempotence=true`**: o producer numera cada mensagem, e o broker ignora uma mensagem que já viu. Nas versões recentes do Kafka isso já vem ligado por padrão.
+
+## Fluxo do consumer
+
+Do outro lado, o consumer roda um ciclo:
+
+```mermaid
+flowchart LR
+    A[poll] --> B[fetch de registros<br/>a partir do offset atual]
+    B --> C[Desserializar]
+    C --> D[Processar]
+    D --> E[Commit do offset]
+    E --> A
+```
+
+O consumer chama `poll` num laço. A cada chamada, ele busca um lote de mensagens da partição a partir do offset onde parou, desserializa, processa e, quando termina, faz o **commit do offset**: registra até onde já leu, para não reprocessar tudo se reiniciar.
+
+Onde esse offset fica guardado? Num topic interno do próprio Kafka, o **`__consumer_offsets`**. Cada consumer group tem sua posição registrada lá.
+
+O commit pode ser:
+
+- **Automático** (`enable.auto.commit=true`): o consumer confirma o offset de tempos em tempos (`auto.commit.interval.ms`), sozinho. Simples, mas perigoso: se o offset é confirmado antes do processamento terminar e o consumer cai no meio, aquela mensagem é pulada.
+- **Manual**: o código chama o commit explicitamente, depois de ter certeza de que processou a mensagem. Dá mais controle e é o que se usa quando não pode perder nem duplicar mensagem à toa.
+
+Quando o consumer group não tem nenhum offset salvo (é um grupo novo, ou o offset expirou), o parâmetro **`auto.offset.reset`** decide por onde começar: `earliest` (do começo do que ainda existe na partição) ou `latest` (só o que chegar a partir de agora).
+
+Sempre que um consumer entra ou sai do grupo (deploy, crash, autoscaling), o Kafka faz um **rebalance**: redistribui as partições entre os consumers que sobraram. Durante o rebalance o consumo para por um instante, então rebalances muito frequentes atrapalham. As configs `session.timeout.ms` e `heartbeat.interval.ms` controlam quão rápido o Kafka considera um consumer morto, e `max.poll.records` limita quantas mensagens vêm por `poll` para o processamento de um lote não estourar o tempo e disparar um rebalance sem querer.
+
+## Retenção e compactação
+
+O Kafka não apaga uma mensagem quando ela é lida. Ele apaga quando a **política de retenção** manda. As duas mais comuns:
+
+- **Por tempo** (`retention.ms`): guarda as mensagens por X tempo (padrão 7 dias) e depois descarta as mais antigas, lidas ou não.
+- **Por tamanho** (`retention.bytes`): mantém a partição até um tamanho máximo, descartando o começo quando estoura.
+
+Existe uma terceira opção, o **log compaction**: em vez de apagar por idade, o Kafka mantém pelo menos a **última mensagem de cada chave** e vai limpando as versões antigas daquela mesma chave. Serve para topics que representam "o estado atual de cada coisa" em vez de "o histórico de eventos". Exemplo: um topic `perfil-usuario` com a chave sendo o ID do usuário. Não interessa guardar todas as 40 vezes que o usuário trocou de foto, só a foto atual. Com compactação, um consumer novo consegue reconstruir o estado de todos os usuários lendo o topic do começo, sem ele crescer para sempre.
+
+## Semânticas de entrega no Kafka
+
+A nota de [Garantias de Entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/) explica as três semânticas em geral (at-most-once, at-least-once, exactly-once). No Kafka, cada uma sai de uma combinação de configuração:
+
+- **At-most-once**: `acks` baixo no producer e/ou commit do offset no consumer **antes** de processar. Se algo cai no meio, a mensagem some, mas nunca duplica.
+- **At-least-once**: `acks=1` ou `acks=all` no producer e commit do offset **depois** de processar. É o comportamento padrão. Nada se perde, mas uma mensagem pode ser reprocessada.
+- **Exactly-once (EOS)**: `acks=all` + `enable.idempotence=true` no producer + a API de **transações** do Kafka, que permite escrever em várias partições e confirmar o offset do consumer de forma atômica (tudo ou nada).
+
+Mesmo com EOS ligado, o "exatamente uma vez" só vale dentro do Kafka. Se o seu consumer processa a mensagem e grava num banco externo, garantir que essa gravação também aconteça exatamente uma vez exige coordenação extra entre o Kafka e o banco. Por isso a saída mais comum na prática continua sendo at-least-once + idempotência no consumer, como descrito na nota de garantias.
+
+## Casos de uso comuns
+
+Onde o Kafka costuma aparecer:
+
+- **Eventos de e-commerce**: `pedido-criado`, `pagamento-aprovado`, `estoque-atualizado` publicados uma vez e consumidos por vários serviços independentes.
+- **Agregação de logs e métricas**: todos os serviços jogam seus logs num topic, e um pipeline consome e joga em Elasticsearch, S3 ou num data warehouse.
+- **Pipelines de dados em tempo real e streaming analytics**: processar eventos conforme chegam (contar, agrupar, detectar fraude) em vez de rodar um batch de madrugada.
+- **Backbone de microsserviços orientados a evento**: o meio pelo qual os serviços reagem a mudanças uns dos outros sem chamada síncrona, como visto em [Comunicação entre Serviços](/labs/web-dev/microsservicos/03-comunicacao-entre-servicos/).
+
+## Principais configurações
+
+Um resumo das configs citadas acima, para consulta rápida:
+
+| Lado           | Config                                           | Para que serve                                                      |
+| -------------- | ------------------------------------------------ | ------------------------------------------------------------------- |
+| Producer       | `acks`                                           | nível de confirmação de escrita (`0`, `1`, `all`)                   |
+| Producer       | `retries`                                        | reenvio automático de lotes que falharam                            |
+| Producer       | `batch.size` / `linger.ms`                       | tamanho do lote e tempo de espera antes de enviar                   |
+| Producer       | `compression.type`                               | compressão do lote (lz4, snappy, zstd)                              |
+| Producer       | `enable.idempotence`                             | evita duplicata em reenvios                                         |
+| Consumer       | `enable.auto.commit` / `auto.commit.interval.ms` | commit automático de offset e sua frequência                        |
+| Consumer       | `auto.offset.reset`                              | por onde começar quando não há offset salvo (`earliest` / `latest`) |
+| Consumer       | `max.poll.records`                               | máximo de mensagens por `poll`                                      |
+| Consumer       | `session.timeout.ms` / `heartbeat.interval.ms`   | quão rápido um consumer é considerado morto                         |
+| Topic / broker | `replication.factor`                             | número de cópias de cada partição                                   |
+| Topic / broker | `min.insync.replicas`                            | mínimo de réplicas no ISR para aceitar escrita com `acks=all`       |
+| Topic / broker | `retention.ms` / `retention.bytes`               | política de retenção por tempo ou por tamanho                       |
+
 ## Evolução de schema
 
 Um evento publicado no Kafka tem um formato: quais campos existem, que tipo cada um tem, quais são obrigatórios. Esse formato é o schema do evento, e ele raramente fica parado. Uma regra de negócio nova exige um campo a mais, um campo muda de tipo, um relacionamento fica mais complexo. O problema é que producer e consumer não fazem deploy juntos: são times diferentes, com ritmos de deploy diferentes, e no meio do caminho é comum ter um producer já publicando no schema novo enquanto um consumer ainda espera o schema antigo, ou o inverso, um consumer atualizado lendo mensagens que foram escritas há dias com o schema antigo (lembra que o Kafka guarda as mensagens por um tempo configurável, não apaga assim que alguém lê). Se essa mudança de schema não for pensada, o consumer quebra: um campo que ele espera não existe mais, um tipo não bate, a deserialização falha.
@@ -63,12 +199,12 @@ Isso é diferente de uma API REST, onde cliente e servidor costumam conversar em
 - **Full**: as duas garantias ao mesmo tempo, backward e forward. É o cenário mais seguro, mas também o mais restritivo sobre o que pode mudar no schema.
 - **Incompatível**: a mudança quebra o contrato em pelo menos uma direção, e algum consumer (novo ou antigo, dependendo do caso) para de conseguir ler a mensagem.
 
-| Tipo | Consumer novo lê mensagem antiga? | Consumer antigo lê mensagem nova? | Exemplo de mudança permitida |
-| --- | --- | --- | --- |
-| Backward | Sim | Não garantido | Remover um campo, ou adicionar um campo opcional com valor default |
-| Forward | Não garantido | Sim | Adicionar um campo, ou remover um campo opcional |
-| Full | Sim | Sim | Só adicionar campos opcionais com default, nunca remover nem renomear |
-| Incompatível | Não | Não | Renomear um campo, mudar o tipo de um campo existente, tornar um campo opcional em obrigatório |
+| Tipo         | Consumer novo lê mensagem antiga? | Consumer antigo lê mensagem nova? | Exemplo de mudança permitida                                                                   |
+| ------------ | --------------------------------- | --------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Backward     | Sim                               | Não garantido                     | Remover um campo, ou adicionar um campo opcional com valor default                             |
+| Forward      | Não garantido                     | Sim                               | Adicionar um campo, ou remover um campo opcional                                               |
+| Full         | Sim                               | Sim                               | Só adicionar campos opcionais com default, nunca remover nem renomear                          |
+| Incompatível | Não                               | Não                               | Renomear um campo, mudar o tipo de um campo existente, tornar um campo opcional em obrigatório |
 
 Na prática, a recomendação geral é mirar em compatibilidade backward como padrão. Algumas boas práticas seguem direto dessa lógica:
 
@@ -77,4 +213,3 @@ Na prática, a recomendação geral é mirar em compatibilidade backward como pa
 - **Versionar eventos** quando a mudança é grande demais para caber numa evolução compatível, como reestruturar o payload inteiro. Nesse caso, um campo de versão no próprio evento, ou até um topic novo (`pedidos-criados-v2`), deixa explícito que aquilo é um contrato diferente e dá tempo para migrar os consumers de um lado para o outro sem quebra.
 
 Nada disso fica garantido sozinho: alguém, ou alguma ferramenta, precisa checar se uma mudança de schema realmente respeita a regra de compatibilidade antes de ir para produção. É aí que entra o **Schema Registry**, o mais usado é o Confluent Schema Registry: um serviço central que guarda todas as versões de schema de cada topic, normalmente escritas em **Avro** ou **Protobuf**, formatos binários compactos com schema bem definido, ao contrário de um JSON solto sem contrato nenhum. Antes de aceitar um schema novo, o registry valida contra a regra de compatibilidade configurada para aquele topic (backward, forward ou full) e recusa a publicação se a mudança quebrar o contrato. Isso tira a checagem de compatibilidade da cabeça de cada dev e coloca num ponto único, automatizado, que barra o problema antes dele virar incidente em produção.
-

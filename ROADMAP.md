@@ -96,10 +96,10 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 ### `mensageria/` (criada via `/labs-organize`)
 
 - 🚧 Filas, producer/consumer/broker, comunicação assíncrona (`01-filas-e-mensageria.md`)
-- 🚧 Kafka: topic, partition, offset, consumer group, replication, evolução de schema/Schema Registry (`02-kafka.md`, seção de evolução de schema adicionada via `/labs-organize`)
+- ✅ Kafka: topic, partition, offset, consumer group, replication, arquitetura de cluster (ISR, KRaft), fluxo de producer/consumer, acks, retenção/compactação, semânticas de entrega, tabela de configs e evolução de schema/Schema Registry (`02-kafka.md`, seções de arquitetura e operação adicionadas e preenchidas via `/labs-organize`)
 - 🚧 RabbitMQ: exchanges, filas, bindings, push-based, comparação com Kafka (`03-rabbitmq.md`, criada via `/labs-organize`, aguardando `/labs-fill`)
 - 🚧 DLQ, ordenação e semânticas de entrega (at-most/at-least/exactly-once) (`04-garantias-de-entrega.md`, renumerada de `03` para `04` via `/labs-organize`)
-- Todas aguardando `/labs-fill`
+- `01`, `03` e `04` aguardando `/labs-fill`
 - ⬜ SQS/SNS em detalhe (fora do escopo desta rodada)
 
 ### `resiliencia/` (criada via `/labs-organize`)
