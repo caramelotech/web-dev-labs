@@ -16,8 +16,8 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   fundamentos/                # HTML e CSS
   engenharia-de-software/     # Design de código, princípios SOLID
   apis/                       # HTTP, REST, segurança/evolução, outros estilos de comunicação e classificação por público
-  banco-de-dados/             # SQL, ACID, CAP/PACELC e NoSQL
-  system-design/               # Fundamentos, capacity planning, latência e metodologia de projeto
+  banco-de-dados/             # SQL, ACID, CAP/PACELC, NoSQL e arquitetura interna de engines relacionais (Postgres vs MySQL)
+  system-design/              # Fundamentos, capacity planning, latência e metodologia de projeto
   escalabilidade/             # Escala vertical/horizontal, CDN, load balancer, service discovery, API Gateway, cache, rate limiting
   sistemas-distribuidos/      # Consistência forte vs eventual e replicação
   transacoes-distribuidas/    # Consistência entre microsserviços, Sagas, dual-write

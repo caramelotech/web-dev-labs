@@ -43,6 +43,7 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 - ✅ Isolation levels na prática: race conditions, locking pessimista/otimista, mutex (`06-controle-de-concorrencia.md`)
 - ✅ Ledger Pattern (`07-ledger-pattern.md`)
 - 🚧 NoSQL: key-value, document, wide-column, graph; SQL vs NoSQL (`08-nosql.md` criado via `/labs-organize`, aguardando `/labs-fill`)
+- ✅ Postgres vs MySQL: arquitetura interna - motor único vs storage engines, processo vs thread, heap vs índice clusterizado, MVCC (heap tuple vs undo log), WAL vs redo/undo/binlog (`09-postgres-vs-mysql.md`, criada e preenchida via `/labs-organize`)
 - ⬜ Índices e planos de execução
 - ⬜ Data modeling (relacional vs NoSQL)
 
