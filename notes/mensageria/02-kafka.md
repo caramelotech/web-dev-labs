@@ -160,12 +160,7 @@ Mesmo com EOS ligado, o "exatamente uma vez" só vale dentro do Kafka. Se o seu 
 
 ## Casos de uso comuns
 
-Onde o Kafka costuma aparecer:
-
-- **Eventos de e-commerce**: `pedido-criado`, `pagamento-aprovado`, `estoque-atualizado` publicados uma vez e consumidos por vários serviços independentes.
-- **Agregação de logs e métricas**: todos os serviços jogam seus logs num topic, e um pipeline consome e joga em Elasticsearch, S3 ou num data warehouse.
-- **Pipelines de dados em tempo real e streaming analytics**: processar eventos conforme chegam (contar, agrupar, detectar fraude) em vez de rodar um batch de madrugada.
-- **Backbone de microsserviços orientados a evento**: o meio pelo qual os serviços reagem a mudanças uns dos outros sem chamada síncrona, como visto em [Comunicação entre Serviços](/labs/web-dev/microsservicos/03-comunicacao-entre-servicos/).
+O Kafka costuma aparecer em cinco padrões recorrentes: pipelines de dados em tempo real, sistemas orientados a evento, processamento de streams, logs e métricas centralizados e Change Data Capture (CDC). Cada um, com a arquitetura típica e os trade-offs, está na nota [Casos de Uso do Kafka](/labs/web-dev/mensageria/06-casos-de-uso-do-kafka/).
 
 ## Principais configurações
 
