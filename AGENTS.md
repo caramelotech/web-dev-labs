@@ -13,25 +13,27 @@ As notas são publicadas no site do Caramelo Labs em `https://caramelotech.com.b
 ```
 notes/           # Notas em Markdown puro - cada arquivo vira uma página no site
   index.md                    # Página de entrada do lab no site
-  fundamentos/                # HTML e CSS
-  engenharia-de-software/     # Design de código, princípios SOLID
-  apis/                       # HTTP, REST, segurança/evolução, outros estilos de comunicação e classificação por público
-  banco-de-dados/             # SQL, ACID, CAP/PACELC, NoSQL e arquitetura interna de engines relacionais (Postgres vs MySQL)
-  system-design/              # Fundamentos, capacity planning, latência e metodologia de projeto
-  escalabilidade/             # Escala vertical/horizontal, CDN, load balancer, service discovery, API Gateway, cache, rate limiting
-  sistemas-distribuidos/      # Consistência forte vs eventual e replicação
-  transacoes-distribuidas/    # Consistência entre microsserviços, Two-Phase Commit, Sagas, dual-write, Outbox
-  mensageria/                 # Filas, Kafka, RabbitMQ, evolução de schema e garantias de entrega
-  microsservicos/             # Fundamentos, decomposição/bounded context, comunicação entre serviços, config server
-  resiliencia/                # Timeout, retry, circuit breaker, idempotência, disponibilidade
-  observabilidade/            # Logs, metrics, traces e ferramentas (Zipkin, Prometheus, Grafana, ELK, OpenTelemetry)
-  entrega-continua/           # Docker, Kubernetes e CI/CD para microsserviços
-  estudos-de-caso/            # System design na prática (ex: encurtador de URL)
-  ferramentas/                # Git, commits, PRs, fluxos, GPG
+  fundamentos/                # Fundamentos de front-end: HTML e CSS
+  engenharia-de-software/     # Design e qualidade de código: princípios, padrões e testes
+  apis/                       # Projeto de APIs: protocolos, estilos de comunicação, segurança e evolução
+  banco-de-dados/             # Bancos relacionais e NoSQL: modelo, garantias transacionais e arquitetura interna
+  system-design/              # Projeto de sistemas: fundamentos, trade-offs e metodologia
+  escalabilidade/             # Escalar carga e a infraestrutura que sustenta isso (cache, load balancer, gateway, CDN, ...)
+  sistemas-distribuidos/      # Consistência, replicação e coordenação entre nós
+  transacoes-distribuidas/    # Manter dados coerentes entre serviços sem uma transação única (Saga, Outbox, ...)
+  mensageria/                 # Comunicação assíncrona: filas, brokers (Kafka, RabbitMQ) e suas garantias de entrega
+  microsservicos/             # Arquitetura de microsserviços: decomposição, comunicação e operação
+  resiliencia/                # Padrões para o sistema aguentar falha (timeout, retry, circuit breaker, disponibilidade)
+  observabilidade/            # Enxergar o sistema em produção: logs, métricas, traces e ferramentas
+  entrega-continua/           # Empacotar e entregar: containers, orquestração e CI/CD
+  estudos-de-caso/            # System design na prática: problemas resolvidos ponta a ponta
+  ferramentas/                # Ferramental de trabalho: Git, Conventional Commits, PRs, fluxos, GPG
 sidebar.json     # Seções da barra lateral no site (labels e ordem)
 examples/        # Exercícios e projetos práticos (não publicados no site)
-ROADMAP.md       # Backlog de próximos tópicos a abordar (não publicado no site)
+ROADMAP.md       # Backlog do que ainda falta cobrir (não publicado no site)
 ```
+
+O comentário ao lado de cada pasta é o **escopo** dela, não um índice das notas. Adicionar uma nota dentro de um escopo já descrito não exige atualizar esta lista - só mexa aqui quando criar uma seção nova ou quando o escopo de uma pasta mudar de fato.
 
 A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da escrita de código (Fundamentos, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade, Entrega Contínua e System Design na Prática).
 
@@ -46,7 +48,7 @@ A ordem das seções segue uma progressão de estudo pensada para entrevistas de
 
 ### Adicionar uma nova nota
 
-1. **Escolha o local:** `fundamentos/`, `engenharia-de-software/`, `apis/`, `banco-de-dados/`, `system-design/`, `escalabilidade/`, `sistemas-distribuidos/`, `transacoes-distribuidas/`, `mensageria/`, `microsservicos/`, `resiliencia/`, `observabilidade/`, `entrega-continua/`, `estudos-de-caso/` ou `ferramentas/`
+1. **Escolha o local:** a pasta cujo escopo (ver [Estrutura](#estrutura)) cobre o tema. Se nenhuma cobre nem parcialmente e há 2-3 tópicos relacionados previstos, é caso de seção nova
 2. **Nomeie com prefixo numérico** para controlar a ordem na barra lateral: `01-nome.md`, `02-nome.md`
 3. **Primeira linha = título:** comece o arquivo com `# Título da Nota` - o site usa esse H1 como título da página
 4. **Sem frontmatter:** escreva direto o Markdown (frontmatter ainda é aceito para campos extras como `description` e `tags`, mas o padrão é não usar)
