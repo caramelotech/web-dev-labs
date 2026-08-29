@@ -31,7 +31,7 @@ Um sistema que escala mas cai na primeira falha de rede não está pronto. Apliq
 
 ## Etapa 6: Dados
 
-Volte para a camada de dados com mais detalhe: SQL ou NoSQL (veja [NoSQL](/labs/web-dev/banco-de-dados/08-nosql/)), como modelar as entidades, quais índices o padrão de consulta exige, como a replicação está configurada e qual nível de consistência cada tipo de dado exige (veja [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/)).
+Volte para a camada de dados com mais detalhe: SQL ou NoSQL (veja [NoSQL](/labs/web-dev/banco-de-dados/09-nosql/)), como modelar as entidades, quais índices o padrão de consulta exige, como a replicação está configurada e qual nível de consistência cada tipo de dado exige (veja [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/)).
 
 ## Etapa 7: Performance
 
@@ -61,17 +61,17 @@ Não existe sistema imune a todos esses cenários ao mesmo tempo, o objetivo nã
 
 Ao longo de todas as notas de system design deste lab, um conjunto recorrente de padrões aparece repetidas vezes, atacando os mesmos problemas de formas diferentes. Em vez de repetir a explicação de cada um aqui, esta lista serve como índice de onde cada padrão é coberto em profundidade:
 
-| Padrão | Onde é coberto |
-| --- | --- |
-| Retry, Timeout, Circuit Breaker, Bulkhead | [Timeout, Retry, Circuit Breaker e Bulkhead](/labs/web-dev/resiliencia/01-timeout-retry-circuit-breaker-e-bulkhead/) |
-| Idempotency | [Idempotência](/labs/web-dev/resiliencia/02-idempotencia/) |
-| Rate Limiting, Backpressure | [Rate Limiting](/labs/web-dev/escalabilidade/09-rate-limiting/) |
-| Cache | [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/) |
-| Queue, Pub/Sub | [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/) |
-| Replication | [Replicação e Escalabilidade do Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/) e [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/) |
-| Sharding | [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/) |
-| Load Balancing | [Load Balancer](/labs/web-dev/escalabilidade/05-load-balancer/) |
-| Health Check | [Load Balancer](/labs/web-dev/escalabilidade/05-load-balancer/) (seção Health Checks) |
-| Failover | [Load Balancer](/labs/web-dev/escalabilidade/05-load-balancer/) e [Disponibilidade](/labs/web-dev/resiliencia/03-disponibilidade/) |
+| Padrão                                    | Onde é coberto                                                                                                                                                                                                  |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Retry, Timeout, Circuit Breaker, Bulkhead | [Timeout, Retry, Circuit Breaker e Bulkhead](/labs/web-dev/resiliencia/01-timeout-retry-circuit-breaker-e-bulkhead/)                                                                                            |
+| Idempotency                               | [Idempotência](/labs/web-dev/resiliencia/02-idempotencia/)                                                                                                                                                      |
+| Rate Limiting, Backpressure               | [Rate Limiting](/labs/web-dev/escalabilidade/09-rate-limiting/)                                                                                                                                                 |
+| Cache                                     | [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/)                                                                                                                                                 |
+| Queue, Pub/Sub                            | [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/)                                                                                                                                           |
+| Replication                               | [Replicação e Escalabilidade do Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/) e [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/) |
+| Sharding                                  | [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/)                                                                                                           |
+| Load Balancing                            | [Load Balancer](/labs/web-dev/escalabilidade/05-load-balancer/)                                                                                                                                                 |
+| Health Check                              | [Load Balancer](/labs/web-dev/escalabilidade/05-load-balancer/) (seção Health Checks)                                                                                                                           |
+| Failover                                  | [Load Balancer](/labs/web-dev/escalabilidade/05-load-balancer/) e [Disponibilidade](/labs/web-dev/resiliencia/03-disponibilidade/)                                                                              |
 
 Uma boa resposta de system design, na prática, é reconhecer qual desses padrões resolve qual dos "e se" da etapa anterior, e justificar por que ele se encaixa (ou não vale a complexidade) para o problema específico em mãos.
