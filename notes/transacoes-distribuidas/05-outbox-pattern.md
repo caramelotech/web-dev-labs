@@ -1,10 +1,10 @@
 # Transactional Outbox Pattern
 
-A nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/03-escrita-dupla/) apresenta o Outbox Pattern como uma das estratégias para resolver o problema da escrita dupla, de forma resumida. Esta nota é o aprofundamento dedicado desse padrão: como ele funciona por dentro, como estruturar a tabela outbox, como publicar os eventos, e quais cuidados operacionais ele exige na prática.
+A nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/) apresenta o Outbox Pattern como uma das estratégias para resolver o problema da escrita dupla, de forma resumida. Esta nota é o aprofundamento dedicado desse padrão: como ele funciona por dentro, como estruturar a tabela outbox, como publicar os eventos, e quais cuidados operacionais ele exige na prática.
 
 ## O problema, relembrando
 
-Quando uma operação de negócio precisa gravar um dado no banco **e** publicar um evento sobre essa mudança (ex: criar um pedido e avisar outros serviços que o pedido foi criado), não existe uma transação distribuída confiável entre o banco de dados e o message broker. Se a aplicação salva no banco e cai antes de publicar o evento, o evento nunca é publicado. Se publica o evento antes de salvar no banco e o `INSERT` falha, um evento "mentiroso" já saiu para o resto do sistema. Os detalhes desse problema estão na nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/03-escrita-dupla/), aqui o foco é só na solução.
+Quando uma operação de negócio precisa gravar um dado no banco **e** publicar um evento sobre essa mudança (ex: criar um pedido e avisar outros serviços que o pedido foi criado), não existe uma transação distribuída confiável entre o banco de dados e o message broker. Se a aplicação salva no banco e cai antes de publicar o evento, o evento nunca é publicado. Se publica o evento antes de salvar no banco e o `INSERT` falha, um evento "mentiroso" já saiu para o resto do sistema. Os detalhes desse problema estão na nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/), aqui o foco é só na solução.
 
 ## A ideia central: publicar dentro da própria transação
 
@@ -68,7 +68,7 @@ LIMIT 100;
 
 ### CDC (Change Data Capture)
 
-Em vez de a aplicação consultar a tabela de tempos em tempos, uma ferramenta de CDC (como o Debezium, já mencionado na nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/03-escrita-dupla/)) observa diretamente o log de transações do banco (o mesmo _write-ahead log_ usado para durabilidade, veja [ACID](/labs/web-dev/banco-de-dados/02-acid/)) e publica o evento assim que a linha é inserida na outbox, sem precisar consultar a tabela ativamente. É mais rápido e não sobrecarrega o banco com consultas repetidas, ao custo de uma peça de infraestrutura a mais para operar.
+Em vez de a aplicação consultar a tabela de tempos em tempos, uma ferramenta de CDC (como o Debezium, já mencionado na nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/)) observa diretamente o log de transações do banco (o mesmo _write-ahead log_ usado para durabilidade, veja [ACID](/labs/web-dev/banco-de-dados/02-acid/)) e publica o evento assim que a linha é inserida na outbox, sem precisar consultar a tabela ativamente. É mais rápido e não sobrecarrega o banco com consultas repetidas, ao custo de uma peça de infraestrutura a mais para operar.
 
 ## Idempotência: uma peça obrigatória, não opcional
 

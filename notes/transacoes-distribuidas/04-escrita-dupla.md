@@ -53,7 +53,7 @@ Tem alta complexidade e baixa adoção em microsserviços modernos.
 
 ### Outbox Pattern
 
-Persiste dados e evento no mesmo banco, na mesma transação. Um processo separado lê a tabela `outbox` e publica no broker. Aprofundamento dedicado em [Transactional Outbox Pattern](/labs/web-dev/transacoes-distribuidas/04-outbox-pattern/).
+Persiste dados e evento no mesmo banco, na mesma transação. Um processo separado lê a tabela `outbox` e publica no broker. Aprofundamento dedicado em [Transactional Outbox Pattern](/labs/web-dev/transacoes-distribuidas/05-outbox-pattern/).
 
 **Vantagens**: atomicidade local, eventos não se perdem, desacoplamento.
 

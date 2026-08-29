@@ -32,6 +32,8 @@ Como garantir consistência em um fluxo como:
 
 Se cada passo está em um serviço diferente?
 
+Existem duas famílias de resposta: tentar manter consistência forte com um protocolo de commit distribuído como o [Two-Phase Commit](/labs/web-dev/transacoes-distribuidas/02-two-phase-commit/), ou abrir mão da consistência forte e coordenar transações locais com compensação, que é a ideia das sagas.
+
 ## Sagas
 
 Uma saga é uma sequência de transações locais:
@@ -44,6 +46,8 @@ Exemplo:
 1. Pedido criado
 2. Pagamento falhou
 3. Pedido cancelado como compensação
+
+O detalhamento do padrão (tipos de passo, projeto de ações compensatórias, isolamento) está na nota [Saga Pattern](/labs/web-dev/transacoes-distribuidas/03-saga/).
 
 ## Orquestração vs Coreografia
 
@@ -115,4 +119,3 @@ Não existe controlador central. Cada serviço reage a eventos.
 ## Referências
 
 - [System Design Interview. A pergunta mais comum em entrevista sobre microsservicos | Leonardo Zamariola](https://www.youtube.com/watch?v=bBYjxqLSXeU)
-

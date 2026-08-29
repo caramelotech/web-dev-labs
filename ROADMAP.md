@@ -88,10 +88,10 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 ### `transacoes-distribuidas/`
 
 - ✅ Consistência transacional: monolito vs microsserviços, orquestração vs coreografia (`01-consistencia-transacional.md`)
-- 🚧 Saga pattern em detalhe (`02-saga.md` existe, vazio - a nota `01` já cobre o básico, esta seria um aprofundamento dedicado)
-- ✅ Dual-write problem, Outbox, CDC, Event Sourcing (`03-escrita-dupla.md`)
-- ✅ Transactional Outbox Pattern em detalhe (`04-outbox-pattern.md`)
-- ⬜ Two-Phase Commit (2PC)
+- ✅ Two-Phase Commit (2PC): coordenador/participantes, fases prepare-vote e commit-rollback, limitações, comparação com Saga (`02-two-phase-commit.md`, criada e preenchida via `/labs-organize`)
+- ✅ Saga pattern em detalhe: tipos de passo, projeto de compensação, isolamento, coreografia vs orquestração aprofundadas (`03-saga.md`, renumerada de `02` e preenchida via `/labs-organize`)
+- ✅ Dual-write problem, Outbox, CDC, Event Sourcing (`04-escrita-dupla.md`, renumerada de `03`)
+- ✅ Transactional Outbox Pattern em detalhe (`05-outbox-pattern.md`, renumerada de `04`)
 
 ### `mensageria/` (criada via `/labs-organize`)
 
@@ -143,4 +143,4 @@ Legenda: ✅ nota existe e tem conteúdo · 🚧 pasta/arquivo criado mas vazio 
 ## Notas de escopo
 
 - Segurança (authn/authz, OWASP, OAuth2, JWT) ganhou uma primeira cobertura em `apis/02-seguranca-e-evolucao-de-apis.md`. Performance ainda aparece espalhada nas notas que já a usam na prática (ex: índices dentro de Databases).
-- Prioridade sugerida: fechar os stubs vazios (SOLID, Saga) antes de abrir pastas novas.
+- Prioridade sugerida: fechar os stubs vazios (SOLID) antes de abrir pastas novas.

@@ -11,7 +11,7 @@ Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao
 - **System Design** - fundamentos, capacity planning, latência e metodologia de projeto
 - **Escalabilidade e Infraestrutura** - escala vertical/horizontal, CDN, load balancer, service discovery, API Gateway, cache e rate limiting
 - **Sistemas Distribuídos** - consistência forte vs eventual e replicação
-- **Transações Distribuídas** - consistência entre microsserviços, Sagas, dual-write
+- **Transações Distribuídas** - consistência entre microsserviços, Two-Phase Commit, Sagas, dual-write e Outbox
 - **Mensageria** - filas, Kafka, RabbitMQ, evolução de schema e garantias de entrega
 - **Microsserviços** - fundamentos, decomposição e bounded context, comunicação entre serviços, config server
 - **Resiliência** - timeout, retry, circuit breaker, idempotência e disponibilidade

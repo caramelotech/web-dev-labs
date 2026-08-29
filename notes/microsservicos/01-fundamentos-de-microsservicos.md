@@ -51,7 +51,7 @@ Microsserviços tendem a valer a pena quando:
 O que você ganha em autonomia de time e escalabilidade seletiva, você paga em:
 
 - **Complexidade de rede**: chamadas que antes eram uma função virando função viram chamadas HTTP/gRPC sujeitas a latência, timeout e falha parcial
-- **Consistência de dados**: sem uma transação única cobrindo tudo, problemas como o [dual-write](/labs/web-dev/transacoes-distribuidas/03-escrita-dupla/) aparecem
+- **Consistência de dados**: sem uma transação única cobrindo tudo, problemas como o [dual-write](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/) aparecem
 - **Overhead operacional**: cada serviço novo é mais um pipeline de deploy, mais um conjunto de métricas, mais um ponto de falha para monitorar
 - **Testes de integração mais caros**: testar o fluxo completo exige subir vários serviços, não só rodar uma suíte local
 

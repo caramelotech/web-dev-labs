@@ -20,7 +20,7 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   system-design/              # Fundamentos, capacity planning, latência e metodologia de projeto
   escalabilidade/             # Escala vertical/horizontal, CDN, load balancer, service discovery, API Gateway, cache, rate limiting
   sistemas-distribuidos/      # Consistência forte vs eventual e replicação
-  transacoes-distribuidas/    # Consistência entre microsserviços, Sagas, dual-write
+  transacoes-distribuidas/    # Consistência entre microsserviços, Two-Phase Commit, Sagas, dual-write, Outbox
   mensageria/                 # Filas, Kafka, RabbitMQ, evolução de schema e garantias de entrega
   microsservicos/             # Fundamentos, decomposição/bounded context, comunicação entre serviços, config server
   resiliencia/                # Timeout, retry, circuit breaker, idempotência, disponibilidade
