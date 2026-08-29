@@ -111,7 +111,7 @@ Depois de enviar, o producer espera uma confirmação. O nível dessa confirmaç
 
 `acks=all` sozinho não basta: se o ISR encolheu para só o líder (todos os seguidores estão atrasados), "todos do ISR" vira "só o líder", e você está de volta ao risco do `acks=1`. Por isso `acks=all` costuma vir junto com **`min.insync.replicas=2`** na configuração do topic: se não houver pelo menos 2 réplicas no ISR, o Kafka recusa a escrita em vez de aceitar uma mensagem que pode se perder.
 
-Quando um envio falha por um motivo temporário (o líder mudou, deu timeout), o producer tenta de novo automaticamente, controlado por **`retries`**. O problema é que um retry pode duplicar a mensagem: o Kafka recebeu a primeira tentativa, a confirmação se perdeu no caminho, o producer reenvia. Para resolver isso existe **`enable.idempotence=true`**: o producer numera cada mensagem, e o broker ignora uma mensagem que já viu. Nas versões recentes do Kafka isso já vem ligado por padrão.
+Quando um envio falha por um motivo temporário (o líder mudou, deu timeout), o producer tenta de novo automaticamente, controlado por **`retries`**. O problema é que um retry pode duplicar a mensagem: o Kafka recebeu a primeira tentativa, a confirmação se perdeu no caminho, o producer reenvia. Para resolver isso existe **`enable.idempotence=true`**: o producer numera cada mensagem, e o broker ignora uma mensagem que já viu. Nas versões recentes do Kafka isso já vem ligado por padrão. O mecanismo (Producer ID, números de sequência) e o que ele cobre estão detalhados em [Producer Idempotente no Kafka](/labs/web-dev/mensageria/05-producer-idempotente/).
 
 ## Fluxo do consumer
 
