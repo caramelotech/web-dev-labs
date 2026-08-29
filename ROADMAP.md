@@ -89,7 +89,7 @@ Sem lacunas planejadas no momento.
 
 Escopo: arquitetura de microsserviços - fundamentos, decomposição/bounded context, comunicação entre serviços, config server e endpoints operacionais.
 
-- ⬜ Service mesh (BFF e adaptação de payload já cobertos em `escalabilidade/07-api-gateway.md`)
+Sem lacunas planejadas no momento.
 
 ### `observabilidade/`
 

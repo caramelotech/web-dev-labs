@@ -2,6 +2,8 @@
 
 Em um sistema distribuído, toda chamada entre dois serviços pode falhar: a rede pode cair, o serviço do outro lado pode estar lento, sobrecarregado ou fora do ar. Os padrões desta nota existem para lidar com esse tipo de falha sem deixar o problema de um serviço derrubar todos os outros.
 
+Esses padrões podem ser implementados em três lugares: numa biblioteca dentro da aplicação (como o Resilience4j no ecossistema Spring), numa camada de infraestrutura entre os serviços (um [Service Mesh](/labs/web-dev/microsservicos/05-service-mesh/)), ou na borda do sistema (um API Gateway ou NGINX). O funcionamento de cada padrão é o mesmo nos três casos, muda só onde o código roda.
+
 ## Timeout
 
 Timeout é o tempo máximo que você espera por uma resposta antes de desistir. Sem timeout, uma chamada para um serviço travado pode prender a thread (ou a conexão) que fez a chamada indefinidamente, e isso se espalha: se o serviço A chama o serviço B sem timeout, e B está travado, A também trava. Com dezenas de requisições acumulando, A fica sem recursos livres e para de responder, mesmo sem nenhum bug no próprio código de A.

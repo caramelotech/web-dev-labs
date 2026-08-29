@@ -43,4 +43,6 @@ As chamadas de rede entre serviços também podem falhar de formas que uma chama
 - **Circuit breaker**: parar de tentar chamar um serviço que está claramente fora do ar, em vez de continuar gastando tempo e recursos em chamadas fadadas ao fracasso.
 - **Bulkhead**: isolar os recursos usados para chamar cada dependência, para que uma dependência lenta não consuma os recursos que seriam usados para chamar as outras.
 
+Service discovery, load balancing e esses padrões de resiliência não precisam viver no código de cada serviço: dá para delegar tudo a um [Service Mesh](/labs/web-dev/microsservicos/05-service-mesh/), uma camada de infraestrutura que intercepta a comunicação entre serviços e aplica essas regras de forma uniforme.
+
 O fio condutor de todos esses padrões é o mesmo: numa arquitetura de microsserviços, a rede entre os serviços é uma fonte constante de falha parcial, e o design da comunicação precisa assumir isso desde o início, não tratar como exceção rara.
