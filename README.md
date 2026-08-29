@@ -2,9 +2,6 @@
 
 Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao system design.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](.github/CONTRIBUTING.md)
-
 As notas deste repositório são publicadas no site do [Caramelo Labs](https://caramelotech.com.br/labs/web-dev/).
 
 ## Conteúdo

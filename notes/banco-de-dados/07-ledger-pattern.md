@@ -2,7 +2,7 @@
 
 A nota de [Controle de Concorrência e Race Conditions](/labs/web-dev/banco-de-dados/06-controle-de-concorrencia/) mostra várias formas de proteger um saldo contra atualizações concorrentes: execução sequencial, atualização atômica, mutex, locks pessimistas e otimistas. Todas elas partem da mesma ideia: existe **um campo mutável** (o saldo) que duas execuções disputam para escrever, e o trabalho é impedir que uma pise na outra.
 
-O Ledger propõe outra saída: em vez de proteger o campo mutável, **eliminar o campo mutável**. Isso o torna, na prática, um parente próximo do [Event Sourcing](/labs/web-dev/transacoes-distribuidas/03-escrita-dupla/) (já visto na nota de Dual-Write Problem): ao invés de guardar apenas o estado atual, o sistema guarda a sequência de eventos que levou até ele, e trata essa sequência como a fonte da verdade.
+O Ledger propõe outra saída: em vez de proteger o campo mutável, **eliminar o campo mutável**. Isso o torna, na prática, um parente próximo do [Event Sourcing](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/) (já visto na nota de Dual-Write Problem): ao invés de guardar apenas o estado atual, o sistema guarda a sequência de eventos que levou até ele, e trata essa sequência como a fonte da verdade.
 
 ## O que é um ledger
 
@@ -84,4 +84,4 @@ Para um contador simples sem essas exigências (curtidas de um post, visualizaç
 - Isso resolve concorrência porque cada operação vira uma inserção independente, que nunca sobrescreve outra, em vez de uma disputa por um único campo.
 - Os benefícios (histórico, auditoria, rastreabilidade, detecção de divergência) vêm ao custo de mais complexidade arquitetural.
 - Para não pagar o custo de recalcular tudo do zero a cada consulta, sistemas reais mantêm um saldo materializado (projeção otimizada) por cima da tabela de transações (fonte de verdade), geralmente com snapshots periódicos.
-- O padrão é conceitualmente o mesmo do [Event Sourcing](/labs/web-dev/transacoes-distribuidas/03-escrita-dupla/), aplicado especificamente ao domínio financeiro.
+- O padrão é conceitualmente o mesmo do [Event Sourcing](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/), aplicado especificamente ao domínio financeiro.

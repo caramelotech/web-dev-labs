@@ -26,7 +26,7 @@ Um monólito é mais simples de desenvolver, testar e implantar no começo, mas 
 
 ### SQL vs NoSQL
 
-Detalhado em [NoSQL](/labs/web-dev/banco-de-dados/08-nosql/). Relacional dá consistência forte e um modelo de dados rígido e previsível; NoSQL dá flexibilidade de esquema e escala horizontal mais natural, ao custo de garantias mais fracas.
+Detalhado em [NoSQL](/labs/web-dev/banco-de-dados/09-nosql/). Relacional dá consistência forte e um modelo de dados rígido e previsível; NoSQL dá flexibilidade de esquema e escala horizontal mais natural, ao custo de garantias mais fracas.
 
 ### Cache vs consistência
 
