@@ -74,7 +74,7 @@ Sem lacunas planejadas no momento.
 
 ### `mensageria/`
 
-Escopo: comunicação assíncrona - filas, brokers (Kafka, RabbitMQ), evolução de schema, garantias de entrega, idempotência e casos de uso.
+Escopo: comunicação assíncrona - arquitetura orientada a eventos, filas, brokers (Kafka, RabbitMQ), evolução de schema, garantias de entrega, idempotência e casos de uso.
 
 - ⬜ SQS/SNS em detalhe (fora do escopo desta rodada)
 

@@ -12,7 +12,7 @@ Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao
 - **Escalabilidade e Infraestrutura** - aguentar mais carga: escala, cache, load balancer, API Gateway, CDN
 - **Sistemas Distribuídos** - quando os dados vivem em várias máquinas: consistência, replicação e coordenação entre nós
 - **Transações Distribuídas** - manter tudo coerente sem uma transação única: Saga, Outbox e afins
-- **Mensageria** - comunicação assíncrona com filas e brokers (Kafka, RabbitMQ) e suas garantias
+- **Mensageria** - comunicação assíncrona: arquitetura orientada a eventos, filas e brokers (Kafka, RabbitMQ) e suas garantias
 - **Microsserviços** - dividir o sistema em serviços: decomposição, comunicação e operação
 - **Resiliência** - continuar de pé quando algo falha: timeout, retry, circuit breaker, disponibilidade
 - **Observabilidade** - enxergar o que acontece em produção: logs, métricas, traces e ferramentas

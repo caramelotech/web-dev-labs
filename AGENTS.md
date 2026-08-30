@@ -21,7 +21,7 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   escalabilidade/             # Escalar carga e a infraestrutura que sustenta isso (cache, load balancer, gateway, CDN, ...)
   sistemas-distribuidos/      # Consistência, replicação e coordenação entre nós
   transacoes-distribuidas/    # Manter dados coerentes entre serviços sem uma transação única (Saga, Outbox, ...)
-  mensageria/                 # Comunicação assíncrona: filas, brokers (Kafka, RabbitMQ) e suas garantias de entrega
+  mensageria/                 # Comunicação assíncrona: arquitetura orientada a eventos, filas, brokers (Kafka, RabbitMQ) e suas garantias de entrega
   microsservicos/             # Arquitetura de microsserviços: decomposição, comunicação e operação
   resiliencia/                # Padrões para o sistema aguentar falha (timeout, retry, circuit breaker, disponibilidade)
   observabilidade/            # Enxergar o sistema em produção: logs, métricas, traces e ferramentas
