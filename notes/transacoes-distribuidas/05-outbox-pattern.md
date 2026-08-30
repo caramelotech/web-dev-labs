@@ -22,7 +22,7 @@ VALUES (123, 'PedidoCriado', '{"pedidoId": 123, "clienteId": 456}', now());
 COMMIT;
 ```
 
-Como as duas gravações acontecem dentro de uma única transação ACID (veja [ACID](/labs/web-dev/banco-de-dados/02-acid/)), ou as duas são salvas, ou nenhuma é. Não existe mais o cenário onde o pedido foi criado mas o evento se perdeu, ou vice-versa: a atomicidade do banco garante os dois juntos.
+Como as duas gravações acontecem dentro de uma única transação ACID (veja [ACID](/labs/web-dev/banco-de-dados/03-acid/)), ou as duas são salvas, ou nenhuma é. Não existe mais o cenário onde o pedido foi criado mas o evento se perdeu, ou vice-versa: a atomicidade do banco garante os dois juntos.
 
 Só que isso resolve só metade do problema: o evento está seguro dentro do banco, mas ainda precisa sair de lá e chegar até o message broker (Kafka, RabbitMQ, SQS). Essa segunda parte é o papel do **publisher**.
 
@@ -68,7 +68,7 @@ LIMIT 100;
 
 ### CDC (Change Data Capture)
 
-Em vez de a aplicação consultar a tabela de tempos em tempos, uma ferramenta de CDC (como o Debezium, já mencionado na nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/)) observa diretamente o log de transações do banco (o mesmo _write-ahead log_ usado para durabilidade, veja [ACID](/labs/web-dev/banco-de-dados/02-acid/)) e publica o evento assim que a linha é inserida na outbox, sem precisar consultar a tabela ativamente. É mais rápido e não sobrecarrega o banco com consultas repetidas, ao custo de uma peça de infraestrutura a mais para operar.
+Em vez de a aplicação consultar a tabela de tempos em tempos, uma ferramenta de CDC (como o Debezium, já mencionado na nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/)) observa diretamente o log de transações do banco (o mesmo _write-ahead log_ usado para durabilidade, veja [ACID](/labs/web-dev/banco-de-dados/03-acid/)) e publica o evento assim que a linha é inserida na outbox, sem precisar consultar a tabela ativamente. É mais rápido e não sobrecarrega o banco com consultas repetidas, ao custo de uma peça de infraestrutura a mais para operar.
 
 ## Idempotência: uma peça obrigatória, não opcional
 

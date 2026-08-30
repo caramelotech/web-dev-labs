@@ -1,6 +1,6 @@
 # Postgres vs MySQL: arquitetura interna
 
-PostgreSQL e MySQL são os dois bancos relacionais de código aberto mais usados no mundo. Os dois falam [SQL](/labs/web-dev/banco-de-dados/01-sql/), os dois oferecem [ACID](/labs/web-dev/banco-de-dados/02-acid/), os dois são [CP/EC](/labs/web-dev/banco-de-dados/05-escolha-de-banco-de-dados/) na classificação de PACELC. Para a maioria dos sistemas web, qualquer um dos dois resolve. Mas por baixo do capô eles tomam decisões de arquitetura bem diferentes, e essas decisões explicam por que cada um se sai melhor em cenários específicos.
+PostgreSQL e MySQL são os dois bancos relacionais de código aberto mais usados no mundo. Os dois falam [SQL](/labs/web-dev/banco-de-dados/01-sql/), os dois oferecem [ACID](/labs/web-dev/banco-de-dados/03-acid/), os dois são [CP/EC](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/) na classificação de PACELC. Para a maioria dos sistemas web, qualquer um dos dois resolve. Mas por baixo do capô eles tomam decisões de arquitetura bem diferentes, e essas decisões explicam por que cada um se sai melhor em cenários específicos.
 
 Essa comparação cai bastante em entrevista de backend, geralmente na forma "qual você usaria e por quê". A resposta boa não é decorar que "Postgres é mais robusto" ou "MySQL é mais rápido" (as duas frases estão erradas hoje). É entender o que muda na estrutura interna e quando isso pesa. Esta nota compara a arquitetura dos dois, não faz ranking.
 
@@ -90,7 +90,7 @@ flowchart LR
 
 ## MVCC e versões de linha
 
-A nota de [Controle de Concorrência](/labs/web-dev/banco-de-dados/06-controle-de-concorrencia/) explica MVCC: em vez de travar a linha, o banco mantém **várias versões** de cada linha, e cada transação enxerga a versão que existia quando ela começou. Leitura não bloqueia escrita e vice-versa. Os dois bancos usam MVCC, mas guardam essas versões antigas em lugares diferentes.
+A nota de [Controle de Concorrência](/labs/web-dev/banco-de-dados/07-controle-de-concorrencia/) explica MVCC: em vez de travar a linha, o banco mantém **várias versões** de cada linha, e cada transação enxerga a versão que existia quando ela começou. Leitura não bloqueia escrita e vice-versa. Os dois bancos usam MVCC, mas guardam essas versões antigas em lugares diferentes.
 
 O **PostgreSQL** guarda as versões antigas **na própria tabela**, ao lado da versão atual. Um `UPDATE` no Postgres não altera a linha no lugar: ele escreve uma linha nova e marca a antiga como obsoleta. As linhas obsoletas (chamadas de "dead tuples", tuplas mortas) continuam ocupando espaço no arquivo até alguém limpar.
 
@@ -105,12 +105,12 @@ Uma **purge thread** limpa as entradas de undo que nenhuma transação mais prec
 
 ## Logs de escrita
 
-Todo banco ACID escreve num log antes de confirmar uma mudança, para conseguir recuperar depois de uma queda de energia (é o **D** de Durabilidade em [ACID](/labs/web-dev/banco-de-dados/02-acid/)). O número e o papel desses logs difere bastante.
+Todo banco ACID escreve num log antes de confirmar uma mudança, para conseguir recuperar depois de uma queda de energia (é o **D** de Durabilidade em [ACID](/labs/web-dev/banco-de-dados/03-acid/)). O número e o papel desses logs difere bastante.
 
 O **PostgreSQL** tem **um log só**: o **WAL** (Write-Ahead Log). Toda mudança é escrita nele antes de ir para os arquivos de dados. O mesmo WAL serve para dois propósitos:
 
 - **Recuperação de crash**: depois de uma queda, o Postgres relê o WAL e reaplica o que faltou (isso é "redo").
-- **Replicação**: as réplicas recebem o WAL do primário e o reproduzem para ficar em sincronia (a "replicação baseada em WAL" citada na nota de [Escolha de Banco de Dados](/labs/web-dev/banco-de-dados/05-escolha-de-banco-de-dados/)).
+- **Replicação**: as réplicas recebem o WAL do primário e o reproduzem para ficar em sincronia (a "replicação baseada em WAL" citada na nota de [Escolha de Banco de Dados](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/)).
 
 O **MySQL/InnoDB** tem **três logs** com papéis distintos:
 

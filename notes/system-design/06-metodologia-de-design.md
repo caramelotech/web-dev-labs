@@ -31,7 +31,7 @@ Um sistema que escala mas cai na primeira falha de rede não está pronto. Apliq
 
 ## Etapa 6: Dados
 
-Volte para a camada de dados com mais detalhe: SQL ou NoSQL (veja [NoSQL](/labs/web-dev/banco-de-dados/09-nosql/)), como modelar as entidades, quais índices o padrão de consulta exige, como a replicação está configurada e qual nível de consistência cada tipo de dado exige (veja [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/)).
+Volte para a camada de dados com mais detalhe: SQL ou NoSQL (veja [NoSQL](/labs/web-dev/banco-de-dados/10-nosql/)), como modelar as entidades, quais índices o padrão de consulta exige, como a replicação está configurada e qual nível de consistência cada tipo de dado exige (veja [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/)).
 
 ## Etapa 7: Performance
 

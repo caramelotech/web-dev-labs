@@ -84,7 +84,7 @@ Escalar não é adicionar máquinas até o problema sumir, é primeiro descobrir
 - **Hot keys / hot partitions**: quando um shard, uma chave de cache ou um registro específico recebe desproporcionalmente mais tráfego que os outros (ex: o perfil de uma celebridade numa rede social). Distribuir dados uniformemente não ajuda se o acesso a eles não for uniforme.
 - **Conexões e connection pool**: cada instância nova da aplicação abre suas próprias conexões com o banco; sem controle, o número de conexões cresce junto com o número de instâncias até estourar o limite do banco.
 - **Dependências síncronas em cadeia**: um serviço que espera outro, que espera outro, faz a latência (e a chance de falha) se acumular a cada camada.
-- **Locks e contenção**: estratégias de concorrência mal escolhidas (veja [Controle de Concorrência](/labs/web-dev/banco-de-dados/06-controle-de-concorrencia/)) podem travar o sistema mesmo com hardware sobrando.
+- **Locks e contenção**: estratégias de concorrência mal escolhidas (veja [Controle de Concorrência](/labs/web-dev/banco-de-dados/07-controle-de-concorrencia/)) podem travar o sistema mesmo com hardware sobrando.
 - **Estado escondido em memória**: um serviço que parece stateless mas guarda algo (um cache local, um contador em variável) que só existe numa instância específica, quebrando a promessa de que qualquer réplica pode atender qualquer requisição.
 
 Identificar o gargalo certo normalmente exige observar o sistema em produção (veja [Observabilidade](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/)) antes de decidir qual técnica de escala aplicar.

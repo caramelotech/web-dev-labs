@@ -106,7 +106,7 @@ Resumindo o papel de cada um: soft delete resolve o "excluí sem querer", não o
 
 **Tabela de histórico separada.** A tabela principal guarda só registros ativos e usa hard delete. Antes de remover, um trigger ou a própria aplicação copia a linha para uma tabela tipo `clientes_historico`. A principal fica enxuta, o histórico fica preservado em outro lugar.
 
-**Append-only / event sourcing.** Nunca se altera nem se apaga nada, apenas se registra o evento "cliente desativado". É a mesma ideia do [Ledger Pattern](/labs/web-dev/banco-de-dados/07-ledger-pattern/), generalizada para qualquer entidade em vez de só saldo.
+**Append-only / event sourcing.** Nunca se altera nem se apaga nada, apenas se registra o evento "cliente desativado". É a mesma ideia do [Ledger Pattern](/labs/web-dev/banco-de-dados/08-ledger-pattern/), generalizada para qualquer entidade em vez de só saldo.
 
 **Snapshot antes de apagar.** Grava uma cópia da linha (um JSON numa tabela de auditoria, por exemplo) e então faz o hard delete. Você tem o registro do que existia sem carregar peso morto na tabela de trabalho.
 

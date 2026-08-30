@@ -2,7 +2,7 @@
 
 Todo banco distribuído precisa responder a uma pergunta incômoda: quando um dado é escrito num nó e replicado para outros, o que acontece com quem lê esse dado um instante depois? A resposta que o sistema escolhe dar é o seu **nível de consistência**, e ela define boa parte do comportamento (e das dores de cabeça) de qualquer aplicação que rode em mais de uma máquina.
 
-Essa nota foca no espectro entre consistência forte e consistência eventual. O [Teorema de CAP](/labs/web-dev/banco-de-dados/03-teorema-de-cap/) já cobre o que acontece durante uma partição de rede, e o [PACELC](/labs/web-dev/banco-de-dados/04-teorema-de-pacelc/) cobre a troca entre consistência e latência no dia a dia. Aqui o objetivo é outro: entender, na prática, o que significa um sistema ser "fortemente consistente" ou "eventualmente consistente", e como a replicação entra nessa conta.
+Essa nota foca no espectro entre consistência forte e consistência eventual. O [Teorema de CAP](/labs/web-dev/banco-de-dados/04-teorema-de-cap/) já cobre o que acontece durante uma partição de rede, e o [PACELC](/labs/web-dev/banco-de-dados/05-teorema-de-pacelc/) cobre a troca entre consistência e latência no dia a dia. Aqui o objetivo é outro: entender, na prática, o que significa um sistema ser "fortemente consistente" ou "eventualmente consistente", e como a replicação entra nessa conta.
 
 ## Strong Consistency
 

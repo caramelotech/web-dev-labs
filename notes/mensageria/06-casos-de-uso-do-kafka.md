@@ -97,7 +97,7 @@ Guardar log para sempre no Kafka sai caro em disco, então o padrão é retenç�
 
 ## Change Data Capture (CDC)
 
-Nos casos anteriores, a aplicação publica o evento de propósito. No CDC, ninguém na aplicação escreve código para publicar nada: uma ferramenta observa o log de transações do banco (o WAL no Postgres, o binlog no MySQL, detalhados em [Postgres vs MySQL](/labs/web-dev/banco-de-dados/10-postgres-vs-mysql/)) e transforma cada `INSERT`, `UPDATE` e `DELETE` já commitado num evento no Kafka.
+Nos casos anteriores, a aplicação publica o evento de propósito. No CDC, ninguém na aplicação escreve código para publicar nada: uma ferramenta observa o log de transações do banco (o WAL no Postgres, o binlog no MySQL, detalhados em [Postgres vs MySQL](/labs/web-dev/banco-de-dados/11-postgres-vs-mysql/)) e transforma cada `INSERT`, `UPDATE` e `DELETE` já commitado num evento no Kafka.
 
 A ferramenta padrão é o **Debezium**, que roda como source connector do Kafka Connect. Você configura um connector apontando para o banco, e ele publica as mudanças em topics como `loja.public.pedidos`.
 

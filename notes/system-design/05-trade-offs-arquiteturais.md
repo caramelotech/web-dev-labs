@@ -6,11 +6,11 @@ Todo design de sistema é, no fundo, uma sequência de escolhas entre duas coisa
 
 ### Consistência vs disponibilidade
 
-Coberto em detalhe no [Teorema de CAP](/labs/web-dev/banco-de-dados/03-teorema-de-cap/): durante uma partição de rede, o sistema escolhe entre responder com um dado possivelmente desatualizado (disponibilidade) ou recusar a resposta até garantir o dado mais recente (consistência). Sistemas financeiros tendem a priorizar consistência; feeds e contadores sociais tendem a priorizar disponibilidade.
+Coberto em detalhe no [Teorema de CAP](/labs/web-dev/banco-de-dados/04-teorema-de-cap/): durante uma partição de rede, o sistema escolhe entre responder com um dado possivelmente desatualizado (disponibilidade) ou recusar a resposta até garantir o dado mais recente (consistência). Sistemas financeiros tendem a priorizar consistência; feeds e contadores sociais tendem a priorizar disponibilidade.
 
 ### Latência vs consistência
 
-Coberto pelo [PACELC](/labs/web-dev/banco-de-dados/04-teorema-de-pacelc/): mesmo sem partição de rede, esperar a confirmação de mais réplicas antes de responder (mais consistência) custa mais tempo de resposta (mais latência). Um checkout de e-commerce pode aceitar uns milissegundos a mais de latência para garantir que o estoque não vendeu em dobro; um sistema de busca pode preferir responder rápido com resultado ligeiramente desatualizado.
+Coberto pelo [PACELC](/labs/web-dev/banco-de-dados/05-teorema-de-pacelc/): mesmo sem partição de rede, esperar a confirmação de mais réplicas antes de responder (mais consistência) custa mais tempo de resposta (mais latência). Um checkout de e-commerce pode aceitar uns milissegundos a mais de latência para garantir que o estoque não vendeu em dobro; um sistema de busca pode preferir responder rápido com resultado ligeiramente desatualizado.
 
 ### Custo vs disponibilidade
 
@@ -26,7 +26,7 @@ Um monólito é mais simples de desenvolver, testar e implantar no começo, mas 
 
 ### SQL vs NoSQL
 
-Detalhado em [NoSQL](/labs/web-dev/banco-de-dados/09-nosql/). Relacional dá consistência forte e um modelo de dados rígido e previsível; NoSQL dá flexibilidade de esquema e escala horizontal mais natural, ao custo de garantias mais fracas.
+Detalhado em [NoSQL](/labs/web-dev/banco-de-dados/10-nosql/). Relacional dá consistência forte e um modelo de dados rígido e previsível; NoSQL dá flexibilidade de esquema e escala horizontal mais natural, ao custo de garantias mais fracas.
 
 ### Cache vs consistência
 

@@ -21,7 +21,7 @@ Escreve X = 10 no nó 1
 Lê X no nó 2 -> precisa retornar 10 (nunca o valor antigo)
 ```
 
-Vale reforçar: essa consistência não é a mesma coisa que o **C** de [ACID](/labs/web-dev/banco-de-dados/02-acid/). A consistência do ACID garante que uma transação respeite as regras de negócio (chaves estrangeiras, `CHECK`, `NOT NULL`). Já a consistência do CAP é sobre todos os nós concordarem sobre qual é o valor atual de um dado, quase como se existisse uma única cópia dos dados mesmo estando replicados.
+Vale reforçar: essa consistência não é a mesma coisa que o **C** de [ACID](/labs/web-dev/banco-de-dados/03-acid/). A consistência do ACID garante que uma transação respeite as regras de negócio (chaves estrangeiras, `CHECK`, `NOT NULL`). Já a consistência do CAP é sobre todos os nós concordarem sobre qual é o valor atual de um dado, quase como se existisse uma única cópia dos dados mesmo estando replicados.
 
 ### Disponibilidade (A)
 
