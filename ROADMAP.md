@@ -59,7 +59,6 @@ Sem lacunas planejadas no momento.
 Escopo: consistência, replicação e coordenação entre nós. CAP e PACELC ficam em `banco-de-dados/`.
 
 - ⬜ Consistência causal
-- ⬜ Consensus (Raft/Paxos) em profundidade
 
 ### `escalabilidade/` (rótulo do sidebar: "Escalabilidade e Infraestrutura")
 
@@ -99,9 +98,8 @@ Sem lacunas planejadas no momento.
 
 ### `entrega-continua/`
 
-Escopo: empacotar e entregar - Docker, Kubernetes, CI/CD para microsserviços.
+Escopo: empacotar, entregar e hospedar - Docker, Kubernetes, CI/CD para microsserviços e categorias de serviço em nuvem.
 
-- ⬜ Categorias de serviço AWS (compute, storage, rede), sem aprofundar em cada serviço
 - ⬜ IaC (Terraform)
 
 ### `estudos-de-caso/`

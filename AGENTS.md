@@ -25,7 +25,7 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   microsservicos/             # Arquitetura de microsserviços: decomposição, comunicação e operação
   resiliencia/                # Padrões para o sistema aguentar falha (timeout, retry, circuit breaker, disponibilidade)
   observabilidade/            # Enxergar o sistema em produção: logs, métricas, traces e ferramentas
-  entrega-continua/           # Empacotar e entregar: containers, orquestração e CI/CD
+  entrega-continua/           # Empacotar, entregar e hospedar: containers, orquestração, CI/CD e categorias de serviço em nuvem
   estudos-de-caso/            # System design na prática: problemas resolvidos ponta a ponta
   ferramentas/                # Ferramental de trabalho: Git, Conventional Commits, PRs, fluxos, GPG
 sidebar.json     # Seções da barra lateral no site (labels e ordem)
