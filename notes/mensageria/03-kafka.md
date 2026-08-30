@@ -1,6 +1,6 @@
 # Kafka
 
-A nota anterior, [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/), descreve o papel genérico de um broker: receber mensagens de producers e entregar para consumers. O Apache Kafka é hoje uma das implementações mais usadas desse papel, mas com um jeito próprio de organizar os dados que vale entender em detalhe, porque ele explica boa parte das decisões de projeto que aparecem ao usar Kafka na prática.
+A nota de [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/) descreve o papel genérico de um broker: receber mensagens de producers e entregar para consumers. O Apache Kafka é hoje uma das implementações mais usadas desse papel, mas com um jeito próprio de organizar os dados que vale entender em detalhe, porque ele explica boa parte das decisões de projeto que aparecem ao usar Kafka na prática.
 
 ## Conceitos fundamentais
 
@@ -17,7 +17,7 @@ flowchart TB
     end
 ```
 
-Quando o producer publica uma mensagem, o Kafka decide em qual partição ela cai (por padrão, com base numa chave que o producer envia, tipo o ID do pedido). Mensagens com a mesma chave sempre vão para a mesma partição, o que garante que a ordem entre elas seja preservada, isso é aprofundado na próxima nota, sobre [Garantias de Entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/).
+Quando o producer publica uma mensagem, o Kafka decide em qual partição ela cai (por padrão, com base numa chave que o producer envia, tipo o ID do pedido). Mensagens com a mesma chave sempre vão para a mesma partição, o que garante que a ordem entre elas seja preservada, isso é aprofundado na próxima nota, sobre [Garantias de Entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/).
 
 **Offset**: dentro de cada partição, toda mensagem recebe um número sequencial crescente, o offset (0, 1, 2, 3...). É basicamente o "número da posição" da mensagem naquela partição. O Kafka não remove uma mensagem assim que ela é lida, como uma fila tradicional faria, ele guarda a mensagem por um tempo configurável (dias, semanas) e é o consumer quem controla até qual offset já leu.
 
@@ -111,7 +111,7 @@ Depois de enviar, o producer espera uma confirmação. O nível dessa confirmaç
 
 `acks=all` sozinho não basta: se o ISR encolheu para só o líder (todos os seguidores estão atrasados), "todos do ISR" vira "só o líder", e você está de volta ao risco do `acks=1`. Por isso `acks=all` costuma vir junto com **`min.insync.replicas=2`** na configuração do topic: se não houver pelo menos 2 réplicas no ISR, o Kafka recusa a escrita em vez de aceitar uma mensagem que pode se perder.
 
-Quando um envio falha por um motivo temporário (o líder mudou, deu timeout), o producer tenta de novo automaticamente, controlado por **`retries`**. O problema é que um retry pode duplicar a mensagem: o Kafka recebeu a primeira tentativa, a confirmação se perdeu no caminho, o producer reenvia. Para resolver isso existe **`enable.idempotence=true`**: o producer numera cada mensagem, e o broker ignora uma mensagem que já viu. Nas versões recentes do Kafka isso já vem ligado por padrão. O mecanismo (Producer ID, números de sequência) e o que ele cobre estão detalhados em [Producer Idempotente no Kafka](/labs/web-dev/mensageria/05-producer-idempotente/).
+Quando um envio falha por um motivo temporário (o líder mudou, deu timeout), o producer tenta de novo automaticamente, controlado por **`retries`**. O problema é que um retry pode duplicar a mensagem: o Kafka recebeu a primeira tentativa, a confirmação se perdeu no caminho, o producer reenvia. Para resolver isso existe **`enable.idempotence=true`**: o producer numera cada mensagem, e o broker ignora uma mensagem que já viu. Nas versões recentes do Kafka isso já vem ligado por padrão. O mecanismo (Producer ID, números de sequência) e o que ele cobre estão detalhados em [Producer Idempotente no Kafka](/labs/web-dev/mensageria/06-producer-idempotente/).
 
 ## Fluxo do consumer
 
@@ -150,7 +150,7 @@ Existe uma terceira opção, o **log compaction**: em vez de apagar por idade, o
 
 ## Semânticas de entrega no Kafka
 
-A nota de [Garantias de Entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/) explica as três semânticas em geral (at-most-once, at-least-once, exactly-once). No Kafka, cada uma sai de uma combinação de configuração:
+A nota de [Garantias de Entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/) explica as três semânticas em geral (at-most-once, at-least-once, exactly-once). No Kafka, cada uma sai de uma combinação de configuração:
 
 - **At-most-once**: `acks` baixo no producer e/ou commit do offset no consumer **antes** de processar. Se algo cai no meio, a mensagem some, mas nunca duplica.
 - **At-least-once**: `acks=1` ou `acks=all` no producer e commit do offset **depois** de processar. É o comportamento padrão. Nada se perde, mas uma mensagem pode ser reprocessada.
@@ -160,7 +160,7 @@ Mesmo com EOS ligado, o "exatamente uma vez" só vale dentro do Kafka. Se o seu 
 
 ## Casos de uso comuns
 
-O Kafka costuma aparecer em cinco padrões recorrentes: pipelines de dados em tempo real, sistemas orientados a evento, processamento de streams, logs e métricas centralizados e Change Data Capture (CDC). Cada um, com a arquitetura típica e os trade-offs, está na nota [Casos de Uso do Kafka](/labs/web-dev/mensageria/06-casos-de-uso-do-kafka/).
+O Kafka costuma aparecer em cinco padrões recorrentes: pipelines de dados em tempo real, sistemas orientados a evento, processamento de streams, logs e métricas centralizados e Change Data Capture (CDC). Cada um, com a arquitetura típica e os trade-offs, está na nota [Casos de Uso do Kafka](/labs/web-dev/mensageria/07-casos-de-uso-do-kafka/).
 
 ## Principais configurações
 

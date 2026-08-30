@@ -1,6 +1,6 @@
 # Casos de Uso do Kafka
 
-As notas anteriores abriram o Kafka por dentro: [topic, partição, offset e consumer group](/labs/web-dev/mensageria/02-kafka/), [garantias de entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/) e [producer idempotente](/labs/web-dev/mensageria/05-producer-idempotente/). Esta fecha o assunto pelo outro lado: onde o Kafka costuma ser usado de verdade.
+As notas anteriores abriram o Kafka por dentro: [topic, partição, offset e consumer group](/labs/web-dev/mensageria/03-kafka/), [garantias de entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/) e [producer idempotente](/labs/web-dev/mensageria/06-producer-idempotente/). Esta fecha o assunto pelo outro lado: onde o Kafka costuma ser usado de verdade.
 
 Existem cinco padrões que aparecem o tempo todo. Não são categorias oficiais, é só a forma prática de agrupar o que as empresas fazem com Kafka. Cada um tem uma arquitetura típica e um conjunto de trade-offs, e na prática eles se misturam bastante.
 
@@ -29,7 +29,7 @@ flowchart LR
 
 É comum separar os topics em duas camadas: um topic **raw** recebe o evento como ele veio da fonte, e um job intermediário valida, limpa e enriquece esse dado, publicando o resultado num topic **curated**. Os consumidores de negócio leem só o curated, que já vem no formato certo.
 
-Quando a lógica de transformação muda, ou tinha um bug, você não precisa reextrair tudo da fonte. Como o Kafka guarda as mensagens pelo tempo da [política de retenção](/labs/web-dev/mensageria/02-kafka/), basta reposicionar o offset do job e reprocessar a partir do ponto necessário. A recuperação vira "replay a partir daqui" em vez de "reconstruir tudo na mão".
+Quando a lógica de transformação muda, ou tinha um bug, você não precisa reextrair tudo da fonte. Como o Kafka guarda as mensagens pelo tempo da [política de retenção](/labs/web-dev/mensageria/03-kafka/), basta reposicionar o offset do job e reprocessar a partir do ponto necessário. A recuperação vira "replay a partir daqui" em vez de "reconstruir tudo na mão".
 
 ## Sistemas orientados a evento
 
@@ -37,7 +37,7 @@ Pense no serviço de pedidos de um e-commerce. Quando um pedido é criado, vári
 
 Na versão acoplada, o serviço de pedidos chama esses cinco serviços, um por um. Cada serviço novo que precisa saber de pedidos obriga a mexer no código do serviço de pedidos. E se o serviço de analytics estiver fora do ar na hora, o que acontece com a criação do pedido?
 
-Na versão orientada a evento, o serviço de pedidos publica um evento `pedido-criado` no Kafka e encerra o trabalho dele. Billing, e-mail, analytics, estoque e antifraude têm cada um seu [consumer group](/labs/web-dev/mensageria/02-kafka/) lendo o mesmo topic, no próprio ritmo. Um serviço novo, digamos um programa de fidelidade, assina o topic e passa a reagir a pedidos sem ninguém tocar no serviço original.
+Na versão orientada a evento, o serviço de pedidos publica um evento `pedido-criado` no Kafka e encerra o trabalho dele. Billing, e-mail, analytics, estoque e antifraude têm cada um seu [consumer group](/labs/web-dev/mensageria/03-kafka/) lendo o mesmo topic, no próprio ritmo. Um serviço novo, digamos um programa de fidelidade, assina o topic e passa a reagir a pedidos sem ninguém tocar no serviço original.
 
 ```mermaid
 flowchart LR
@@ -51,7 +51,7 @@ flowchart LR
 
 Esse é o backbone dos microsserviços orientados a evento, o mesmo assunto visto em [Comunicação entre Serviços](/labs/web-dev/microsservicos/03-comunicacao-entre-servicos/).
 
-O preço é que o fluxo deixa de ser óbvio. Um único `pedido-criado` dispara vários workflows assíncronos espalhados por serviços diferentes. Responder "por que esse pedido não foi cobrado" exige [rastreamento distribuído](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/), e o contrato do evento precisa ser estável: se o serviço de pedidos muda o formato de `pedido-criado` sem cuidado, quebra todos os consumidores de uma vez. É por isso que a [evolução de schema](/labs/web-dev/mensageria/02-kafka/) pesa tanto nesse cenário.
+O preço é que o fluxo deixa de ser óbvio. Um único `pedido-criado` dispara vários workflows assíncronos espalhados por serviços diferentes. Responder "por que esse pedido não foi cobrado" exige [rastreamento distribuído](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/), e o contrato do evento precisa ser estável: se o serviço de pedidos muda o formato de `pedido-criado` sem cuidado, quebra todos os consumidores de uma vez. É por isso que a [evolução de schema](/labs/web-dev/mensageria/03-kafka/) pesa tanto nesse cenário.
 
 ## Processamento de streams
 
@@ -67,7 +67,7 @@ As ferramentas mais comuns:
 - **ksqlDB**: você escreve SQL sobre os streams e ele cuida do resto.
 - **Apache Flink**: uma engine à parte, mais robusta para estado grande e lógica complexa. É a que aparece com mais frequência em pipelines pesados.
 
-Como o cálculo de um evento às vezes depende dos anteriores (somar o total gasto por um usuário, por exemplo), os eventos de uma mesma entidade precisam cair na mesma partição e ser processados em ordem. Isso volta para a [escolha da chave no producer](/labs/web-dev/mensageria/02-kafka/): mesma chave, mesma partição, ordem preservada.
+Como o cálculo de um evento às vezes depende dos anteriores (somar o total gasto por um usuário, por exemplo), os eventos de uma mesma entidade precisam cair na mesma partição e ser processados em ordem. Isso volta para a [escolha da chave no producer](/labs/web-dev/mensageria/03-kafka/): mesma chave, mesma partição, ordem preservada.
 
 O ponto mais delicado é o **estado**. Um agregador do tipo "erros por serviço nos últimos 5 minutos" guarda contadores na memória. Se o processo cai, esse estado se perde. As ferramentas resolvem isso salvando o estado num topic compactado do próprio Kafka (o changelog): ao reiniciar, o processador reconstrói os contadores lendo esse topic. As **janelas** (windows) definem o recorte de tempo do cálculo: os últimos 5 minutos deslizando, cada hora cheia, ou a sessão de um usuário até 30 minutos de inatividade.
 

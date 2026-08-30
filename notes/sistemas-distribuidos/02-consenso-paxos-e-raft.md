@@ -89,7 +89,7 @@ A **segurança** do Raft garante que, uma vez commitada, uma entrada nunca é pe
 
 Para **mudar o conjunto de nós** (adicionar ou trocar uma máquina) sem parar o cluster, Raft usa uma transição em duas etapas (joint consensus), em que a configuração antiga e a nova precisam concordar durante a troca.
 
-Onde você encontra Raft rodando: etcd (o banco de configuração do Kubernetes), Consul, CockroachDB, TiDB, o replica set do MongoDB e o [modo KRaft do Kafka](/labs/web-dev/mensageria/02-kafka/), que substituiu o ZooKeeper.
+Onde você encontra Raft rodando: etcd (o banco de configuração do Kubernetes), Consul, CockroachDB, TiDB, o replica set do MongoDB e o [modo KRaft do Kafka](/labs/web-dev/mensageria/03-kafka/), que substituiu o ZooKeeper.
 
 ## Paxos vs Raft na prática
 

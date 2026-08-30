@@ -1,6 +1,6 @@
 # Garantias de Entrega: Ordenação, DLQ e Idempotência
 
-Depois de entender como uma mensagem trafega (veja [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/) e [Kafka](/labs/web-dev/mensageria/02-kafka/)), a próxima pergunta é: o que acontece quando algo dá errado no meio do caminho? Um consumer trava ao processar uma mensagem, a rede engasga, o mesmo evento chega duas vezes. Esta nota cobre os mecanismos que lidam com essas falhas.
+Depois de entender como uma mensagem trafega (veja [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/) e [Kafka](/labs/web-dev/mensageria/03-kafka/)), a próxima pergunta é: o que acontece quando algo dá errado no meio do caminho? Um consumer trava ao processar uma mensagem, a rede engasga, o mesmo evento chega duas vezes. Esta nota cobre os mecanismos que lidam com essas falhas.
 
 ## Dead Letter Queue
 
@@ -38,4 +38,4 @@ Quando se fala em "garantia de entrega" de um broker, existem três níveis poss
 
 Na prática, a saída mais comum não é perseguir exactly-once no broker, é aceitar **at-least-once** (que é mais simples e mais barato) e fazer o consumer tratar duplicatas do lado dele. Essa técnica tem nome próprio, idempotência, e está detalhada na nota de [Idempotência](/labs/web-dev/resiliencia/02-idempotencia/): reprocessar a mesma mensagem duas vezes tem que produzir o mesmo resultado que processá-la uma vez só.
 
-Existe ainda uma proteção do lado de quem publica, contra o retry do próprio producer gerar um registro duplicado no broker. No Kafka isso é o producer idempotente, coberto em [Producer Idempotente no Kafka](/labs/web-dev/mensageria/05-producer-idempotente/), que trata um ponto de falha diferente do tratado pela idempotência no consumer.
+Existe ainda uma proteção do lado de quem publica, contra o retry do próprio producer gerar um registro duplicado no broker. No Kafka isso é o producer idempotente, coberto em [Producer Idempotente no Kafka](/labs/web-dev/mensageria/06-producer-idempotente/), que trata um ponto de falha diferente do tratado pela idempotência no consumer.

@@ -1,6 +1,6 @@
 # Producer Idempotente no Kafka
 
-A nota de [Kafka](/labs/web-dev/mensageria/02-kafka/) mencionou de passagem que ligar `enable.idempotence=true` evita duplicatas quando o producer reenvia uma mensagem. A nota de [Garantias de Entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/) mostrou que, na prática, a entrega mais comum é at-least-once: nada se perde, mas a mesma mensagem pode aparecer duas vezes. Esta nota junta as duas pontas e abre o mecanismo que o Kafka usa para o reenvio do producer não virar um registro duplicado, além de deixar claro o que esse mecanismo cobre e o que ele não cobre.
+A nota de [Kafka](/labs/web-dev/mensageria/03-kafka/) mencionou de passagem que ligar `enable.idempotence=true` evita duplicatas quando o producer reenvia uma mensagem. A nota de [Garantias de Entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/) mostrou que, na prática, a entrega mais comum é at-least-once: nada se perde, mas a mesma mensagem pode aparecer duas vezes. Esta nota junta as duas pontas e abre o mecanismo que o Kafka usa para o reenvio do producer não virar um registro duplicado, além de deixar claro o que esse mecanismo cobre e o que ele não cobre.
 
 ## O problema: um retry pode duplicar a mensagem
 
@@ -62,7 +62,7 @@ A partir do Kafka 3.0, o producer já vem com `enable.idempotence=true` por padr
 | Config                                  | Valor exigido               | Por quê                                                                                                                                                                                                  |
 | --------------------------------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `enable.idempotence`                    | `true` (padrão desde o 3.0) | liga o PID e os números de sequência                                                                                                                                                                     |
-| `acks`                                  | `all`                       | a mensagem só é confirmada depois que o líder e as réplicas do ISR gravaram (ver [Kafka](/labs/web-dev/mensageria/02-kafka/)); sem isso, uma troca de líder poderia perder mensagens e furar a sequência |
+| `acks`                                  | `all`                       | a mensagem só é confirmada depois que o líder e as réplicas do ISR gravaram (ver [Kafka](/labs/web-dev/mensageria/03-kafka/)); sem isso, uma troca de líder poderia perder mensagens e furar a sequência |
 | `retries`                               | maior que `0`               | se o producer nunca reenvia, não existe reenvio para deduplicar                                                                                                                                          |
 | `max.in.flight.requests.per.connection` | no máximo `5`               | é o teto de envios sem ACK que podem estar "no ar" ao mesmo tempo; acima de 5 o broker não consegue mais garantir a validação da ordem das sequências                                                    |
 
@@ -113,7 +113,7 @@ Vale fixar a diferença, porque os dois termos aparecem colados e resolvem coisa
 - **Producer idempotente**: elimina registros duplicados causados por retry do producer, e isso acontece dentro do Kafka, antes de qualquer consumer ver a mensagem.
 - **Consumer idempotente**: elimina processamento de negócio duplicado quando o mesmo evento chega ao consumer mais de uma vez, seja por reentrega do broker, por rebalance ou por reprocessamento de offset.
 
-A distinção pesa mais sob entrega at-least-once, que é o padrão (ver [Garantias de Entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/)). Mesmo com o producer idempotente ligado, o consumer ainda pode receber a mesma mensagem duas vezes por motivos que não têm nada a ver com retry de publicação, então ele precisa da própria proteção.
+A distinção pesa mais sob entrega at-least-once, que é o padrão (ver [Garantias de Entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/)). Mesmo com o producer idempotente ligado, o consumer ainda pode receber a mesma mensagem duas vezes por motivos que não têm nada a ver com retry de publicação, então ele precisa da própria proteção.
 
 Se numa entrevista aparecer "como você evita mensagens duplicadas no Kafka?", a resposta curta "usa producer idempotente" cobre só um pedaço. Uma resposta melhor reconhece que o producer idempotente trata o retry de publicação, e que confiabilidade de ponta a ponta ainda pede idempotência no consumer e, quando há um banco no meio, o padrão Outbox.
 

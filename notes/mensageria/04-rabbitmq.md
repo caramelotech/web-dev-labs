@@ -1,6 +1,6 @@
 # RabbitMQ
 
-A nota de [Kafka](/labs/web-dev/mensageria/02-kafka/) mostrou uma implementação concreta de broker com um jeito próprio de organizar dados: log distribuído, particionado, que guarda mensagens por um tempo configurável. O RabbitMQ resolve o mesmo problema geral descrito em [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/), entregar mensagens de producers para consumers, mas parte de um modelo bem diferente por baixo dos panos. Entender os dois lado a lado ajuda a enxergar que "broker de mensageria" não é uma coisa só, é uma categoria com implementações que resolvem trade-offs diferentes.
+A nota de [Kafka](/labs/web-dev/mensageria/03-kafka/) mostrou uma implementação concreta de broker com um jeito próprio de organizar dados: log distribuído, particionado, que guarda mensagens por um tempo configurável. O RabbitMQ resolve o mesmo problema geral descrito em [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/), entregar mensagens de producers para consumers, mas parte de um modelo bem diferente por baixo dos panos. Entender os dois lado a lado ajuda a enxergar que "broker de mensageria" não é uma coisa só, é uma categoria com implementações que resolvem trade-offs diferentes.
 
 ## Smart broker, AMQP
 
