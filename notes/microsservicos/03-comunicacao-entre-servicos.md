@@ -28,6 +28,29 @@ flowchart LR
 
 Na prática, a maioria dos sistemas usa as duas formas ao mesmo tempo: síncrono para o que o usuário precisa ver na hora (confirmar que o pagamento passou), assíncrono para o que pode esperar alguns segundos (mandar o e-mail de confirmação, atualizar o painel de analytics).
 
+## Como escolher entre síncrono e assíncrono
+
+Na dúvida entre chamar um serviço direto ou publicar um evento, uma pergunta resolve a maioria dos casos: **essa interação precisa de uma resposta imediata para o fluxo continuar?**
+
+```mermaid
+flowchart TD
+    Q{Precisa de resposta<br/>imediata para continuar?}
+    Q -->|Sim| S[Síncrono: REST ou gRPC]
+    Q -->|Não| A[Evento assíncrono]
+```
+
+Se o usuário está parado na tela esperando o resultado, ou se o próximo passo do código depende do que o outro serviço respondeu, a chamada é síncrona: REST ou gRPC. Confirmar se o cartão foi aprovado antes de mostrar "pedido concluído" é esse caso.
+
+Se outros serviços só precisam ficar sabendo que algo aconteceu, e cada um reage no seu tempo, é evento. Depois do pedido criado, o serviço de e-mail manda a confirmação, o de analytics registra a venda e o de estoque reserva o produto. Nenhum desses precisa devolver nada para o serviço de pedidos.
+
+### O anti-padrão: simular request-response pelo broker
+
+Um erro comum é usar mensageria para fazer, na prática, uma chamada síncrona. O serviço A publica um evento num topic, cria um segundo topic só para a resposta e fica bloqueado esperando o serviço B publicar lá. Funciona, mas você acabou de reinventar RPC com mais partes móveis: dois topics em vez de uma chamada HTTP, latência maior, e um fluxo bem mais difícil de depurar quando a resposta não chega.
+
+O broker existe para desacoplar serviços no tempo, não para esconder uma dependência síncrona atrás de uma fila. Se a comunicação é síncrona por natureza, assuma isso e use REST ou gRPC, que são feitos para esse formato. A discussão completa de quando eventos fazem sentido está em [Arquitetura Orientada a Eventos](/labs/web-dev/mensageria/02-arquitetura-orientada-a-eventos/).
+
+O ponto de fundo é decidir pela necessidade do negócio, não pela tecnologia. "Vamos usar Kafka" não é um requisito; "o serviço de faturamento não pode travar quando o de notificação cai" é, e é isso que aponta para eventos.
+
 ## Service-to-Service
 
 Comunicação síncrona entre serviços traz um conjunto de problemas específicos, que não existem dentro de um monólito, porque ali a "chamada" é uma chamada de rede real, sujeita a tudo que pode dar errado numa rede.
