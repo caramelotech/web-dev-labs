@@ -68,15 +68,15 @@ Sem lacunas planejadas no momento.
 
 ### `transacoes-distribuidas/`
 
-Escopo: manter dados coerentes entre serviços sem uma transação única - consistência transacional, 2PC, Saga, dual-write, Outbox, CDC, Event Sourcing.
+Escopo: manter dados coerentes entre serviços sem uma transação única - consistência transacional, 2PC, Saga, dual-write, Outbox, CDC, Event Sourcing, CQRS.
 
 Sem lacunas planejadas no momento.
 
 ### `mensageria/`
 
-Escopo: comunicação assíncrona - arquitetura orientada a eventos, filas, brokers (Kafka, RabbitMQ), evolução de schema, garantias de entrega, idempotência e casos de uso.
+Escopo: comunicação assíncrona - arquitetura orientada a eventos, filas, brokers (Kafka, RabbitMQ), comparação de plataformas (Kafka, RabbitMQ, SQS, Solace), evolução de schema, garantias de entrega, idempotência e casos de uso.
 
-- ⬜ SQS/SNS em detalhe (fora do escopo desta rodada)
+- ⬜ SQS/SNS em detalhe (só há um comparativo de alto nível por enquanto)
 
 ### `resiliencia/`
 

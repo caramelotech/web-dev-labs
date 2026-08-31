@@ -65,4 +65,6 @@ Na prática, a escolha depende menos de qual dos dois é "melhor" e mais de qual
 - **RabbitMQ** tende a se sair bem quando o roteamento em si é complexo (várias filas recebendo subconjuntos diferentes de mensagens com base em regras), quando cada mensagem representa uma tarefa que deve ser processada uma vez e desaparecer (uma fila de jobs clássica), ou quando a aplicação precisa de garantias refinadas de entrega ponto a ponto oferecidas pelo AMQP.
 - **Kafka** tende a se sair melhor quando o volume de eventos é muito alto, quando múltiplos consumers independentes precisam ler o mesmo fluxo de eventos do começo ao fim, ou quando existe valor real em guardar o histórico de eventos e poder reprocessá-lo depois, como uma fonte de verdade replayável.
 
+RabbitMQ e Kafka não são as únicas opções. A nota [Escolhendo a Plataforma de Mensageria](/labs/web-dev/mensageria/08-escolhendo-a-plataforma-de-mensageria/) abre a comparação para Amazon SQS e Solace e lista os critérios que costumam decidir a escolha.
+
 Nenhum dos dois é estritamente superior, são ferramentas com filosofias diferentes para o mesmo problema de fundo: desacoplar quem produz de quem consome uma mensagem.

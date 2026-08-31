@@ -111,7 +111,7 @@ flowchart LR
     KT --> WH[(Data warehouse)]
 ```
 
-Serve para manter cópias derivadas do banco sempre em dia: invalidar o cache no instante em que a linha muda, atualizar o índice de busca, reconstruir um read model de CQRS, replicar para o data warehouse quase em tempo real. Tudo sem job de sincronização batch e sem um `SELECT ... WHERE updated_at > ?` martelando o banco de tempos em tempos.
+Serve para manter cópias derivadas do banco sempre em dia: invalidar o cache no instante em que a linha muda, atualizar o índice de busca, reconstruir um read model de [CQRS](/labs/web-dev/transacoes-distribuidas/06-cqrs/), replicar para o data warehouse quase em tempo real. Tudo sem job de sincronização batch e sem um `SELECT ... WHERE updated_at > ?` martelando o banco de tempos em tempos.
 
 Tem uma distinção importante aqui. O CDC te entrega `UPDATE pedidos SET status = 2 WHERE id = 99`, uma mudança de linha descrita no vocabulário da tabela. Isso não é a mesma coisa que `pagamento-capturado`, um evento de negócio com significado próprio. O CDC é ótimo para replicação e sincronização de dados. Para dirigir um workflow de negócio, o certo é um evento de domínio publicado de propósito pela aplicação, que carrega a intenção real. Fazer o serviço de e-mail reagir a `status = 2` amarra ele à estrutura interna da tabela de outro time, e no dia em que essa tabela mudar, quebra.
 
