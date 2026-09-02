@@ -28,7 +28,7 @@ flowchart LR
 
 - **Commit**: o gatilho de tudo. Toda mudança enviada ao Git (um push, um pull request) dispara o pipeline automaticamente.
 - **Build**: o código é compilado (ou, em linguagens interpretadas, suas dependências são instaladas e validadas), pegando erros de sintaxe e de tipo cedo.
-- **Testes automatizados**: a suíte de testes do serviço roda, cobrindo desde testes unitários rápidos até testes de contrato entre serviços (aprofundado em [Testes em Microsserviços](/labs/web-dev/engenharia-de-software/02-testes-em-microsservicos/)).
+- **Testes automatizados**: a suíte de testes do serviço roda, cobrindo desde testes unitários rápidos até testes de contrato entre serviços (aprofundado em [Testes em Microsserviços](/labs/web-dev/engenharia-de-software/03-testes-em-microsservicos/)).
 - **Empacotamento**: o código que passou nos testes é empacotado num artefato, tipicamente uma imagem Docker (veja [Docker](/labs/web-dev/entrega-continua/01-docker/)), pronta para ser executada em qualquer ambiente.
 - **Scan de segurança**: ferramentas automatizadas analisam o código (SAST) e as dependências usadas, procurando vulnerabilidades conhecidas antes que o artefato siga adiante.
 - **Push para repositório de artefatos**: a imagem aprovada é publicada num registro (um registry de imagens Docker, por exemplo), com uma tag que identifica exatamente essa versão.
