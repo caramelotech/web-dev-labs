@@ -85,6 +85,54 @@ Alguém precisa coordenar tudo isso: saber quais brokers estão vivos, qual é o
 
 Do ponto de vista de quem usa o Kafka, ZooKeeper e KRaft fazem a mesma coisa; a diferença é operacional.
 
+O **controller** ativo é eleito por quórum entre os controllers do cluster: com N controllers, é preciso o voto de N/2 + 1 deles para decidir quem manda, o mesmo tipo de maioria que aparece em [Consenso: Paxos e Raft](/labs/web-dev/sistemas-distribuidos/02-consenso-paxos-e-raft/).
+
+## Armazenamento em disco e desempenho
+
+O Kafka guarda tudo em disco e ainda assim move gigabytes por segundo. Isso não é mágica, é um conjunto de decisões de projeto que evitam os dois gargalos clássicos de I/O: o seek de disco e a cópia de memória.
+
+### Segments e índice esparso
+
+Uma partição não é um arquivo gigante único. Ela é quebrada em **segments**: arquivos de tamanho parecido (o padrão é 1 GB, config `segment.bytes`). O Kafka escreve no segment ativo até ele encher, fecha esse arquivo e abre o próximo. A retenção e a compactação trabalham em cima de segments inteiros, é por isso que "apagar mensagem velha" no Kafka é barato: ele deleta o arquivo do segment todo de uma vez, não linha por linha.
+
+Cada segment tem três arquivos:
+
+| Arquivo      | O que guarda                                    |
+| ------------ | ----------------------------------------------- |
+| `.log`       | as mensagens em si, na ordem em que chegaram    |
+| `.index`     | mapa de offset para a posição em bytes no `.log` |
+| `.timeindex` | mapa de timestamp para posição no `.log`        |
+
+O `.index` é **esparso**: o Kafka não anota a posição de toda mensagem, só a cada N bytes escritos (config `index.interval.bytes`, padrão 4 KB). Assim o índice fica pequeno o suficiente para viver na memória mesmo numa partição com bilhões de mensagens. Para achar o offset 1.000.000, o Kafka pula para a entrada de índice mais próxima antes dele e lê sequencialmente o resto.
+
+### Por que a escrita é rápida
+
+O Kafka só faz uma coisa com o `.log`: **acrescenta no fim**. Nunca atualiza uma mensagem no meio, nunca reordena. Escrita sempre sequencial.
+
+Isso importa porque disco (tanto HDD quanto SSD) é ordens de grandeza mais rápido em acesso sequencial do que em acesso aleatório: no HDD a cabeça não precisa ficar se movendo, no SSD o controlador consegue escrever em blocos grandes contíguos. Um append sequencial em disco chega perto da velocidade de escrita na memória, e é aí que um banco tradicional, que precisa atualizar índices B-tree em posições espalhadas, perde para o Kafka em volume de escrita.
+
+### Por que a leitura é rápida
+
+Dois truques trabalham juntos na leitura.
+
+**OS page cache**: quando o Kafka escreve no `.log`, o sistema operacional mantém esses bytes num cache em memória (o page cache). Um consumer que está acompanhando o topic em tempo real lê mensagens que foram escritas há segundos, e essas mensagens ainda estão no page cache, então a leitura nem toca o disco. Num cluster Kafka saudável, com os consumers em dia, o disco quase não tem atividade de leitura.
+
+**Zero-copy (`sendfile`)**: para mandar mensagens pela rede até um consumer, o caminho ingênuo seria copiar os bytes do page cache para dentro da aplicação (a JVM do broker), e da aplicação para o buffer do socket. São duas cópias e duas trocas de contexto à toa, já que o broker não precisa nem olhar o conteúdo da mensagem. O Kafka usa a chamada de sistema `sendfile()`, que manda o kernel copiar direto do page cache para o socket de rede.
+
+```mermaid
+flowchart LR
+    subgraph SC["Sem zero-copy"]
+        A1[Page cache] --> A2[Buffer da aplicação] --> A3[Buffer do socket] --> A4[Rede]
+    end
+    subgraph CC["Com sendfile"]
+        B1[Page cache] --> B2[Buffer do socket] --> B3[Rede]
+    end
+```
+
+### A soma das partes
+
+Nenhuma dessas escolhas isolada é revolucionária. O ganho vem de todas juntas: append sequencial em disco, índice esparso na memória, page cache servindo as leituras, `sendfile` cortando as cópias, e o batch do lado do producer (visto na próxima seção) reduzindo o número de idas e voltas na rede. É essa pilha de trade-offs que dá ao Kafka o throughput que ele tem.
+
 ## Fluxo do producer
 
 Publicar uma mensagem não é só "manda pro Kafka". O producer faz algumas etapas antes:
@@ -97,7 +145,7 @@ flowchart LR
 ```
 
 1. **Serialização**: a chave e o valor da mensagem viram bytes (JSON, Avro, Protobuf, string simples).
-2. **Partitioner**: decide para qual partição a mensagem vai. Se a mensagem tem chave, o partitioner faz um hash da chave, então mensagens com a mesma chave sempre caem na mesma partição (o que preserva a ordem entre elas). Sem chave, ele distribui de forma equilibrada entre as partições.
+2. **Partitioner**: decide para qual partição a mensagem vai. Com chave, ele faz `hash(chave) % número de partições`, então mensagens com a mesma chave sempre caem na mesma partição (o que preserva a ordem entre elas). Sem chave, ele distribui de forma equilibrada (round robin). Também dá para escrever um **partitioner customizado** com a sua própria regra. A escolha da chave importa: uma chave mal escolhida ou concentra o tráfego numa única partição (uma **hot partition**, que vira gargalo enquanto as outras ficam ociosas) ou espalha demais e faz você perder a ordem que precisava.
 3. **Batching**: em vez de mandar uma mensagem por vez, o producer junta várias num lote (record batch) e envia de uma vez, o que é muito mais eficiente. As configs que controlam isso são `batch.size` (tamanho máximo do lote) e `linger.ms` (quanto tempo esperar juntando mensagens antes de mandar mesmo que o lote não tenha enchido). O lote ainda pode ser comprimido com `compression.type` (lz4, snappy, zstd).
 4. **Envio ao líder** da partição de destino.
 
@@ -208,3 +256,8 @@ Na prática, a recomendação geral é mirar em compatibilidade backward como pa
 - **Versionar eventos** quando a mudança é grande demais para caber numa evolução compatível, como reestruturar o payload inteiro. Nesse caso, um campo de versão no próprio evento, ou até um topic novo (`pedidos-criados-v2`), deixa explícito que aquilo é um contrato diferente e dá tempo para migrar os consumers de um lado para o outro sem quebra.
 
 Nada disso fica garantido sozinho: alguém, ou alguma ferramenta, precisa checar se uma mudança de schema realmente respeita a regra de compatibilidade antes de ir para produção. É aí que entra o **Schema Registry**, o mais usado é o Confluent Schema Registry: um serviço central que guarda todas as versões de schema de cada topic, normalmente escritas em **Avro** ou **Protobuf**, formatos binários compactos com schema bem definido, ao contrário de um JSON solto sem contrato nenhum. Antes de aceitar um schema novo, o registry valida contra a regra de compatibilidade configurada para aquele topic (backward, forward ou full) e recusa a publicação se a mudança quebrar o contrato. Isso tira a checagem de compatibilidade da cabeça de cada dev e coloca num ponto único, automatizado, que barra o problema antes dele virar incidente em produção.
+
+## Referências
+
+- [Apache Kafka Documentation - Design](https://kafka.apache.org/documentation/#design) - Apache Kafka, en
+- [Kafka Internals (curso gratuito)](https://developer.confluent.io/courses/architecture/get-started/) - Confluent Developer, en
