@@ -177,7 +177,7 @@ SELECT * FROM usuarios WHERE id IN (1, 3, 5, 7);
 SELECT * FROM pedidos WHERE valor BETWEEN 100.00 AND 500.00;
 ```
 
-O `LIKE` serve para padrões simples e busca por prefixo. Para busca em texto livre (com relevância, plural e acento), ele não escala: esse é o assunto da nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/12-busca-full-text-search/).
+O `LIKE` serve para padrões simples e busca por prefixo. Para busca em texto livre (com relevância, plural e acento), ele não escala: esse é o assunto da nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/13-busca-full-text-search/).
 
 ### DISTINCT
 

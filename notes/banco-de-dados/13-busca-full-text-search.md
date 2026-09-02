@@ -8,6 +8,8 @@ SELECT * FROM produtos WHERE nome LIKE '%anel%';
 
 Funciona com 100 linhas. Com 1 milhão, a busca começa a travar, e o usuário que digitou "aneis" ou "Anél" não acha nada. Full-Text Search (busca textual, ou FTS) é o recurso que os bancos relacionais oferecem justamente para esse problema: buscar texto em linguagem natural, rápido e com noção de relevância.
 
+Full-text é um dos vários tipos de busca que um sistema pode usar (keyword, semântica, fuzzy, geoespacial e outros estão em [Tipos de Busca](/labs/web-dev/banco-de-dados/12-tipos-de-busca/)). Esta nota foca no full-text porque é o que resolve a maioria das caixas de busca sem infraestrutura nova.
+
 Esta nota usa PostgreSQL e MySQL nos exemplos, que são os dois bancos cobertos na nota de [Postgres vs MySQL](/labs/web-dev/banco-de-dados/11-postgres-vs-mysql/).
 
 ## Por que LIKE não escala para busca textual

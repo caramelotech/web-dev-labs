@@ -150,7 +150,7 @@ Voltando ao ponto do começo: os dois são relacionais, ACID e CP/EC. A arquitet
 - **Transações longas ou relatórios pesados junto com carga transacional**: os dois sofrem, mas vale saber que no Postgres uma transação esquecida trava o VACUUM do banco inteiro.
 - **Muitos índices secundários e leitura por faixa de PK**: o índice clusterizado do InnoDB favorece leitura sequencial por PK; a escolha da PK vira uma decisão importante.
 - **Milhares de conexões**: o modelo de processo por conexão do Postgres pesa mais, e quase sempre pede um PgBouncer na frente.
-- **Precisa de tipos de índice especializados** (JSONB com GIN, [busca full-text](/labs/web-dev/banco-de-dados/12-busca-full-text-search/), dados geográficos com PostGIS): o Postgres tem um leque bem maior aqui.
+- **Precisa de tipos de índice especializados** (JSONB com GIN, [busca full-text](/labs/web-dev/banco-de-dados/13-busca-full-text-search/), dados geográficos com PostGIS): o Postgres tem um leque bem maior aqui.
 
 Para o resto, que é a maioria dos sistemas CRUD, os dois entregam bem, e a escolha costuma cair no que o time já conhece, no que o provedor de nuvem oferece melhor, e no ecossistema de ferramentas em volta.
 
