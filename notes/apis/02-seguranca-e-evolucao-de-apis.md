@@ -138,7 +138,7 @@ Prevenção nunca é 100% eficaz, então detectar rápido quando algo deu errado
 | Exposição excessiva de dados         | O endpoint devolve o objeto inteiro (incluindo campos sensíveis como senha com hash, CPF, dados internos) e deixa o filtro do que mostrar a cargo do cliente, em vez de já retornar só o necessário |
 | Man-in-the-middle                    | Alguém intercepta a comunicação entre cliente e servidor para ler ou alterar dados em trânsito; mitigado com HTTPS/mTLS e, em casos críticos, certificate pinning |
 | Injeção                              | Entrada do usuário é interpretada como código ou comando (SQL injection, command injection) porque a aplicação concatena a entrada direto numa query ou comando em vez de tratá-la como dado |
-| DoS (Denial of Service)              | Volume de requisições (intencional ou não) suficiente para esgotar os recursos do serviço e tirá-lo do ar; mitigado com rate limiting na borda, aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/09-rate-limiting/) |
+| DoS (Denial of Service)              | Volume de requisições (intencional ou não) suficiente para esgotar os recursos do serviço e tirá-lo do ar; mitigado com rate limiting na borda, aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/10-rate-limiting/) |
 | Dependências inseguras               | Bibliotecas de terceiros com vulnerabilidades conhecidas (ou comprometidas por um ataque de supply chain) acabam rodando dentro da própria aplicação; mitigado mantendo dependências atualizadas e rodando scanners (`npm audit`, Dependabot, Snyk) no pipeline |
 
 ## Por que evoluir APIs

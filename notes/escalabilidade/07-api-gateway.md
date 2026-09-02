@@ -17,7 +17,7 @@ Concentrar as requisições num único ponto de entrada permite centralizar preo
 - **Roteamento**: decide, com base na URL ou em outros dados da requisição, qual serviço deve tratá-la (ex: `/usuarios/*` vai para o serviço de usuários).
 - **Autenticação**: verifica se quem está fazendo a requisição é quem diz ser (ex: validar um token JWT), antes de deixar a requisição seguir adiante.
 - **Autorização**: verifica se, além de autenticado, o usuário tem permissão para aquela ação específica.
-- **Rate limiting**: limita quantas requisições um cliente pode fazer num intervalo de tempo, protegendo os serviços de trás contra abuso ou picos excessivos (aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/09-rate-limiting/)).
+- **Rate limiting**: limita quantas requisições um cliente pode fazer num intervalo de tempo, protegendo os serviços de trás contra abuso ou picos excessivos (aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/10-rate-limiting/)).
 - **TLS termination**: o gateway é quem lida com a criptografia HTTPS na borda do sistema; a comunicação entre o gateway e os serviços internos pode acontecer sem esse custo extra, dentro de uma rede já considerada confiável.
 - **Logging**: registra as requisições que entram no sistema num único lugar, o que facilita auditoria e depuração.
 - **Observabilidade**: como todo tráfego passa por ele, o gateway é um ponto natural para coletar métricas (quantas requisições, quanto tempo cada uma leva, quantos erros) do sistema como um todo, alimentando o que é aprofundado em [Observabilidade](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/).
