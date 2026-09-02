@@ -97,11 +97,11 @@ Uma partição não é um arquivo gigante único. Ela é quebrada em **segments*
 
 Cada segment tem três arquivos:
 
-| Arquivo      | O que guarda                                    |
-| ------------ | ----------------------------------------------- |
-| `.log`       | as mensagens em si, na ordem em que chegaram    |
+| Arquivo      | O que guarda                                     |
+| ------------ | ------------------------------------------------ |
+| `.log`       | as mensagens em si, na ordem em que chegaram     |
 | `.index`     | mapa de offset para a posição em bytes no `.log` |
-| `.timeindex` | mapa de timestamp para posição no `.log`        |
+| `.timeindex` | mapa de timestamp para posição no `.log`         |
 
 O `.index` é **esparso**: o Kafka não anota a posição de toda mensagem, só a cada N bytes escritos (config `index.interval.bytes`, padrão 4 KB). Assim o índice fica pequeno o suficiente para viver na memória mesmo numa partição com bilhões de mensagens. Para achar o offset 1.000.000, o Kafka pula para a entrada de índice mais próxima antes dele e lê sequencialmente o resto.
 

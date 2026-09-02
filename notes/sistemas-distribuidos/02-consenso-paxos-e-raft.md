@@ -60,6 +60,8 @@ O tempo é dividido em **termos** (terms), numerados. Cada nó está em um de tr
 - Cada nó vota em no máximo um candidate por termo; quem juntar a maioria vira leader
 - O timeout aleatório evita que todos virem candidate ao mesmo tempo e empatem para sempre
 
+A eleição de líder aparece aqui como parte do Raft, mas é um padrão de coordenação por si só, usado até por sistemas que não rodam consenso completo. O tema geral (split-brain, fencing token, ZooKeeper, failover de primário) está em [Eleição de Líder](/labs/web-dev/sistemas-distribuidos/03-eleicao-de-lider/).
+
 ### Replicação de log
 
 Toda escrita passa pelo líder:
@@ -97,12 +99,12 @@ Os dois resolvem o mesmo problema e dão as mesmas garantias: enquanto a maioria
 
 A diferença é de engenharia, não de poder:
 
-| | Paxos | Raft |
-| --- | --- | --- |
-| Ano | anos 90 | 2014 |
-| Foco do projeto | correção teórica | ser fácil de entender e implementar |
-| Estrutura | fases e papéis genéricos | líder forte + log replicado |
-| Onde aparece | Chubby, Spanner | etcd, Consul, CockroachDB, Kafka KRaft |
+|                 | Paxos                    | Raft                                   |
+| --------------- | ------------------------ | -------------------------------------- |
+| Ano             | anos 90                  | 2014                                   |
+| Foco do projeto | correção teórica         | ser fácil de entender e implementar    |
+| Estrutura       | fases e papéis genéricos | líder forte + log replicado            |
+| Onde aparece    | Chubby, Spanner          | etcd, Consul, CockroachDB, Kafka KRaft |
 
 Para quem está aprendendo, o caminho prático é entender Raft bem (a mecânica de líder e log replicado aparece em todo lugar) e saber que Paxos existe, é mais antigo e resolve a mesma coisa. Quando bater a dúvida "esse banco distribuído para de responder se cair a maioria dos nós?", a resposta quase sempre é sim, e o motivo é o algoritmo de consenso por baixo.
 
