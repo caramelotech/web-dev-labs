@@ -16,7 +16,7 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   fundamentos/                # Fundamentos de front-end: HTML e CSS
   engenharia-de-software/     # Design e qualidade de código: princípios, padrões e testes
   apis/                       # Projeto de APIs: protocolos, estilos de comunicação, segurança e evolução
-  banco-de-dados/             # Bancos relacionais e NoSQL: modelo, garantias transacionais e arquitetura interna
+  banco-de-dados/             # Bancos relacionais e NoSQL: modelo, garantias transacionais, arquitetura interna e busca
   system-design/              # Projeto de sistemas: fundamentos, trade-offs e metodologia
   escalabilidade/             # Escalar carga e a infraestrutura que sustenta isso (cache, load balancer, gateway, CDN, ...)
   sistemas-distribuidos/      # Consistência, replicação e coordenação entre nós

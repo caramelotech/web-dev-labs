@@ -7,7 +7,7 @@ Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao
 - **Fundamentos Web** - o alicerce do front-end: HTML e CSS
 - **Engenharia de Software** - escrever código que dá para manter: princípios, padrões e testes
 - **APIs** - como os sistemas conversam: protocolos, estilos de comunicação, segurança e evolução
-- **Databases** - guardar dados com segurança: modelo relacional e NoSQL, garantias transacionais e arquitetura interna
+- **Databases** - guardar dados com segurança: modelo relacional e NoSQL, garantias transacionais, arquitetura interna e busca
 - **System Design** - pensar o sistema antes de construir: fundamentos, trade-offs e metodologia
 - **Escalabilidade e Infraestrutura** - aguentar mais carga: escala, cache, load balancer, API Gateway, CDN
 - **Sistemas Distribuídos** - quando os dados vivem em várias máquinas: consistência, replicação e coordenação entre nós

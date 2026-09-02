@@ -41,7 +41,7 @@ Sem lacunas planejadas no momento.
 
 ### `banco-de-dados/`
 
-Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência e arquitetura interna das engines.
+Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência, arquitetura interna das engines e busca (tipos de busca, full-text).
 
 - ⬜ Índices e planos de execução
 - ⬜ Data modeling (relacional vs NoSQL)
@@ -62,7 +62,7 @@ Escopo: consistência, replicação e coordenação entre nós. CAP e PACELC fic
 
 ### `escalabilidade/` (rótulo do sidebar: "Escalabilidade e Infraestrutura")
 
-Escopo: escalar carga e a infraestrutura que sustenta isso - particionamento, replicação, CDN, load balancer, service discovery, API Gateway, cache, rate limiting.
+Escopo: escalar carga e a infraestrutura que sustenta isso - particionamento, replicação, CDN, load balancer, service discovery, API Gateway, cache, casos de uso do Redis, rate limiting.
 
 Sem lacunas planejadas no momento.
 
