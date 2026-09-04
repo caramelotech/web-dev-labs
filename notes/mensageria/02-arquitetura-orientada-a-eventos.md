@@ -71,12 +71,12 @@ flowchart LR
 
 **Broker** é o meio de campo que recebe, guarda e distribui os eventos. As opções mais comuns:
 
-| Broker | Jeitão | Costuma aparecer em |
-| --- | --- | --- |
-| Apache Kafka | Log distribuído e particionado, guarda o histórico | Streaming, event sourcing, pipelines de dados |
-| Amazon Kinesis | Kafka gerenciado da AWS, mesma ideia de log | Quem já vive no ecossistema AWS |
-| RabbitMQ | Broker "esperto" que roteia mensagem por regras, entrega e esquece | Filas de trabalho, roteamento complexo |
-| NATS | Minimalista, latência baixíssima, foco em pub/sub | Comunicação entre serviços, IoT, edge |
+| Broker         | Caracteristicas                                                    | Costuma aparecer em                           |
+| -------------- | ------------------------------------------------------------------ | --------------------------------------------- |
+| Apache Kafka   | Log distribuído e particionado, guarda o histórico                 | Streaming, event sourcing, pipelines de dados |
+| Amazon Kinesis | Kafka gerenciado da AWS, mesma ideia de log                        | Quem já vive no ecossistema AWS               |
+| RabbitMQ       | Broker "esperto" que roteia mensagem por regras, entrega e esquece | Filas de trabalho, roteamento complexo        |
+| NATS           | Minimalista, latência baixíssima, foco em pub/sub                  | Comunicação entre serviços, IoT, edge         |
 
 Kafka e RabbitMQ estão detalhados nas notas de [Kafka](/labs/web-dev/mensageria/03-kafka/) e [RabbitMQ](/labs/web-dev/mensageria/04-rabbitmq/). A escolha muda bastante coisa: um log que guarda histórico (Kafka) permite reprocessar eventos antigos; um broker que entrega e esquece (RabbitMQ no modo padrão) não.
 
@@ -125,14 +125,14 @@ Alguns mecanismos aparecem em praticamente todo sistema orientado a eventos, ind
 
 "Arquitetura orientada a eventos" é um guarda-chuva. Debaixo dele existem padrões com nomes próprios, e a maioria dos sistemas usa mais de um ao mesmo tempo:
 
-| Padrão | O que é | Quando usar |
-| --- | --- | --- |
-| **Publish-subscribe** | Um evento, vários consumidores independentes lendo cada um pelo seu motivo | O caso mais comum: notificar N serviços de que algo aconteceu |
-| **Event streaming** | Um cálculo contínuo sobre o fluxo de eventos (contagem, janela de tempo, join entre streams) | Antifraude em tempo real, alertas de SRE, recomendação que reage a cada clique |
-| **Event sourcing** | A sequência de eventos é a fonte da verdade; o estado atual é derivado dela | Quando o histórico completo importa: contabilidade, auditoria, saldo de conta |
-| **Saga** | Coordenar uma transação que atravessa vários serviços usando eventos e passos de compensação | Quando uma operação precisa ser "tudo ou nada" mas não cabe numa transação de banco única |
+| Padrão                | O que é                                                                                      | Quando usar                                                                               |
+| --------------------- | -------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Publish-subscribe** | Um evento, vários consumidores independentes lendo cada um pelo seu motivo                   | O caso mais comum: notificar N serviços de que algo aconteceu                             |
+| **Event streaming**   | Um cálculo contínuo sobre o fluxo de eventos (contagem, janela de tempo, join entre streams) | Antifraude em tempo real, alertas de SRE, recomendação que reage a cada clique            |
+| **Event sourcing**    | A sequência de eventos é a fonte da verdade; o estado atual é derivado dela                  | Quando o histórico completo importa: contabilidade, auditoria, saldo de conta             |
+| **Saga**              | Coordenar uma transação que atravessa vários serviços usando eventos e passos de compensação | Quando uma operação precisa ser "tudo ou nada" mas não cabe numa transação de banco única |
 
-Publish-subscribe e event streaming aparecem em [Casos de Uso do Kafka](/labs/web-dev/mensageria/07-casos-de-uso-do-kafka/). Saga e event sourcing têm nota própria em [Saga](/labs/web-dev/transacoes-distribuidas/03-saga/) e [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/).
+Publish-subscribe e event streaming aparecem em [Casos de Uso do Kafka](/labs/web-dev/mensageria/08-casos-de-uso-do-kafka/). Saga e event sourcing têm nota própria em [Saga](/labs/web-dev/transacoes-distribuidas/03-saga/) e [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/).
 
 ## Anti-padrões
 

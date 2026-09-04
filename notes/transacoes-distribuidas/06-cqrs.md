@@ -56,7 +56,7 @@ flowchart LR
     P --> R[(Banco de leitura)]
 ```
 
-Isso esbarra no problema da escrita dupla: gravar no banco e publicar no broker não é atômico. A solução é a mesma da nota de [Outbox Pattern](/labs/web-dev/transacoes-distribuidas/05-outbox-pattern/), gravar o evento na mesma transação do banco, e deixar um processo separado publicá-lo. O componente que consome esses eventos e escreve o modelo de leitura costuma ser chamado de **projeção**: ele "projeta" o fluxo de eventos numa visão pronta para consulta. Change Data Capture, visto em [Casos de Uso do Kafka](/labs/web-dev/mensageria/07-casos-de-uso-do-kafka/), é outra forma de alimentar essa projeção.
+Isso esbarra no problema da escrita dupla: gravar no banco e publicar no broker não é atômico. A solução é a mesma da nota de [Outbox Pattern](/labs/web-dev/transacoes-distribuidas/05-outbox-pattern/), gravar o evento na mesma transação do banco, e deixar um processo separado publicá-lo. O componente que consome esses eventos e escreve o modelo de leitura costuma ser chamado de **projeção**: ele "projeta" o fluxo de eventos numa visão pronta para consulta. Change Data Capture, visto em [Casos de Uso do Kafka](/labs/web-dev/mensageria/08-casos-de-uso-do-kafka/), é outra forma de alimentar essa projeção.
 
 Como o evento pode chegar duas vezes, a projeção precisa ser idempotente (ver [Idempotência](/labs/web-dev/resiliencia/02-idempotencia/)): aplicar o mesmo evento de novo tem que dar o mesmo resultado.
 

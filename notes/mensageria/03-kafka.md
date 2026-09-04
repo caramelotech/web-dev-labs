@@ -208,7 +208,7 @@ Mesmo com EOS ligado, o "exatamente uma vez" só vale dentro do Kafka. Se o seu 
 
 ## Casos de uso comuns
 
-O Kafka costuma aparecer em cinco padrões recorrentes: pipelines de dados em tempo real, sistemas orientados a evento, processamento de streams, logs e métricas centralizados e Change Data Capture (CDC). Cada um, com a arquitetura típica e os trade-offs, está na nota [Casos de Uso do Kafka](/labs/web-dev/mensageria/07-casos-de-uso-do-kafka/).
+O Kafka costuma aparecer em cinco padrões recorrentes: pipelines de dados em tempo real, sistemas orientados a evento, processamento de streams, logs e métricas centralizados e Change Data Capture (CDC). Cada um, com a arquitetura típica e os trade-offs, está na nota [Casos de Uso do Kafka](/labs/web-dev/mensageria/08-casos-de-uso-do-kafka/).
 
 ## Principais configurações
 

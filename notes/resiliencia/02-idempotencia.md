@@ -70,3 +70,5 @@ Independente de onde a chave é guardada, dois detalhes são importantes:
 - **Criação de pedido**: um app de delivery que reenvia a criação de um pedido por causa de uma conexão instável não deve gerar dois pedidos idênticos na cozinha do restaurante.
 - **Envio de e-mail**: um worker que processa a fila de e-mails de confirmação e é reiniciado no meio do processamento não deve mandar o mesmo e-mail de novo para o cliente ao reprocessar a mensagem.
 - **Processamento de eventos**: um consumer Kafka que recebe a mesma mensagem duas vezes (garantia at-least-once, ver [Garantias de Entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/)) usa o ID do evento como chave de idempotência para não aplicar o mesmo efeito colateral (debitar estoque, por exemplo) duas vezes.
+
+No contexto de mensageria, checar o ID do evento antes de processar tem nome próprio, deduplicação, e um conjunto de técnicas específicas (inbox pattern, janela de tempo, bloom filter) descritas em [Deduplicação de Mensagens](/labs/web-dev/mensageria/07-deduplicacao-de-mensagens/). A deduplicação descarta a mensagem repetida; a idempotência garante que, se uma passar, o efeito acontece uma vez só.
