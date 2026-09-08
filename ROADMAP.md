@@ -43,7 +43,6 @@ Sem lacunas planejadas no momento.
 
 Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência, arquitetura interna das engines e busca (tipos de busca, full-text).
 
-- ⬜ Índices e planos de execução
 - ⬜ Data modeling (relacional vs NoSQL)
 
 ## Trilha 2: System Design

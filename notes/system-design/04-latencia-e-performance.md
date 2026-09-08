@@ -43,7 +43,7 @@ Quando latência ou throughput pioram, o motivo está em algum recurso específi
 - **Memória**: falta de RAM força o sistema operacional a usar swap (disco), o que é ordens de magnitude mais lento, ou causa garbage collection agressivo em linguagens gerenciadas, pausando a aplicação por instantes.
 - **I/O de disco**: leituras e escritas em disco (logs, banco de dados local, arquivos) são muito mais lentas que operações em memória.
 - **Rede**: latência entre serviços, banda limitada, ou muitas conexões TCP sendo abertas e fechadas.
-- **Banco de dados**: queries mal otimizadas, falta de índice, ou o banco simplesmente recebendo mais tráfego do que consegue processar (veja [Database bottlenecks](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/)).
+- **Banco de dados**: queries mal otimizadas, [falta de índice](/labs/web-dev/banco-de-dados/12-indices-e-planos-de-execucao/), ou o banco simplesmente recebendo mais tráfego do que consegue processar (veja [Database bottlenecks](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/)).
 - **Cache**: quando o cache tem baixa taxa de acerto (hit rate), a maioria das requisições acaba caindo no banco de qualquer forma, perdendo o benefício de ter um cache (veja [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/)).
 - **Filas**: consumers processando mais devagar do que producers publicam fazem a fila crescer sem parar, e o atraso entre publicar e processar (que também é uma forma de latência) aumenta continuamente.
 
