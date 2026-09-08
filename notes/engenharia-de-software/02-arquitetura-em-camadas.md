@@ -121,7 +121,7 @@ O controller conhece o service e o chama. O service conhece o repository e o cha
 Por que isso importa na prática:
 
 - **Trocar peças sem efeito cascata.** Mudar o framework web (de Express para Fastify, de MVC para Minimal API) mexe só na camada de controle. Trocar o banco mexe só na camada de dados. A lógica de negócio, que costuma ser a parte mais valiosa e mais difícil de reescrever, fica intocada.
-- **Testar a lógica sozinha.** Como o service depende de uma interface de repositório e não do banco de verdade, dá para testar a regra de transferência passando um repositório falso que devolve saldos conhecidos, sem subir Postgres nenhum. Isso é o que deixa os testes unitários rápidos, assunto de [Testes em Microsserviços](/labs/web-dev/engenharia-de-software/03-testes-em-microsservicos/).
+- **Testar a lógica sozinha.** Como o service depende de uma interface de repositório e não do banco de verdade, dá para testar a regra de transferência passando um repositório falso que devolve saldos conhecidos, sem subir Postgres nenhum. Isso é o que deixa os testes unitários rápidos, assunto de [Testes em Microsserviços](/labs/web-dev/engenharia-de-software/04-testes-em-microsservicos/).
 
 Um detalhe de fronteira: o que trafega entre o mundo externo e o controller costuma ser um **DTO** (Data Transfer Object), um objeto simples com os campos daquela requisição ou resposta. Dentro do service e abaixo dele, trabalha-se com a **entidade de domínio**, que carrega comportamento e regras. Separar os dois evita que um campo interno vaze na API sem querer, e que uma mudança no contrato HTTP force uma mudança no domínio.
 
