@@ -233,7 +233,28 @@ Authorization: Bearer <token>         → autenticação JWT
 Authorization: Basic <base64>         → autenticação básica
 Cache-Control: no-cache               → sem cache
 X-Request-ID: uuid-aqui              → rastreabilidade
+Accept-Encoding: gzip, br             → algoritmos de compressão que o cliente aceita
+Content-Encoding: br                  → algoritmo usado na resposta
 ```
+
+## Compressão de resposta
+
+Um JSON de listagem com 200 KB de texto vira uns 30 KB depois de comprimido. Essa economia de banda é negociada entre cliente e servidor a cada requisição: o cliente manda `Accept-Encoding` dizendo quais algoritmos sabe descomprimir, o servidor escolhe um e devolve a resposta comprimida com o header `Content-Encoding` indicando qual foi usado. Se o cliente não anuncia nada, a resposta vai sem compressão.
+
+```
+Requisição:  Accept-Encoding: gzip, br, zstd
+Resposta:    Content-Encoding: br
+```
+
+Os três algoritmos que aparecem hoje:
+
+- **gzip**: suportado por todo cliente e servidor HTTP que existe. É o padrão seguro, e na dúvida é ele.
+- **brotli** (`br`): criado pelo Google, comprime cerca de 15% a 25% melhor que o gzip com um custo de CPU parecido. É bem suportado em navegadores.
+- **zstd**: criado pelo Facebook, tem razão de compressão parecida com a do gzip, mas comprime várias vezes mais rápido. Útil quando o gargalo é a CPU do servidor, não a banda.
+
+O ganho aparece em conteúdo textual: JSON, HTML, CSS, JavaScript encolhem de 60% a 80%. Comprimir tem um custo de CPU dos dois lados, então para uma resposta minúscula (poucas centenas de bytes) não compensa, o trabalho de comprimir custa mais que o byte economizado. E não adianta comprimir o que já vem comprimido: JPEG, PNG, MP4 e arquivos `.zip` não encolhem, só gastam CPU.
+
+Existe um cuidado de segurança. O ataque **BREACH** explora a compressão de uma resposta dinâmica servida sob HTTPS quando ela mistura, no mesmo corpo, um segredo (como um token CSRF) e um trecho que o atacante consegue influenciar. Observando o tamanho da resposta comprimida em várias tentativas, dá para deduzir o segredo byte a byte. A mitigação prática é não comprimir esse tipo específico de resposta (as que carregam token de sessão ou CSRF junto de entrada refletida); comprimir assets estáticos e listagens públicas segue tranquilo.
 
 ## Boas práticas de design de API
 
@@ -263,5 +284,7 @@ GET /produtos?page=2&size=20&sort=nome,asc
   "totalPaginas": 18
 }
 ```
+
+As estratégias de paginação (offset, cursor, keyset), quando usar cada uma e o problema do OFFSET profundo estão em [Paginação](/labs/web-dev/apis/05-paginacao/).
 
 - Documente com OpenAPI/Swagger - gera documentação interativa automaticamente
