@@ -218,6 +218,41 @@ Se outra transação já tiver alterado essa conta (e a versão já não for mai
 
 Diferente do lock pessimista, o lock otimista não bloqueia ninguém enquanto a leitura acontece, ele só detecta o conflito na hora de escrever, e devolve a responsabilidade de decidir o que fazer (tentar de novo, avisar o usuário) para a aplicação. Em JPA/Hibernate, essa estratégia normalmente é implementada com a anotação `@Version`.
 
+#### MVCC: o banco já faz algo parecido com lock otimista, sozinho
+
+O lock otimista da seção anterior é implementado à mão, com uma coluna `version` que a aplicação gerencia. A maioria dos bancos relacionais modernos (PostgreSQL, MySQL/InnoDB, Oracle) já faz algo na mesma linha por baixo dos panos, para toda leitura, sem a aplicação precisar pedir: o **MVCC** (Multiversion Concurrency Control, controle de concorrência por multiversão).
+
+Em vez de travar uma linha para ler ela, o banco mantém **várias versões** da mesma linha ao mesmo tempo. Um `UPDATE` não sobrescreve o dado no lugar, ele cria uma versão nova e marca a antiga como obsoleta. Cada transação enxerga a versão que existia no momento em que ela começou (chamado de **snapshot**), então leitura nunca bloqueia escrita, e escrita nunca bloqueia leitura, elas simplesmente enxergam fotografias diferentes do mesmo dado.
+
+```text
+Linha "conta 123", saldo = 50 (versão 1)
+
+Transação A começa às 10:00:00 -> enxerga snapshot com saldo = 50
+Transação B começa às 10:00:01 -> enxerga o mesmo snapshot, saldo = 50
+Transação B faz UPDATE, cria a versão 2 (saldo = 80), e dá COMMIT
+Transação A continua enxergando saldo = 50 (a versão 1, do snapshot dela)
+                                             até ela terminar e começar outra
+```
+
+É esse mecanismo que faz o nível de isolamento **Repeatable Read** funcionar sem precisar travar a tabela inteira: no PostgreSQL, MySQL e na maioria dos bancos modernos, `Repeatable Read` é implementado via MVCC (também chamado de **snapshot isolation**), não via lock. As versões antigas (as "tuplas mortas" no jargão do Postgres) ficam ocupando espaço até um processo de limpeza (o `autovacuum` no Postgres) liberar elas.
+
+**O detalhe que a tabela de fenômenos da nota de [ACID](/labs/web-dev/banco-de-dados/03-acid/) não mostra:** mesmo com snapshot isolation evitando dirty read, non-repeatable read e phantom read, ainda sobra um problema chamado **write skew**. Ele acontece quando duas transações leem o mesmo dado, cada uma decide agir com base no que leu, e as duas escritas juntas violam uma regra que nenhuma delas quebraria sozinha.
+
+O exemplo clássico (dos hospitais): a regra é "sempre precisa ter pelo menos um médico de plantão". Dois médicos, Ana e Bruno, estão de plantão. Os dois, ao mesmo tempo, checam quantos médicos estão de plantão antes de pedir folga:
+
+```text
+10:00:00 - Ana lê: "2 médicos de plantão (eu e o Bruno)" -> ok, posso pedir folga
+10:00:00 - Bruno lê: "2 médicos de plantão (eu e a Ana)" -> ok, posso pedir folga
+10:00:01 - Ana marca folga
+10:00:01 - Bruno marca folga
+
+Resultado: 0 médicos de plantão, a regra foi violada
+```
+
+Nenhuma das duas leituras estava errada no momento em que aconteceu, e nenhuma das duas escritas conflita diretamente com a outra (são linhas diferentes: a folga da Ana, a folga do Bruno). É por isso que `Repeatable Read`/snapshot isolation não pega esse caso: não existe um conflito clássico de "duas transações escrevendo a mesma linha" para detectar. Só o nível `Serializable` (que o PostgreSQL implementa rastreando dependências de leitura e escrita entre transações, sem precisar travar nada) rejeita esse cenário, forçando uma das duas transações a tentar de novo.
+
+Isso reforça, com um exemplo concreto, a mesma tabela de trade-off já vista em ACID: quanto mais alto o nível de isolamento, mais anomalias ele evita, mas mais caro fica.
+
 #### Lock distribuído
 
 Quando o recurso compartilhado não vive dentro do banco de dados (por exemplo, um arquivo, uma fila, ou um passo de um processo que precisa rodar só uma vez entre várias instâncias), é preciso um mecanismo de lock que funcione entre máquinas diferentes, coordenado por um serviço externo (Redis, ZooKeeper, etcd, por exemplo). A ideia é a mesma do mutex (só uma execução por vez na seção crítica), mas implementada numa infraestrutura compartilhada em vez de memória local, e com tratamento extra para o caso de uma instância travar o lock e nunca liberar (normalmente resolvido com um tempo de expiração automática do lock).
@@ -232,6 +267,7 @@ Quando o recurso compartilhado não vive dentro do banco de dados (por exemplo, 
 | Lock pessimista     | Bloqueia a linha no banco antes de alterar                | Conflitos frequentes, regras que dependem do estado atual                                                  | Contenção e risco de deadlock                     |
 | Lock otimista       | Detecta alteração por número de versão, na hora de salvar | Conflitos pouco frequentes                                                                                 | Exige lógica de retry / tratamento de conflito    |
 | Lock distribuído    | Coordena instâncias via um serviço externo compartilhado  | Recursos compartilhados fora do banco                                                                      | Exige infraestrutura extra e tratamento de falhas |
+| MVCC (snapshot isolation) | O banco versiona a linha automaticamente, leitura nunca bloqueia escrita | Nível de isolamento Repeatable Read na maioria dos bancos modernos | Não evita write skew, só Serializable evita |
 | Ledger              | Registra eventos em vez de sobrescrever um valor único    | Dinheiro, auditoria, rastreabilidade (veja [Ledger Pattern](/labs/web-dev/banco-de-dados/08-ledger-pattern/)) | Maior complexidade arquitetural                   |
 
 ## Escolhendo uma estratégia na prática
@@ -272,10 +308,16 @@ public void credit(Long accountId, BigDecimal amount) {
 
 Vale um cuidado aqui: `@Transactional` sozinho garante atomicidade da transação (tudo ou nada), mas **não elimina** o lost update por si só. Sem `@Version` (lock otimista), `@Lock(LockModeType.PESSIMISTIC_WRITE)` (lock pessimista) ou uma atualização atômica no `UPDATE` gerado, duas transações concorrentes ainda podem ler o mesmo valor antigo e uma sobrescrever a outra.
 
+## Referências
+
+- [PostgreSQL e o Controle de Concorrência por Multiversão (MVCC)](https://blog.4linux.com.br/postgresql-e-o-controle-de-concorrencia-por-multiversao-mvcc/) - Almeida Robson (Blog 4Linux), pt-BR
+- [13.2. Transaction Isolation - PostgreSQL Documentation](https://www.postgresql.org/docs/current/transaction-iso.html) - PostgreSQL, en
+
 ## Recapitulando
 
 - Race condition é quando o resultado depende da ordem de execuções concorrentes sobre um mesmo recurso compartilhado, tipicamente numa sequência ler → calcular → escrever.
 - O problema clássico causado por isso é o **lost update**: uma escrita sobrescreve outra sem nenhum erro visível.
 - Mesmo aplicações "single-threaded" sofrem race condition quando rodam em múltiplas instâncias, porque o controle de concorrência precisa acontecer numa camada compartilhada, geralmente o banco de dados.
 - Execução sequencial resolve mas custa paralelismo; atualização atômica resolve bem casos simples; mutex protege dentro de um processo só; lock pessimista e otimista protegem entre instâncias diferentes usando o banco como fonte de verdade; lock distribuído resolve quando o recurso não está no banco.
+- MVCC é o banco fazendo algo parecido com lock otimista sozinho, para toda leitura, mas ainda deixa passar a anomalia de write skew, que só o nível Serializable evita.
 - Para domínios financeiros com necessidade de auditoria, vale considerar trocar a abordagem por um [Ledger Pattern](/labs/web-dev/banco-de-dados/08-ledger-pattern/) em vez de proteger um saldo mutável.
