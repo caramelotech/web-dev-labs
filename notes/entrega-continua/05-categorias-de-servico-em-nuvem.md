@@ -25,15 +25,15 @@ O que muda entre os níveis é a **responsabilidade compartilhada**: quanto mais
 
 Dentro de um provedor de IaaS/PaaS, os serviços se organizam em algumas famílias. Não precisa decorar nomes de produto, só reconhecer para que serve cada família:
 
-| Categoria | Para que serve | Exemplos (AWS / GCP) |
-| --- | --- | --- |
-| Compute | Rodar código: VMs, containers, funções | EC2, ECS / Compute Engine, Cloud Run |
-| Storage | Guardar arquivos e blocos de dados | S3, EBS / Cloud Storage, Persistent Disk |
-| Rede | Conectar e expor: rede privada, balanceador, DNS, CDN | VPC, ELB, Route 53, CloudFront / VPC, Cloud Load Balancing |
-| Bancos gerenciados | Banco sem você administrar o servidor | RDS, DynamoDB, ElastiCache / Cloud SQL, Firestore |
-| Mensageria gerenciada | Filas e streaming prontos | SQS, MSK / Pub/Sub |
-| Observabilidade | Métricas, logs e alertas | CloudWatch / Cloud Monitoring |
-| Identidade (IAM) | Quem pode fazer o quê | IAM / IAM |
+| Categoria             | Para que serve                                        | Exemplos (AWS / GCP)                                       |
+| --------------------- | ----------------------------------------------------- | ---------------------------------------------------------- |
+| Compute               | Rodar código: VMs, containers, funções                | EC2, ECS / Compute Engine, Cloud Run                       |
+| Storage               | Guardar arquivos e blocos de dados                    | S3, EBS / Cloud Storage, Persistent Disk                   |
+| Rede                  | Conectar e expor: rede privada, balanceador, DNS, CDN | VPC, ELB, Route 53, CloudFront / VPC, Cloud Load Balancing |
+| Bancos gerenciados    | Banco sem você administrar o servidor                 | RDS, DynamoDB, ElastiCache / Cloud SQL, Firestore          |
+| Mensageria gerenciada | Filas e streaming prontos                             | SQS, MSK / Pub/Sub                                         |
+| Observabilidade       | Métricas, logs e alertas                              | CloudWatch / Cloud Monitoring                              |
+| Identidade (IAM)      | Quem pode fazer o quê                                 | IAM / IAM                                                  |
 
 Quase toda peça deste lab tem uma versão "as a service": em vez de instalar e operar Redis, você usa um [cache gerenciado](/labs/web-dev/escalabilidade/08-cache-e-redis/); em vez de administrar um Postgres, usa um [banco gerenciado](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/); em vez de manter um cluster Kafka, usa mensageria gerenciada. O custo é sempre o mesmo trade-off: menos trabalho operacional, mais dependência do provedor e, em geral, conta mais cara por unidade.
 
