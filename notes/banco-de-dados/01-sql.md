@@ -177,7 +177,7 @@ SELECT * FROM usuarios WHERE id IN (1, 3, 5, 7);
 SELECT * FROM pedidos WHERE valor BETWEEN 100.00 AND 500.00;
 ```
 
-O `LIKE` serve para padrões simples e busca por prefixo. Para busca em texto livre (com relevância, plural e acento), ele não escala: esse é o assunto da nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/14-busca-full-text-search/).
+O `LIKE` serve para padrões simples e busca por prefixo. Para busca em texto livre (com relevância, plural e acento), ele não escala: esse é o assunto da nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/).
 
 ### DISTINCT
 
@@ -413,7 +413,7 @@ CREATE INDEX idx_pedidos_usuario_status ON pedidos(usuario_id, status);
 
 Colunas com `PRIMARY KEY` e `UNIQUE` já têm índice automaticamente.
 
-Como o índice funciona por dentro (a árvore B-tree), quando o banco decide usar ou ignorar um índice e como ler o plano de uma query com `EXPLAIN` está em [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/12-indices-e-planos-de-execucao/).
+Como o índice funciona por dentro (a árvore B-tree), quando o banco decide usar ou ignorar um índice e como ler o plano de uma query com `EXPLAIN` está em [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/).
 
 ## Transações
 

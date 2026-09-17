@@ -30,7 +30,7 @@ O tipo de índice padrão em praticamente todo banco relacional é o **B-tree** 
 Como as folhas estão em ordem, o B-tree serve para mais coisa do que igualdade (`=`):
 
 - comparação e faixa: `>`, `<`, `>=`, `<=`, `BETWEEN`
-- prefixo de texto: `nome LIKE 'anel%'` (mas não `LIKE '%anel'`, ver [Busca Full-Text](/labs/web-dev/banco-de-dados/14-busca-full-text-search/))
+- prefixo de texto: `nome LIKE 'anel%'` (mas não `LIKE '%anel'`, ver [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/))
 - `ORDER BY` na mesma coluna, sem precisar de um passo extra de ordenação
 
 Colunas com `PRIMARY KEY` e `UNIQUE` já ganham um índice B-tree automático. A forma como esse índice se relaciona com o armazenamento físico da linha muda de um banco para outro (heap no PostgreSQL, índice clusterizado no MySQL/InnoDB), e isso está detalhado em [PostgreSQL vs MySQL](/labs/web-dev/banco-de-dados/11-postgres-vs-mysql/).
@@ -56,7 +56,7 @@ Além do B-tree simples de uma coluna, os que mais aparecem no dia a dia:
 
 **Índice único** (`UNIQUE`) tem função dupla: acelera a busca e garante que não existam dois valores repetidos.
 
-Bancos também têm tipos especializados para casos que o B-tree não atende bem: **GIN** para texto e campos com vários valores (arrays, JSONB), **GiST** e **BRIN** para dados geográficos e faixas. O GIN é o motor da [Busca Full-Text](/labs/web-dev/banco-de-dados/14-busca-full-text-search/).
+Bancos também têm tipos especializados para casos que o B-tree não atende bem: **GIN** para texto e campos com vários valores (arrays, JSONB), **GiST** e **BRIN** para dados geográficos e faixas. O GIN é o motor da [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/).
 
 ## Quando o banco usa ou ignora o índice
 
@@ -90,7 +90,7 @@ O que procurar no resultado:
 - **Index Only Scan**: respondeu só com o índice, sem tocar na tabela. O mais rápido.
 - **linhas estimadas vs linhas reais**: se o planner achava que viriam 10 linhas e vieram 400 mil, as estatísticas estão desatualizadas e o plano provavelmente é ruim.
 
-A nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/14-busca-full-text-search/) tem um exemplo lado a lado de `EXPLAIN ANALYZE` antes e depois de criar o índice, vale ver o efeito na prática.
+A nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/) tem um exemplo lado a lado de `EXPLAIN ANALYZE` antes e depois de criar o índice, vale ver o efeito na prática.
 
 ## Referências
 
