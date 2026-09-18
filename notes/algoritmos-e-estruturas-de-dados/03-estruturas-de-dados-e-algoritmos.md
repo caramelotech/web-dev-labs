@@ -48,16 +48,16 @@ Um código que "funciona" passou nos testes de hoje, com poucos dados. Um códig
 
 ## Mapa do que vem a seguir
 
-| Nota | O que você vai ver |
-| ---- | ------------------ |
-| [Complexidade e Big O](/labs/web-dev/algoritmos-e-estruturas-de-dados/04-complexidade-e-big-o/) | A régua para medir e comparar o custo de um algoritmo |
-| [Estruturas Lineares](/labs/web-dev/algoritmos-e-estruturas-de-dados/05-estruturas-lineares/) | Array, lista ligada, pilha e fila |
-| [Tabelas Hash](/labs/web-dev/algoritmos-e-estruturas-de-dados/06-tabelas-hash/) | Chave e valor com acesso rápido |
-| [Árvores](/labs/web-dev/algoritmos-e-estruturas-de-dados/07-arvores/) | Dados hierárquicos, busca em ordem e heap |
-| [Grafos](/labs/web-dev/algoritmos-e-estruturas-de-dados/08-grafos/) | Conexões entre coisas, BFS e DFS |
-| [Recursão, Busca e Ordenação](/labs/web-dev/algoritmos-e-estruturas-de-dados/09-recursao-busca-e-ordenacao/) | Os algoritmos mais clássicos |
-| [Paradigmas de Projeto](/labs/web-dev/algoritmos-e-estruturas-de-dados/10-paradigmas-de-projeto-de-algoritmos/) | Divisão e conquista, programação dinâmica, guloso e backtracking |
-| [Padrões de Resolução](/labs/web-dev/algoritmos-e-estruturas-de-dados/11-padroes-de-resolucao-de-problemas/) | Two pointers, sliding window e como reconhecer o formato do problema |
+| Nota                                                                                                            | O que você vai ver                                                   |
+| --------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [Complexidade e Big O](/labs/web-dev/algoritmos-e-estruturas-de-dados/04-complexidade-e-big-o/)                 | A régua para medir e comparar o custo de um algoritmo                |
+| [Estruturas Lineares](/labs/web-dev/algoritmos-e-estruturas-de-dados/05-estruturas-lineares/)                   | Array, lista ligada, pilha e fila                                    |
+| [Tabelas Hash](/labs/web-dev/algoritmos-e-estruturas-de-dados/06-tabelas-hash/)                                 | Chave e valor com acesso rápido                                      |
+| [Árvores](/labs/web-dev/algoritmos-e-estruturas-de-dados/07-arvores/)                                           | Dados hierárquicos, busca em ordem e heap                            |
+| [Grafos](/labs/web-dev/algoritmos-e-estruturas-de-dados/08-grafos/)                                             | Conexões entre coisas, BFS e DFS                                     |
+| [Recursão, Busca e Ordenação](/labs/web-dev/algoritmos-e-estruturas-de-dados/09-recursao-busca-e-ordenacao/)    | Os algoritmos mais clássicos                                         |
+| [Paradigmas de Projeto](/labs/web-dev/algoritmos-e-estruturas-de-dados/10-paradigmas-de-projeto-de-algoritmos/) | Divisão e conquista, programação dinâmica, guloso e backtracking     |
+| [Padrões de Resolução](/labs/web-dev/algoritmos-e-estruturas-de-dados/11-padroes-de-resolucao-de-problemas/)    | Two pointers, sliding window e como reconhecer o formato do problema |
 
 ## Referências
 

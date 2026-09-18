@@ -109,7 +109,7 @@ function trocoGuloso(moedas, valor) {
 }
 
 trocoGuloso([1, 5, 10, 25], 30); // [25, 5]   -> ótimo
-trocoGuloso([1, 3, 4], 6);       // [4, 1, 1] -> 3 moedas, mas o ótimo são 2 (3 + 3)
+trocoGuloso([1, 3, 4], 6); // [4, 1, 1] -> 3 moedas, mas o ótimo são 2 (3 + 3)
 ```
 
 Com as moedas do dia a dia (1, 5, 10, 25), o guloso acerta. Com `[1, 3, 4]` ele erra, e a programação dinâmica da seção anterior acerta. A lição: **o guloso só é correto quando o problema tem uma estrutura que garante isso**, e é preciso provar (ou saber de antemão que se aplica). Bons exemplos em que funciona: escolher o maior número de atividades que não se sobrepõem, o algoritmo de Huffman de compressão e o caminho mínimo de Dijkstra.
@@ -127,11 +127,11 @@ function subconjuntos(itens) {
   const resultado = [];
 
   function explorar(inicio, atual) {
-    resultado.push([...atual]);          // registra o subconjunto atual
+    resultado.push([...atual]); // registra o subconjunto atual
     for (let i = inicio; i < itens.length; i++) {
-      atual.push(itens[i]);              // escolhe
-      explorar(i + 1, atual);            // explora a partir daí
-      atual.pop();                       // desfaz a escolha
+      atual.push(itens[i]); // escolhe
+      explorar(i + 1, atual); // explora a partir daí
+      atual.pop(); // desfaz a escolha
     }
   }
 
