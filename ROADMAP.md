@@ -10,9 +10,15 @@ Algumas notas em `notes/` ainda são esqueleto (só headings, sem conteúdo). Pa
 
 ### `fundamentos/`
 
-Escopo: fundamentos de front-end (HTML e CSS). Não cobre fundamentos de programação.
+Escopo: fundamentos de front-end (HTML e CSS). Fundamentos de programação (algoritmos, estruturas de dados, complexidade) ficam em `algoritmos-e-estruturas-de-dados/`.
 
-- ⬜ Decidir se algoritmos, estruturas de dados e complexidade (Big O) entram neste lab (pasta própria `algoritmos-e-estruturas-de-dados/`) ou ficam fora do escopo
+Sem lacunas planejadas no momento.
+
+### `algoritmos-e-estruturas-de-dados/`
+
+Escopo: base para resolver problemas - pilares de estudo, lógica e pensamento computacional, estruturas de dados, complexidade (Big O), paradigmas de projeto de algoritmos e padrões de resolução de problemas.
+
+Sem lacunas planejadas no momento.
 
 ### `engenharia-de-software/`
 
