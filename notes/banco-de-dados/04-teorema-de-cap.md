@@ -74,15 +74,6 @@ Nenhuma escolha é "certa" no absoluto, depende do problema. Um sistema bancári
 
 O CAP só descreve o que acontece **durante** uma partição, mas a maior parte do tempo um sistema distribuído está operando normalmente, sem nenhuma partição ativa. Nesses momentos, a troca real não é entre consistência e disponibilidade, é entre consistência e **latência** (o tempo que leva para sincronizar os nós antes de responder). Essa extensão do CAP é o Teorema de PACELC.
 
-## Recapitulando
-
-- O Teorema de CAP descreve o limite de um sistema distribuído: durante uma partição de rede, só é possível garantir consistência ou disponibilidade, não as duas.
-- Consistência (C): toda leitura retorna o dado mais recente ou um erro (diferente da consistência do ACID, que é sobre regras de negócio).
-- Disponibilidade (A): toda requisição recebe alguma resposta, mesmo que o dado esteja desatualizado.
-- Tolerância a partição (P): não é uma escolha, é uma realidade de qualquer sistema com mais de um nó.
-- A escolha prática do CAP é entre CP (recusa responder para não errar) e AP (responde mesmo com risco de dado velho).
-- Fora de uma partição, a troca deixa de ser C vs A e passa a ser consistência vs latência, o que o PACELC explica.
-
 ## Referências
 
 - [Como Escolher o Banco de Dados Correto pra sua Aplicação | System Design & Arquitetura de Software](https://www.youtube.com/watch?v=bhw4-Kq_RPs)

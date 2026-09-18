@@ -129,13 +129,6 @@ flowchart LR
 | Banco único       | Escala       |
 | Banco distribuído | Complexidade |
 
-## Resumo
-
-- Sistema simples conceitualmente, difícil na escala
-- Leitura domina o sistema
-- Cache é essencial
-- Geração de ID é crítica
-
 ## Referências
 
 - [System Design: Encurtador de URL - Desafio Real de Entrevista RESOLVIDO | Leonardo Zamariola](https://www.youtube.com/watch?v=JHavVCLQT4k)

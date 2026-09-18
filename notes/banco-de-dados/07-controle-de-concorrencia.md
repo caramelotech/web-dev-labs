@@ -312,12 +312,3 @@ Vale um cuidado aqui: `@Transactional` sozinho garante atomicidade da transaçã
 
 - [PostgreSQL e o Controle de Concorrência por Multiversão (MVCC)](https://blog.4linux.com.br/postgresql-e-o-controle-de-concorrencia-por-multiversao-mvcc/) - Almeida Robson (Blog 4Linux), pt-BR
 - [13.2. Transaction Isolation - PostgreSQL Documentation](https://www.postgresql.org/docs/current/transaction-iso.html) - PostgreSQL, en
-
-## Recapitulando
-
-- Race condition é quando o resultado depende da ordem de execuções concorrentes sobre um mesmo recurso compartilhado, tipicamente numa sequência ler → calcular → escrever.
-- O problema clássico causado por isso é o **lost update**: uma escrita sobrescreve outra sem nenhum erro visível.
-- Mesmo aplicações "single-threaded" sofrem race condition quando rodam em múltiplas instâncias, porque o controle de concorrência precisa acontecer numa camada compartilhada, geralmente o banco de dados.
-- Execução sequencial resolve mas custa paralelismo; atualização atômica resolve bem casos simples; mutex protege dentro de um processo só; lock pessimista e otimista protegem entre instâncias diferentes usando o banco como fonte de verdade; lock distribuído resolve quando o recurso não está no banco.
-- MVCC é o banco fazendo algo parecido com lock otimista sozinho, para toda leitura, mas ainda deixa passar a anomalia de write skew, que só o nível Serializable evita.
-- Para domínios financeiros com necessidade de auditoria, vale considerar trocar a abordagem por um [Ledger Pattern](/labs/web-dev/banco-de-dados/08-ledger-pattern/) em vez de proteger um saldo mutável.

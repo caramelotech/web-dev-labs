@@ -108,14 +108,6 @@ Não existe controlador central. Cada serviço reage a eventos.
 - Observabilidade
 - Versionamento de eventos
 
-## Resumo
-
-- Monolito: simples e consistente
-- Microsserviços: distribuídos e sujeitos a falhas parciais
-- Sagas: forma comum de coordenar consistência
-- Orquestração: controle central
-- Coreografia: eventos distribuídos
-
 ## Referências
 
 - [System Design Interview. A pergunta mais comum em entrevista sobre microsservicos | Leonardo Zamariola](https://www.youtube.com/watch?v=bBYjxqLSXeU)

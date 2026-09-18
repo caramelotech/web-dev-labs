@@ -103,13 +103,6 @@ Ao escolher um banco de dados para um sistema, a pergunta não é "qual banco é
 - **Sistema fora do ar é inaceitável, um dado levemente desatualizado é tolerável** (feed de rede social, catálogo de produtos, cache, telemetria): procure bancos **AP/EL**, como Cassandra, DynamoDB ou Redis.
 - **O banco expõe configuração para ajustar isso?** Vale checar antes de descartar um banco só pela classificação padrão: MongoDB, DynamoDB e Cassandra, por exemplo, permitem apertar a consistência quando uma operação específica exigir, mesmo sendo AP/EL ou CP/EC por padrão.
 
-## Recapitulando
-
-- Esta nota aplica a teoria do [CAP](/labs/web-dev/banco-de-dados/04-teorema-de-cap/) e do [PACELC](/labs/web-dev/banco-de-dados/05-teorema-de-pacelc/) a bancos de dados reais.
-- Cada banco tem uma classificação PACELC padrão (ex: Cassandra e DynamoDB são AP/EL, PostgreSQL e Spanner são CP/EC), sustentada por um mecanismo interno de replicação/consenso (Quorum, Raft, Paxos, Sentinel ou WAL).
-- Muitos bancos permitem ajustar esse comportamento padrão via configuração (WriteConcern, ReadConcern, consistency level, quorum de confirmação), outros não (PostgreSQL, Redis).
-- Na prática, a escolha depende do trade-off que o sistema pode pagar: dado sempre correto (CP/EC) ou sistema sempre no ar mesmo com dado levemente atrasado (AP/EL).
-
 ## Referências
 
 - [Tabela de decisão CAP/PACELC (Miro)](https://miro.com/app/board/uXjVJCL6b64=/?share_link_id=911501521268&focusWidget=3458764643057124514)

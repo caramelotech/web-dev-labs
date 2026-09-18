@@ -94,15 +94,6 @@ O Teorema de CAP já ajuda a entender o comportamento de um banco numa situaçã
 - "Se a rede cair, esse banco prefere parar de responder ou responder com dado velho?" (a pergunta do CAP)
 - "No dia a dia, sem nenhuma falha, esse banco prefere ser mais rápido ou mais rigoroso com a consistência?" (a pergunta que o PACELC adiciona)
 
-## Recapitulando
-
-- O CAP só descreve o comportamento de um sistema distribuído durante uma partição de rede.
-- O PACELC estende essa ideia: mesmo sem partição, existe uma troca entre latência e consistência, porque sincronizar réplicas custa tempo.
-- A sigla resume as duas trocas: **se** houver Partição, escolha entre Availability ou Consistency; **Else** (sem partição), escolha entre Latency ou Consistency.
-- Bancos como Cassandra e DynamoDB são PA/EL (disponibilidade e velocidade acima de tudo).
-- Bancos como HBase e MongoDB (por padrão) são PC/EC (consistência acima de tudo).
-- Entender o PACELC ajuda a escolher banco de dados olhando não só para falhas raras, mas para o comportamento do dia a dia.
-
 ## Referências
 
 - [Como Escolher o Banco de Dados Correto pra sua Aplicação | System Design & Arquitetura de Software](https://www.youtube.com/watch?v=bhw4-Kq_RPs)

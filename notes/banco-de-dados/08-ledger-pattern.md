@@ -76,12 +76,3 @@ O Ledger custa mais complexidade arquitetural do que simplesmente proteger um sa
 - Divergências entre sistemas precisam ser detectáveis e investigáveis depois do fato.
 
 Para um contador simples sem essas exigências (curtidas de um post, visualizações de uma página), uma atualização atômica ou um lock continuam sendo soluções mais simples e suficientes.
-
-## Recapitulando
-
-- O Ledger troca "proteger um saldo mutável" por "eliminar o saldo mutável": em vez de guardar o estado atual, guarda a sequência de movimentações que leva até ele.
-- O saldo passa a ser calculado (soma das transações), não armazenado diretamente.
-- Isso resolve concorrência porque cada operação vira uma inserção independente, que nunca sobrescreve outra, em vez de uma disputa por um único campo.
-- Os benefícios (histórico, auditoria, rastreabilidade, detecção de divergência) vêm ao custo de mais complexidade arquitetural.
-- Para não pagar o custo de recalcular tudo do zero a cada consulta, sistemas reais mantêm um saldo materializado (projeção otimizada) por cima da tabela de transações (fonte de verdade), geralmente com snapshots periódicos.
-- O padrão é conceitualmente o mesmo do [Event Sourcing](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/), aplicado especificamente ao domínio financeiro.
