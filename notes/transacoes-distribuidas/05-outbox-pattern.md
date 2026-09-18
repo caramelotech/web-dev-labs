@@ -101,14 +101,6 @@ Eventos já publicados com sucesso não precisam ficar para sempre na tabela. Se
 | Complexidade operacional | Mais uma tabela, mais um processo (publisher) para manter, monitorar e limpar                                                                       |
 | Duplicidade possível     | O padrão garante entrega pelo menos uma vez, exigindo consumidores idempotentes                                                                     |
 
-## Recapitulando
-
-- O Outbox Pattern resolve o Dual-Write Problem gravando o dado de negócio e o evento na mesma transação de banco, numa tabela `outbox` dedicada.
-- Um processo publisher (via polling ou CDC) lê essa tabela e publica os eventos pendentes no broker, marcando ou removendo os já processados.
-- O padrão garante que o evento não se perde, mas não garante entrega exatamente uma vez, por isso consumidores precisam ser idempotentes.
-- A tabela outbox não é uma dependência nova (já está no banco que a aplicação usa), mas o processo publisher é uma peça nova que precisa de monitoramento próprio.
-- O ganho de resiliência e atomicidade vem ao custo de latência extra na publicação e mais complexidade operacional.
-
 ## Referências
 
 - [Padrões de Resiliência - Transactional Outbox Pattern | André Secco](https://www.youtube.com/watch?v=Fl_zXWvK2F8)
