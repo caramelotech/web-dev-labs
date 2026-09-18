@@ -37,21 +37,25 @@ Escopo: design e qualidade de código, princípios, padrões de projeto e testes
 
 Escopo: projeto de APIs - protocolos, estilos de comunicação, segurança e evolução.
 
-Sem lacunas planejadas no momento.
+- ⬜ Ataques web comuns: DDoS e XSS
+- ⬜ TLS/SSL em detalhe (handshake, certificados, cadeia de confiança)
 
 ### `banco-de-dados/`
 
 Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência, arquitetura interna das engines e busca (tipos de busca, full-text).
 
-- ⬜ Data modeling (relacional vs NoSQL)
+- ⬜ Data modeling (relacional vs NoSQL), incluindo normalização
+- ⬜ Armazenamento distribuído (HDFS) e processamento distribuído com Spark
 
 ## Trilha 2: System Design
 
 ### `system-design/`
 
-Escopo: projeto de sistemas - fundamentos, capacity planning, latência, trade-offs e metodologia.
+Escopo: projeto de sistemas - fundamentos, capacity planning, latência, trade-offs, metodologia e o roadmap de tópicos.
 
-Sem lacunas planejadas no momento.
+- ⬜ Usuários e padrões de uso (tipos, roles, demografia, picos, web vs mobile)
+- ⬜ Fundamentos de rede: TCP vs UDP, RTT
+- ⬜ Paralelização e threads (capacidade de um servidor)
 
 ### `sistemas-distribuidos/`
 
@@ -63,7 +67,7 @@ Escopo: consistência, replicação e coordenação entre nós. CAP e PACELC fic
 
 Escopo: escalar carga e a infraestrutura que sustenta isso - particionamento, replicação, CDN, load balancer, service discovery, API Gateway, cache, casos de uso do Redis, rate limiting.
 
-Sem lacunas planejadas no momento.
+- ⬜ Forward proxy vs reverse proxy
 
 ### `transacoes-distribuidas/`
 
