@@ -11,9 +11,9 @@ O outro lado da moeda: se os elementos ficam lado a lado, inserir ou remover no 
 ```js
 const lista = [10, 20, 30, 40];
 
-lista[2];            // 30, O(1)
-lista.indexOf(40);   // busca, O(n)
-lista.push(50);      // no fim, O(1) na maioria das vezes
+lista[2]; // 30, O(1)
+lista.indexOf(40); // busca, O(n)
+lista.push(50); // no fim, O(1) na maioria das vezes
 lista.splice(1, 0, 15); // insere no meio, O(n): desloca 20, 30, 40, 50
 ```
 
@@ -155,14 +155,14 @@ class Fila {
 
 Para uma lista ligada simples que guarda só a referência da cabeça:
 
-| Operação | Array | Lista ligada | Pilha | Fila |
-| -------- | ----- | ------------ | ----- | ---- |
-| Acesso por posição | O(1) | O(n) | não se usa | não se usa |
-| Busca por valor | O(n) | O(n) | não se usa | não se usa |
-| Inserir no início | O(n) | O(1) | não se usa | não se usa |
-| Inserir no fim | O(1) amortizado | O(n) | O(1) (`push`) | O(1) (`enqueue`) |
-| Remover do início | O(n) | O(1) | não se usa | O(1) (`dequeue`) |
-| Inserir ou remover no meio | O(n) | O(n) para achar a posição, O(1) para ligar | não se usa | não se usa |
+| Operação                   | Array           | Lista ligada                               | Pilha         | Fila             |
+| -------------------------- | --------------- | ------------------------------------------ | ------------- | ---------------- |
+| Acesso por posição         | O(1)            | O(n)                                       | não se usa    | não se usa       |
+| Busca por valor            | O(n)            | O(n)                                       | não se usa    | não se usa       |
+| Inserir no início          | O(n)            | O(1)                                       | não se usa    | não se usa       |
+| Inserir no fim             | O(1) amortizado | O(n)                                       | O(1) (`push`) | O(1) (`enqueue`) |
+| Remover do início          | O(n)            | O(1)                                       | não se usa    | O(1) (`dequeue`) |
+| Inserir ou remover no meio | O(n)            | O(n) para achar a posição, O(1) para ligar | não se usa    | não se usa       |
 
 Na dúvida, comece pelo array. Use pilha ou fila quando a **ordem de saída** for o ponto do problema (o último que entrou ou o primeiro que entrou).
 

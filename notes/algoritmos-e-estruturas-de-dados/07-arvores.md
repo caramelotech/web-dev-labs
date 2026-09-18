@@ -43,7 +43,7 @@ function emOrdem(no, visitar) {
 
 ## Árvore de busca binária
 
-Uma **árvore de busca binária** (BST, de *binary search tree*) é uma árvore binária com uma regra: para todo nó, os valores da subárvore esquerda são **menores** e os da direita são **maiores**. A árvore do desenho acima segue essa regra.
+Uma **árvore de busca binária** (BST, de _binary search tree_) é uma árvore binária com uma regra: para todo nó, os valores da subárvore esquerda são **menores** e os da direita são **maiores**. A árvore do desenho acima segue essa regra.
 
 Com essa regra, buscar vira um "acerta ou descarta metade": compara com o nó atual. Se o valor procurado é menor, o resultado só pode estar à esquerda, então tudo à direita é ignorado. E assim por diante.
 
@@ -62,10 +62,16 @@ class ArvoreBusca {
     let atual = this.raiz;
     while (true) {
       if (valor < atual.valor) {
-        if (atual.esquerda === null) { atual.esquerda = novo; return; }
+        if (atual.esquerda === null) {
+          atual.esquerda = novo;
+          return;
+        }
         atual = atual.esquerda;
       } else {
-        if (atual.direita === null) { atual.direita = novo; return; }
+        if (atual.direita === null) {
+          atual.direita = novo;
+          return;
+        }
         atual = atual.direita;
       }
     }
@@ -93,18 +99,18 @@ Para evitar esse cenário existem as **árvores balanceadas**, que se reorganiza
 
 ## Heap (fila de prioridade)
 
-Um **heap** é uma árvore binária *completa* (todos os níveis cheios, com o último preenchido da esquerda para a direita) com uma regra diferente da BST. Num **min-heap**, todo nó é menor ou igual aos seus filhos. Consequência: **o menor elemento está sempre na raiz**.
+Um **heap** é uma árvore binária _completa_ (todos os níveis cheios, com o último preenchido da esquerda para a direita) com uma regra diferente da BST. Num **min-heap**, todo nó é menor ou igual aos seus filhos. Consequência: **o menor elemento está sempre na raiz**.
 
 Por ser completa, a árvore cabe num array sem nenhum ponteiro. Para o nó no índice `i`:
 
 - os filhos estão em `2i + 1` e `2i + 2`
 - o pai está em `Math.floor((i - 1) / 2)`
 
-| Operação | Custo |
-| -------- | ----- |
-| Ver o menor (`peek`) | O(1) |
-| Inserir | O(log n) |
-| Remover o menor | O(log n) |
+| Operação             | Custo    |
+| -------------------- | -------- |
+| Ver o menor (`peek`) | O(1)     |
+| Inserir              | O(log n) |
+| Remover o menor      | O(log n) |
 
 Inserir coloca o item no fim do array e o "sobe" enquanto for menor que o pai. Remover o menor troca a raiz pelo último item e o "desce" enquanto for maior que algum filho.
 
@@ -136,10 +142,15 @@ class MinHeap {
         const esq = 2 * i + 1;
         const dir = 2 * i + 2;
         let menorIdx = i;
-        if (esq < this.itens.length && this.itens[esq] < this.itens[menorIdx]) menorIdx = esq;
-        if (dir < this.itens.length && this.itens[dir] < this.itens[menorIdx]) menorIdx = dir;
+        if (esq < this.itens.length && this.itens[esq] < this.itens[menorIdx])
+          menorIdx = esq;
+        if (dir < this.itens.length && this.itens[dir] < this.itens[menorIdx])
+          menorIdx = dir;
         if (menorIdx === i) break;
-        [this.itens[i], this.itens[menorIdx]] = [this.itens[menorIdx], this.itens[i]];
+        [this.itens[i], this.itens[menorIdx]] = [
+          this.itens[menorIdx],
+          this.itens[i],
+        ];
         i = menorIdx;
       }
     }

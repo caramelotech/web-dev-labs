@@ -4,7 +4,7 @@ Uma tabela hash guarda pares de **chave e valor** e devolve o valor de uma chave
 
 ## Como funciona uma tabela hash (hash map)
 
-Por baixo, a tabela é um **array** dividido em posições chamadas *baldes* (buckets). O truque está em como se decide em qual balde cada chave vai: uma **função de hash** recebe a chave e devolve um número, e esse número (com um `%` pelo tamanho do array) vira o índice.
+Por baixo, a tabela é um **array** dividido em posições chamadas _baldes_ (buckets). O truque está em como se decide em qual balde cada chave vai: uma **função de hash** recebe a chave e devolve um número, e esse número (com um `%` pelo tamanho do array) vira o índice.
 
 ```mermaid
 flowchart LR
@@ -47,11 +47,11 @@ class TabelaHash {
 
 ## Custo de acesso
 
-| Operação | Caso médio | Pior caso |
-| -------- | ---------- | --------- |
-| Buscar (`get`) | O(1) | O(n) |
-| Inserir (`set`) | O(1) | O(n) |
-| Remover (`delete`) | O(1) | O(n) |
+| Operação           | Caso médio | Pior caso |
+| ------------------ | ---------- | --------- |
+| Buscar (`get`)     | O(1)       | O(n)      |
+| Inserir (`set`)    | O(1)       | O(n)      |
+| Remover (`delete`) | O(1)       | O(n)      |
 
 O "caso médio" é o que vale na prática, e o pior caso acontece quando muitas chaves caem no mesmo balde (a seção de colisões explica). Duas informações complementares:
 

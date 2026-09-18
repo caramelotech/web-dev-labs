@@ -43,7 +43,7 @@ Para grafos com poucas conexões (o caso comum), use lista de adjacência.
 
 ## Busca em largura (BFS)
 
-A **busca em largura** (BFS, de *breadth-first search*) explora o grafo em camadas: primeiro o vértice inicial, depois todos os vizinhos dele, depois os vizinhos dos vizinhos. Quem organiza isso é uma **fila** (veja [Estruturas Lineares](/labs/web-dev/algoritmos-e-estruturas-de-dados/05-estruturas-lineares/)): os vértices descobertos primeiro são visitados primeiro.
+A **busca em largura** (BFS, de _breadth-first search_) explora o grafo em camadas: primeiro o vértice inicial, depois todos os vizinhos dele, depois os vizinhos dos vizinhos. Quem organiza isso é uma **fila** (veja [Estruturas Lineares](/labs/web-dev/algoritmos-e-estruturas-de-dados/05-estruturas-lineares/)): os vértices descobertos primeiro são visitados primeiro.
 
 Um efeito útil: num grafo sem pesos, a BFS encontra o caminho com **menos arestas** até cada vértice.
 
@@ -74,7 +74,7 @@ O `Set` de visitados é o que impede o ciclo infinito. O custo total é O(V + E)
 
 ## Busca em profundidade (DFS)
 
-A **busca em profundidade** (DFS, de *depth-first search*) faz o contrário: escolhe um vizinho e vai o mais fundo possível, e só volta quando chega a um beco sem saída, para tentar o próximo caminho. Quem organiza isso é uma **pilha**, que na versão recursiva é a própria pilha de chamadas de funções.
+A **busca em profundidade** (DFS, de _depth-first search_) faz o contrário: escolhe um vizinho e vai o mais fundo possível, e só volta quando chega a um beco sem saída, para tentar o próximo caminho. Quem organiza isso é uma **pilha**, que na versão recursiva é a própria pilha de chamadas de funções.
 
 ```js
 function dfs(grafo, atual, visitados = new Set(), ordem = []) {
@@ -95,13 +95,13 @@ Para grafos muito profundos, a versão recursiva pode estourar a pilha de chamad
 
 ## Quando usar cada busca
 
-| Pergunta | Busca indicada |
-| -------- | -------------- |
-| Qual o caminho com menos passos entre A e B (sem pesos)? | BFS |
-| Tudo que está a até 2 conexões de distância? | BFS |
-| Existe algum caminho entre A e B? | Qualquer uma |
-| O grafo tem ciclo? Quantos grupos conectados existem? | DFS costuma ser mais natural |
-| Explorar todas as possibilidades de um jogo ou labirinto | DFS (base do backtracking) |
+| Pergunta                                                 | Busca indicada               |
+| -------------------------------------------------------- | ---------------------------- |
+| Qual o caminho com menos passos entre A e B (sem pesos)? | BFS                          |
+| Tudo que está a até 2 conexões de distância?             | BFS                          |
+| Existe algum caminho entre A e B?                        | Qualquer uma                 |
+| O grafo tem ciclo? Quantos grupos conectados existem?    | DFS costuma ser mais natural |
+| Explorar todas as possibilidades de um jogo ou labirinto | DFS (base do backtracking)   |
 
 Os dois algoritmos custam o mesmo, a escolha é sobre o que o problema pede. Como reconhecer que um problema é um grafo disfarçado (uma matriz, um labirinto, "menor número de passos") está em [Padrões de Resolução de Problemas](/labs/web-dev/algoritmos-e-estruturas-de-dados/11-padroes-de-resolucao-de-problemas/).
 

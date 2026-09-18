@@ -73,11 +73,11 @@ A diferença prática entre Partner API e Open API não está no protocolo usado
 
 ## Comparativo
 
-| | Open API | Internal API | Partner API |
-| --- | --- | --- | --- |
-| Quem acessa | Qualquer pessoa ou empresa | Só sistemas da própria organização | Parceiros aprovados/contratados |
-| Controle de acesso | Cadastro aberto, geralmente self-service | Rede interna, sem exposição externa | Aprovação manual, contrato, credenciais específicas |
-| Exemplo | API de clima, login social, catálogo público | Serviço de pedidos chamando serviço de pagamento | Rastreamento de afiliados, troca de dados de saúde |
-| Prioridade de design | Documentação clara, onboarding fácil | Performance, simplicidade (menos preocupação com quem consome) | Segurança e conformidade regulatória acima de tudo |
+|                      | Open API                                     | Internal API                                                   | Partner API                                         |
+| -------------------- | -------------------------------------------- | -------------------------------------------------------------- | --------------------------------------------------- |
+| Quem acessa          | Qualquer pessoa ou empresa                   | Só sistemas da própria organização                             | Parceiros aprovados/contratados                     |
+| Controle de acesso   | Cadastro aberto, geralmente self-service     | Rede interna, sem exposição externa                            | Aprovação manual, contrato, credenciais específicas |
+| Exemplo              | API de clima, login social, catálogo público | Serviço de pedidos chamando serviço de pagamento               | Rastreamento de afiliados, troca de dados de saúde  |
+| Prioridade de design | Documentação clara, onboarding fácil         | Performance, simplicidade (menos preocupação com quem consome) | Segurança e conformidade regulatória acima de tudo  |
 
 Essas três categorias não são mutuamente excludentes dentro de um mesmo sistema: é comum uma empresa ter uma API pública para desenvolvedores externos, dezenas de Internal APIs entre seus próprios microsserviços, e um punhado de Partner APIs para integrações comerciais específicas, cada uma com seu próprio nível de exposição e controle de acesso.

@@ -75,13 +75,13 @@ As duas versões descrevem quase o mesmo caminho, só cortam o processo em fatia
 
 Pegue o problema do [Encurtador de URL](/labs/web-dev/estudos-de-caso/01-encurtador-de-url/) e passe pelas ideias:
 
-| Ideia | Como aparece no problema |
-| ----- | ------------------------ |
-| Decomposição | Separar em gerar o código curto, guardar o mapeamento e redirecionar |
+| Ideia                     | Como aparece no problema                                                                                                                                      |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Decomposição              | Separar em gerar o código curto, guardar o mapeamento e redirecionar                                                                                          |
 | Reconhecimento de padrões | Guardar `código -> URL` é um problema de "chave e valor", já conhecido (veja [Tabelas Hash](/labs/web-dev/algoritmos-e-estruturas-de-dados/06-tabelas-hash/)) |
-| Abstração | Ignorar por enquanto o layout da página, o login, a cor do botão: só importa a relação entre código e URL |
-| Algoritmo / automação | Os passos que geram o código, gravam e consultam |
-| Análise | Estimar quantas leituras por segundo o sistema aguenta e onde está o gargalo |
+| Abstração                 | Ignorar por enquanto o layout da página, o login, a cor do botão: só importa a relação entre código e URL                                                     |
+| Algoritmo / automação     | Os passos que geram o código, gravam e consultam                                                                                                              |
+| Análise                   | Estimar quantas leituras por segundo o sistema aguenta e onde está o gargalo                                                                                  |
 
 ### Onde isso aparece no dia a dia
 

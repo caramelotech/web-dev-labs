@@ -7,20 +7,20 @@ Como comparar dois algoritmos que resolvem o mesmo problema? Cronometrar não se
 - **Complexidade de tempo:** como a quantidade de operações cresce conforme o tamanho da entrada (chamado de `n`) aumenta.
 - **Complexidade de espaço:** como a memória extra usada cresce conforme `n` aumenta.
 
-Repare que o que se conta são operações, e não segundos. Um algoritmo que faz 3 passos por item e outro que faz 5 passos por item crescem do mesmo jeito: dobrar a entrada dobra o trabalho. O que diferencia algoritmos é o *formato* do crescimento.
+Repare que o que se conta são operações, e não segundos. Um algoritmo que faz 3 passos por item e outro que faz 5 passos por item crescem do mesmo jeito: dobrar a entrada dobra o trabalho. O que diferencia algoritmos é o _formato_ do crescimento.
 
 ## Notação Big O
 
 Big O é a notação que descreve esse formato de crescimento. Escrever `O(n)` significa "o custo cresce, no máximo, proporcionalmente a `n`". As classes que mais aparecem, da mais barata para a mais cara:
 
-| Classe | Nome | Exemplo | Para n = 1.000 | Para n = 1.000.000 |
-| ------ | ---- | ------- | -------------- | ------------------ |
-| O(1) | constante | acessar `lista[0]` | 1 | 1 |
-| O(log n) | logarítmica | busca binária | cerca de 10 | cerca de 20 |
-| O(n) | linear | percorrer a lista inteira | 1.000 | 1.000.000 |
-| O(n log n) | linearítmica | ordenar com merge sort | cerca de 10.000 | cerca de 20 milhões |
-| O(n²) | quadrática | dois `for` aninhados sobre a mesma lista | 1.000.000 | 1 trilhão |
-| O(2ⁿ) | exponencial | Fibonacci recursivo ingênuo | inviável | inviável |
+| Classe     | Nome         | Exemplo                                  | Para n = 1.000  | Para n = 1.000.000  |
+| ---------- | ------------ | ---------------------------------------- | --------------- | ------------------- |
+| O(1)       | constante    | acessar `lista[0]`                       | 1               | 1                   |
+| O(log n)   | logarítmica  | busca binária                            | cerca de 10     | cerca de 20         |
+| O(n)       | linear       | percorrer a lista inteira                | 1.000           | 1.000.000           |
+| O(n log n) | linearítmica | ordenar com merge sort                   | cerca de 10.000 | cerca de 20 milhões |
+| O(n²)      | quadrática   | dois `for` aninhados sobre a mesma lista | 1.000.000       | 1 trilhão           |
+| O(2ⁿ)      | exponencial  | Fibonacci recursivo ingênuo              | inviável        | inviável            |
 
 Para ter uma noção do que isso significa: um computador comum faz da ordem de um bilhão de operações simples por segundo. Um algoritmo O(n) com um milhão de itens leva um milésimo de segundo. O(n²) com o mesmo milhão faz 1 trilhão de operações, cerca de 17 minutos. E o O(2ⁿ) nem termina antes de você desistir, já com n = 100.
 
@@ -77,7 +77,7 @@ Esse é o trade-off clássico: **trocar memória por tempo**. É o que cache, í
 
 ## Limite da teoria
 
-Big O descreve como o custo *cresce*, e não quanto tempo o código leva de fato. Por isso convém desconfiar de três armadilhas:
+Big O descreve como o custo _cresce_, e não quanto tempo o código leva de fato. Por isso convém desconfiar de três armadilhas:
 
 - **`n` pequeno engana.** Um algoritmo O(n²) simples, sem overhead, pode ser mais rápido que um O(n log n) complicado para 20 itens. A classe só começa a mandar quando os dados crescem.
 - **As constantes existem.** Dois algoritmos O(n) podem ter velocidades bem diferentes na prática.

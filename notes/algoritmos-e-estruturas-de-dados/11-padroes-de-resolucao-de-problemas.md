@@ -12,16 +12,16 @@ O caminho comum de quem resolve bem é:
 
 Alguns sinais no enunciado e o padrão que costuma acompanhá-los:
 
-| Sinal no enunciado | Padrão em que pensar |
-| ------------------ | -------------------- |
-| Par ou trio de itens numa lista **ordenada** | Two pointers |
-| Trecho **contíguo** (subarray ou substring), com tamanho ou condição | Sliding window |
-| "Já vi esse valor?", contar ocorrências | [Tabela hash](/labs/web-dev/algoritmos-e-estruturas-de-dados/06-tabelas-hash/) |
-| Lista ordenada, "achar um valor" | [Busca binária](/labs/web-dev/algoritmos-e-estruturas-de-dados/09-recursao-busca-e-ordenacao/) |
-| Menor número de passos, camadas, vizinhos | BFS |
-| Explorar todos os caminhos, detectar ciclos | DFS |
-| Gerar todas as combinações ou permutações válidas | [Backtracking](/labs/web-dev/algoritmos-e-estruturas-de-dados/10-paradigmas-de-projeto-de-algoritmos/) |
-| Subproblemas que se repetem | [Programação dinâmica](/labs/web-dev/algoritmos-e-estruturas-de-dados/10-paradigmas-de-projeto-de-algoritmos/) |
+| Sinal no enunciado                                                   | Padrão em que pensar                                                                                           |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| Par ou trio de itens numa lista **ordenada**                         | Two pointers                                                                                                   |
+| Trecho **contíguo** (subarray ou substring), com tamanho ou condição | Sliding window                                                                                                 |
+| "Já vi esse valor?", contar ocorrências                              | [Tabela hash](/labs/web-dev/algoritmos-e-estruturas-de-dados/06-tabelas-hash/)                                 |
+| Lista ordenada, "achar um valor"                                     | [Busca binária](/labs/web-dev/algoritmos-e-estruturas-de-dados/09-recursao-busca-e-ordenacao/)                 |
+| Menor número de passos, camadas, vizinhos                            | BFS                                                                                                            |
+| Explorar todos os caminhos, detectar ciclos                          | DFS                                                                                                            |
+| Gerar todas as combinações ou permutações válidas                    | [Backtracking](/labs/web-dev/algoritmos-e-estruturas-de-dados/10-paradigmas-de-projeto-de-algoritmos/)         |
+| Subproblemas que se repetem                                          | [Programação dinâmica](/labs/web-dev/algoritmos-e-estruturas-de-dados/10-paradigmas-de-projeto-de-algoritmos/) |
 
 Essa tabela é ponto de partida, e não regra: às vezes o sinal é enganoso, e o mesmo problema aceita padrões diferentes.
 
@@ -39,8 +39,9 @@ function parComSoma(ordenada, alvo) {
   while (esq < dir) {
     const soma = ordenada[esq] + ordenada[dir];
     if (soma === alvo) return [esq, dir];
-    if (soma < alvo) esq++;   // precisa de uma soma maior: avança o menor
-    else dir--;               // precisa de uma soma menor: recua o maior
+    if (soma < alvo)
+      esq++; // precisa de uma soma maior: avança o menor
+    else dir--; // precisa de uma soma menor: recua o maior
   }
   return null;
 }
@@ -89,11 +90,12 @@ function maiorSubstringSemRepeticao(texto) {
   let maior = 0;
 
   for (let dir = 0; dir < texto.length; dir++) {
-    while (naJanela.has(texto[dir])) {  // repetiu: encolhe pela esquerda
+    while (naJanela.has(texto[dir])) {
+      // repetiu: encolhe pela esquerda
       naJanela.delete(texto[esq]);
       esq++;
     }
-    naJanela.add(texto[dir]);           // cresce pela direita
+    naJanela.add(texto[dir]); // cresce pela direita
     maior = Math.max(maior, dir - esq + 1);
   }
   return maior;
@@ -123,6 +125,6 @@ Estas três técnicas já têm nota própria, então aqui só o que muda: como *
 ## Referências
 
 - [Two Pointers](https://usaco.guide/silver/two-pointers) - USACO Guide, en
-- [Two pointer (also known as "Sliding Window")](https://guides.codepath.org/compsci/Two-pointer-(also-known-as-'Sliding-Window')) - CodePath, en
+- [Two pointer (also known as "Sliding Window")](<https://guides.codepath.org/compsci/Two-pointer-(also-known-as-'Sliding-Window')>) - CodePath, en
 - [Busca em largura (BFS) num grafo](https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/bfs.html) - Paulo Feofiloff (IME-USP), pt-BR
 - [Busca em profundidade (DFS) num grafo](https://www.ime.usp.br/~pf/algoritmos_para_grafos/aulas/dfs.html) - Paulo Feofiloff (IME-USP), pt-BR

@@ -4,12 +4,12 @@
 
 ## Visão geral
 
-| Termo | O que é | O que resolve |
-| ----- | ------- | -------------- |
-| SSO (Single Sign-On) | Uma experiência de usuário | Logar uma vez e acessar vários sistemas sem reautenticar |
-| OAuth 2.0 | Um protocolo de autorização | O que um app pode acessar em nome do usuário |
-| OIDC (OpenID Connect) | Uma camada de identidade sobre o OAuth 2.0 | Quem é o usuário |
-| SAML | Um protocolo de autenticação baseado em XML | SSO corporativo/enterprise, principalmente em sistemas legados |
+| Termo                 | O que é                                     | O que resolve                                                  |
+| --------------------- | ------------------------------------------- | -------------------------------------------------------------- |
+| SSO (Single Sign-On)  | Uma experiência de usuário                  | Logar uma vez e acessar vários sistemas sem reautenticar       |
+| OAuth 2.0             | Um protocolo de autorização                 | O que um app pode acessar em nome do usuário                   |
+| OIDC (OpenID Connect) | Uma camada de identidade sobre o OAuth 2.0  | Quem é o usuário                                               |
+| SAML                  | Um protocolo de autenticação baseado em XML | SSO corporativo/enterprise, principalmente em sistemas legados |
 
 Se precisar guardar só uma frase: **OAuth resolve acesso, OIDC resolve identidade, SAML resolve SSO corporativo, e SSO é o nome que damos à experiência que os três (OIDC ou SAML) entregam por baixo.**
 

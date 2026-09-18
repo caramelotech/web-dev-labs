@@ -13,8 +13,8 @@ Sem o caso base, a função chama a si mesma para sempre.
 
 ```js
 function fatorial(n) {
-  if (n <= 1) return 1;          // caso base
-  return n * fatorial(n - 1);    // passo recursivo
+  if (n <= 1) return 1; // caso base
+  return n * fatorial(n - 1); // passo recursivo
 }
 
 fatorial(4); // 24
@@ -34,7 +34,7 @@ fatorial(4) = 4 * 6 = 24
 
 ### A pilha de chamadas
 
-Cada chamada de função fica esperando a próxima terminar, e o computador guarda essas chamadas pendentes numa **pilha** (a *call stack*, a mesma estrutura da nota de [Estruturas Lineares](/labs/web-dev/algoritmos-e-estruturas-de-dados/05-estruturas-lineares/)). No exemplo, as quatro chamadas ficam empilhadas até `fatorial(1)` responder, e então se desempilham devolvendo os resultados.
+Cada chamada de função fica esperando a próxima terminar, e o computador guarda essas chamadas pendentes numa **pilha** (a _call stack_, a mesma estrutura da nota de [Estruturas Lineares](/labs/web-dev/algoritmos-e-estruturas-de-dados/05-estruturas-lineares/)). No exemplo, as quatro chamadas ficam empilhadas até `fatorial(1)` responder, e então se desempilham devolvendo os resultados.
 
 A pilha tem tamanho limitado. Uma recursão profunda demais (ou sem caso base) termina em erro:
 
@@ -85,14 +85,14 @@ Se você vai buscar muitas vezes, vale a pena ordenar uma vez (O(n log n)) e dep
 
 Ordenar aparece o tempo todo: listar produtos por preço, ranquear resultados, preparar dados para busca binária. Existem dezenas de algoritmos, e eles se dividem em dois grupos de custo:
 
-| Algoritmo | Tempo (pior caso) | Memória extra | Observação |
-| --------- | ----------------- | ------------- | ---------- |
-| Bubble sort | O(n²) | O(1) | Didático, quase nunca usado |
-| Selection sort | O(n²) | O(1) | Didático |
-| Insertion sort | O(n²) | O(1) | Rápido em listas pequenas ou quase ordenadas |
-| Merge sort | O(n log n) | O(n) | Custo previsível e estável |
-| Quicksort | O(n²), com média O(n log n) | O(log n) | Muito rápido na prática, se o pivô for bem escolhido |
-| Heapsort | O(n log n) | O(1) | Usa um [heap](/labs/web-dev/algoritmos-e-estruturas-de-dados/07-arvores/) |
+| Algoritmo      | Tempo (pior caso)           | Memória extra | Observação                                                                |
+| -------------- | --------------------------- | ------------- | ------------------------------------------------------------------------- |
+| Bubble sort    | O(n²)                       | O(1)          | Didático, quase nunca usado                                               |
+| Selection sort | O(n²)                       | O(1)          | Didático                                                                  |
+| Insertion sort | O(n²)                       | O(1)          | Rápido em listas pequenas ou quase ordenadas                              |
+| Merge sort     | O(n log n)                  | O(n)          | Custo previsível e estável                                                |
+| Quicksort      | O(n²), com média O(n log n) | O(log n)      | Muito rápido na prática, se o pivô for bem escolhido                      |
+| Heapsort       | O(n log n)                  | O(1)          | Usa um [heap](/labs/web-dev/algoritmos-e-estruturas-de-dados/07-arvores/) |
 
 Um algoritmo é **estável** quando itens iguais mantêm a ordem que já tinham entre si. Isso importa quando você ordena por um critério (nome) depois de já ter ordenado por outro (cidade).
 
@@ -143,7 +143,7 @@ O merge sort é um caso de **divisão e conquista**, paradigma detalhado na nota
 No dia a dia você usa o `Array.prototype.sort`, que já é O(n log n) e fica a cargo do motor. Tem uma pegadinha clássica: **sem uma função de comparação, ele ordena como texto**.
 
 ```js
-[10, 9, 1].sort();               // [1, 10, 9]  (ordem alfabética: "1" < "10" < "9")
+[10, 9, 1].sort(); // [1, 10, 9]  (ordem alfabética: "1" < "10" < "9")
 [10, 9, 1].sort((a, b) => a - b); // [1, 9, 10]
 ```
 

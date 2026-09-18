@@ -149,11 +149,11 @@ Exemplos comuns: o Stripe chama um webhook seu quando um pagamento é confirmado
 
 ## Comparativo
 
-| Estilo | Direção | Conexão | Formato | Quando escolher |
-| --- | --- | --- | --- | --- |
-| REST | Cliente → servidor, síncrono | Uma por request | JSON/texto | Padrão para a maioria das APIs web |
-| GraphQL | Cliente → servidor, síncrono | Uma por request | JSON/texto | Dados com muitas relações, clientes que precisam de subconjuntos variados |
-| gRPC | Cliente → servidor (ou stream nos dois sentidos) | Persistente (HTTP/2) | Binário (Protobuf) | Comunicação interna de alta performance entre serviços |
-| WebSocket | Bidirecional | Persistente | Texto ou binário | Tempo real com troca de mensagens nos dois sentidos |
-| SSE | Servidor → cliente | Persistente (HTTP comum) | Texto (event-stream) | Push simples, unidirecional, com reconexão automática |
-| Webhook | Provedor → sua aplicação | Uma por evento | JSON/texto (HTTP normal) | Receber notificação de evento sem fazer polling |
+| Estilo    | Direção                                          | Conexão                  | Formato                  | Quando escolher                                                           |
+| --------- | ------------------------------------------------ | ------------------------ | ------------------------ | ------------------------------------------------------------------------- |
+| REST      | Cliente → servidor, síncrono                     | Uma por request          | JSON/texto               | Padrão para a maioria das APIs web                                        |
+| GraphQL   | Cliente → servidor, síncrono                     | Uma por request          | JSON/texto               | Dados com muitas relações, clientes que precisam de subconjuntos variados |
+| gRPC      | Cliente → servidor (ou stream nos dois sentidos) | Persistente (HTTP/2)     | Binário (Protobuf)       | Comunicação interna de alta performance entre serviços                    |
+| WebSocket | Bidirecional                                     | Persistente              | Texto ou binário         | Tempo real com troca de mensagens nos dois sentidos                       |
+| SSE       | Servidor → cliente                               | Persistente (HTTP comum) | Texto (event-stream)     | Push simples, unidirecional, com reconexão automática                     |
+| Webhook   | Provedor → sua aplicação                         | Uma por evento           | JSON/texto (HTTP normal) | Receber notificação de evento sem fazer polling                           |
