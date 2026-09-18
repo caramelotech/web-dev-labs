@@ -40,6 +40,10 @@ Chamadas síncronas são mais simples de raciocinar (peça, espere, receba), mas
 
 Como visto em [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/), técnicas que aumentam o throughput total do sistema (batching, filas, processamento em lote) costumam aumentar a latência de cada operação individual. Um sistema pode otimizar para "processar o máximo de operações por segundo" ou para "responder cada operação o mais rápido possível", raramente consegue maximizar os dois ao mesmo tempo.
 
+### Processamento em lote vs streaming
+
+Batch coleta os dados e processa um bloco grande de uma vez, num horário agendado, o que é simples e barato quando o resultado pode esperar (um relatório que só precisa estar pronto de manhã). Streaming processa cada evento continuamente, assim que ele chega, aprofundado em [Processamento de streams](/labs/web-dev/mensageria/08-casos-de-uso-do-kafka/), o que entrega resultado sempre atualizado ao custo de mais peças em movimento para operar. A pergunta que decide entre os dois não é técnica, é sobre a necessidade real de atualização do dado: se esperar algumas horas não muda nenhuma decisão, batch resolve mais barato; se a informação só tem valor nos próximos segundos, como numa detecção de fraude, streaming se paga. Na prática boa parte dos sistemas usa os dois ao mesmo tempo, streaming cuidando do fluxo ao vivo e um job batch rodando por trás para reprocessar o que falhou ou ficou pendente.
+
 ### Strong consistency vs eventual consistency
 
 Aprofundado em [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/). Consistência forte simplifica o raciocínio sobre o sistema (o dado é sempre o mais recente), mas custa latência e disponibilidade. Consistência eventual é mais rápida e resiliente, mas exige que a aplicação (e quem a usa) tolere uma janela de divergência temporária.
