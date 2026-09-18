@@ -86,10 +86,15 @@ Isso normalmente aparece na prática como:
 
 Existe inclusive uma observação clássica sobre isso, conhecida como **Lei de Conway**: a estrutura de um sistema tende a espelhar a estrutura de comunicação da organização que o constrói. Ou seja, se os times são muito acoplados e dependentes entre si, o sistema também tende a nascer acoplado, e o inverso também é verdade.
 
-# Recapitulando
+### Ownership de serviços
 
-- Escalabilidade é a capacidade de um sistema (e do time por trás dele) suportar mais carga sem perder qualidade.
-- Escalabilidade vertical: mais recursos numa mesma máquina, simples mas com teto.
-- Escalabilidade horizontal: mais máquinas trabalhando em paralelo, sem teto mas mais complexa.
-- Escalabilidade organizacional: estruturar pessoas e times para crescer sem travar a produtividade, geralmente refletida na arquitetura do sistema.
+Ter times pequenos e autônomos resolve o problema no momento em que um serviço nasce, mas não garante nada sobre o que acontece com ele um ano depois. Ownership é sobre isso: um serviço precisa de um time claramente responsável por ele o tempo todo que ele estiver em produção, não só na semana em que foi criado.
+
+O problema aparece na prática como **serviços órfãos**: o time que criou aquele serviço foi reorganizado, as pessoas que entendiam o código saíram da empresa, e o que sobra é um sistema em produção, recebendo tráfego real, que ninguém mais consegue explicar direito. Quando esse serviço quebra, não existe um time óbvio para chamar, e corrigir qualquer coisa nele vira uma investigação arqueológica antes de virar uma correção.
+
+Uma forma de evitar esse cenário é o princípio conhecido como **"you build it, you run it"**: o mesmo time que constrói um serviço também é quem responde por ele em produção, incluindo plantão e atuação em incidentes. Isso muda o incentivo de quem escreve o código. Uma decisão técnica ruim (sem monitoramento, sem tratamento de erro, com uma dependência frágil) deixa de ser "problema de outro time" e passa a ser algo que a própria equipe vai sentir às três da manhã se o serviço cair. Empresas como a Amazon adotam esse princípio como parte da cultura de times autônomos, exatamente para manter ownership vivo enquanto o sistema cresce e as pessoas mudam de equipe.
+
+## Referências
+
+- [You build it, You run it](https://ontologia.eximia.co/principios/you-build-it-you-run-it/) - EximiaCo, pt-BR
 
