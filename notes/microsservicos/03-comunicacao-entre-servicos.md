@@ -51,6 +51,41 @@ O broker existe para desacoplar serviços no tempo, não para esconder uma depen
 
 O ponto de fundo é decidir pela necessidade do negócio, não pela tecnologia. "Vamos usar Kafka" não é um requisito; "o serviço de faturamento não pode travar quando o de notificação cai" é, e é isso que aponta para eventos.
 
+## Cadeias síncronas e serviços tagarelas
+
+Escolher comunicação síncrona serviço a serviço é uma decisão local, mas o efeito dela se acumula. Dois problemas aparecem quando esse acúmulo passa despercebido: cadeias síncronas longas demais e serviços que conversam demais entre si.
+
+**Cadeias síncronas**: cada chamada síncrona soma sua própria latência à latência total da requisição, e soma também o próprio risco de falha ao risco da cadeia inteira. Se o serviço de checkout chama o de estoque, que chama o de preços, que chama o de promoções, a resposta final só sai depois que os quatro responderam, e se qualquer um deles cair ou ficar lento, o checkout inteiro sente.
+
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant Checkout
+    participant Estoque
+    participant Preços
+    participant Promoções
+
+    Cliente->>Checkout: finalizar compra
+    Checkout->>Estoque: item disponível?
+    Estoque->>Preços: qual o preço atual?
+    Preços->>Promoções: tem desconto ativo?
+    Promoções-->>Preços: resposta
+    Preços-->>Estoque: resposta
+    Estoque-->>Checkout: resposta
+    Checkout-->>Cliente: pedido confirmado
+```
+
+Cada seta a mais na cadeia é mais um ponto onde a requisição pode travar, e a latência p99 de cada serviço no meio do caminho se soma na latência p99 do fluxo inteiro. Uma cadeia de quatro serviços com 100ms de p99 cada não entrega em 100ms, entrega perto de 400ms no pior caso, e um único serviço fora do ar derruba a cadeia toda.
+
+**Serviços tagarelas (chatty services)**: o problema aparece de outro ângulo quando uma única resposta para o cliente precisa juntar dados de vários serviços diferentes. Uma tela de perfil que mostra dados pessoais, pedidos recentes e pontos de fidelidade pode exigir três, quatro chamadas separadas só para montar aquela tela, cada uma com seu próprio custo de rede. Isso costuma acontecer quando os serviços foram recortados demais (o mesmo problema de over-decomposition visto em [Decomposição de Serviços e Bounded Context](/labs/web-dev/microsservicos/02-decomposicao-e-bounded-context/)) ou quando um dado que poderia estar disponível localmente é buscado remotamente toda vez que é preciso.
+
+Algumas formas de reduzir os dois problemas:
+
+- **Agregação de requisições**: um BFF (Backend for Frontend) ou o próprio API Gateway junta várias chamadas internas numa resposta só para o cliente, tirando do consumidor final o custo de fazer as chamadas uma por uma. Ver [Agregação de requisições (BFF)](/labs/web-dev/escalabilidade/07-api-gateway/).
+- **Cache e duplicação controlada de dados**: em vez de perguntar ao serviço vizinho toda vez, guardar uma cópia local do dado que muda pouco (o preço do produto no momento da compra, por exemplo) evita boa parte das chamadas síncronas repetidas.
+- **Revisar a granularidade dos serviços**: se dois serviços quase sempre precisam ser chamados juntos para responder qualquer coisa, isso é sinal de que a fronteira entre eles ficou fina demais, e juntar os dois de volta pode ser a solução mais simples.
+- **Comunicação assíncrona**: quando a resposta não precisa ser imediata, trocar a chamada síncrona por um evento remove aquele elo da cadeia. O consumidor deixa de esperar e passa a reagir quando o evento chegar.
+
 ## Service-to-Service
 
 Comunicação síncrona entre serviços traz um conjunto de problemas específicos, que não existem dentro de um monólito, porque ali a "chamada" é uma chamada de rede real, sujeita a tudo que pode dar errado numa rede.
@@ -69,3 +104,8 @@ As chamadas de rede entre serviços também podem falhar de formas que uma chama
 Service discovery, load balancing e esses padrões de resiliência não precisam viver no código de cada serviço: dá para delegar tudo a um [Service Mesh](/labs/web-dev/microsservicos/05-service-mesh/), uma camada de infraestrutura que intercepta a comunicação entre serviços e aplica essas regras de forma uniforme.
 
 O fio condutor de todos esses padrões é o mesmo: numa arquitetura de microsserviços, a rede entre os serviços é uma fonte constante de falha parcial, e o design da comunicação precisa assumir isso desde o início, não tratar como exceção rara.
+
+## Referências
+
+- [Top 10 Anti-Padrões de Microsserviços](https://devsagaz.com.br/10-microservice-anti-patterns/) - devsagaz, pt-BR
+- [The Chatty Services Anti-Pattern](https://medium.com/@subham11/the-chatty-services-anti-pattern-a6ead99b7d0b) - satyam kumar, en

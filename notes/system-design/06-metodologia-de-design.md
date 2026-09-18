@@ -1,6 +1,6 @@
 # Como Estruturar um System Design
 
-Depois de estudar CDN, load balancer, cache, filas, réplicas e todos os outros componentes individualmente, falta a peça final: uma ordem de raciocínio para juntar tudo isso na hora de projetar um sistema do zero, seja numa entrevista, seja num projeto real. Esta nota fecha a seção de System Design com essa metodologia, em nove etapas, e um checklist de cenários de falha para testar o design no final.
+Depois de estudar CDN, load balancer, cache, filas, réplicas e todos os outros componentes individualmente, falta a peça final: uma ordem de raciocínio para juntar tudo isso na hora de projetar um sistema do zero, seja numa entrevista, seja num projeto real. Esta nota reúne essa metodologia, em nove etapas, e um checklist de cenários de falha para testar o design no final. Para um mapa de todos os tópicos que costumam aparecer num design, veja o [Roadmap de System Design](/labs/web-dev/system-design/07-roadmap-de-system-design/).
 
 ## Etapa 1: Requisitos
 

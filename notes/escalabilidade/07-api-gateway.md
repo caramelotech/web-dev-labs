@@ -97,3 +97,14 @@ Isso mantém os microsserviços de trás enxutos, falando uma única versão do 
 **Quando utilizar um API Gateway**: sistemas com múltiplos microsserviços, especialmente quando existem preocupações transversais (auth, rate limiting) que se repetiriam em cada serviço, ou quando clientes diferentes (app mobile, web, parceiros externos) precisam de formas diferentes de acessar o mesmo conjunto de serviços.
 
 **Quando não utilizar**: em um monólito ou sistema pequeno com poucos serviços, um API Gateway completo pode ser complexidade desnecessária, um load balancer sozinho já resolve o problema de distribuir tráfego, e autenticação pode viver direto na aplicação sem custo real de duplicação.
+
+## O que evitar
+
+- **O antipadrão do "gateway Deus"**: acontece quando lógica de negócio vai migrando aos poucos para dentro do gateway. Começa pequeno, uma validação aqui, uma regra específica de um cliente ali, e alguns meses depois o gateway decide preço, aplica desconto e sabe coisas sobre o domínio que deveriam estar só no serviço dono daquele domínio. Nesse ponto o gateway virou um novo monolito bem no meio do caminho, só que sem os benefícios de organização de um: qualquer time que precisa mudar uma regra de negócio precisa mexer (e fazer deploy) num componente compartilhado por todo o sistema.
+- **O que pertence ao gateway**: cross-cutting concerns, ou seja, preocupações que se repetiriam em todo serviço se não fossem centralizadas: autenticação, rate limiting, roteamento, TLS termination, observabilidade. Nenhuma dessas depende de saber como o domínio de negócio funciona.
+- **O que não pertence ao gateway**: regra de negócio do domínio. Calcular o valor de um pedido com desconto, decidir se um item pode ser cancelado, validar se um cliente pode fazer determinada operação, isso é responsabilidade do serviço dono daquele dado, não do gateway.
+- **Sintoma de alerta**: se mudar uma regra de negócio (não uma política de acesso ou de tráfego) exige deploy do gateway em vez de só do serviço dono da regra, a fronteira já foi cruzada. Nesse momento vale revisar o que foi parar ali e mover de volta para o serviço certo antes que o gateway vire um gargalo de organização, do mesmo jeito que o Enterprise Service Bus virava um gargalo na era do SOA.
+
+## Referências
+
+- [API Gateway: por que ele é peça-chave em arquiteturas de microservices (e quando evitar)](https://dev.to/paulo_henriquefusco_bbdb/pi-gateway-por-que-ele-e-peca-chave-em-arquiteturas-de-api-gateway-por-que-ele-e-peca-chave-em-4omk) - Paulo Henrique Fusco, pt-BR
