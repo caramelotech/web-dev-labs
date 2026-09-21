@@ -90,7 +90,7 @@ O que procurar no resultado:
 - **Index Only Scan**: respondeu só com o índice, sem tocar na tabela. O mais rápido.
 - **linhas estimadas vs linhas reais**: se o planner achava que viriam 10 linhas e vieram 400 mil, as estatísticas estão desatualizadas e o plano provavelmente é ruim.
 
-A nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/) tem um exemplo lado a lado de `EXPLAIN ANALYZE` antes e depois de criar o índice, vale ver o efeito na prática.
+A nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/) tem um exemplo lado a lado de `EXPLAIN ANALYZE` antes e depois de criar o índice, vale ver o efeito na prática. Para ir além do plano (buffers, esperas de lock, ordenação em disco e monitoramento em produção), veja [Diagnóstico de Queries Lentas](/labs/web-dev/banco-de-dados/17-diagnostico-de-queries-lentas/).
 
 ## Referências
 

@@ -17,7 +17,7 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   algoritmos-e-estruturas-de-dados/  # Base para resolver problemas: raciocínio, estruturas de dados, complexidade (Big O), paradigmas de algoritmos e padrões de resolução
   engenharia-de-software/     # Design e qualidade de código: princípios, padrões e testes
   apis/                       # Projeto de APIs: protocolos, estilos de comunicação, segurança e evolução
-  banco-de-dados/             # Bancos relacionais e NoSQL: modelo, garantias transacionais, arquitetura interna e busca
+  banco-de-dados/             # Bancos relacionais e NoSQL: modelo, garantias transacionais, arquitetura interna, performance de consultas e busca
   system-design/              # Projeto de sistemas: fundamentos, trade-offs e metodologia
   escalabilidade/             # Escalar carga e a infraestrutura que sustenta isso (cache, load balancer, gateway, CDN, ...)
   sistemas-distribuidos/      # Consistência, replicação e coordenação entre nós

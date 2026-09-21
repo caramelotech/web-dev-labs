@@ -84,7 +84,7 @@ Vale reforçar o custo do sharding descrito na nota de escalabilidade: ele quebr
 
 ## Query Optimization
 
-Antes de qualquer técnica acima, vale sempre checar se a consulta em si está bem escrita: evitar `SELECT *` quando só algumas colunas importam, evitar função em cima da coluna filtrada (`WHERE lower(email) = ?` ignora índice em `email`), e usar `EXPLAIN`/`EXPLAIN ANALYZE` para confirmar que o banco está de fato usando o índice esperado, tudo isso já foi coberto com exemplo prático em [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/). É, na prática, o primeiro lugar a olhar, porque é de graça: não exige mudar schema, não exige infraestrutura nova, só reescrever a query.
+Antes de qualquer técnica acima, vale sempre checar se a consulta em si está bem escrita: evitar `SELECT *` quando só algumas colunas importam, evitar função em cima da coluna filtrada (`WHERE lower(email) = ?` ignora índice em `email`), e usar `EXPLAIN`/`EXPLAIN ANALYZE` para confirmar que o banco está de fato usando o índice esperado, tudo isso já foi coberto com exemplo prático em [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/). É, na prática, o primeiro lugar a olhar, porque é de graça: não exige mudar schema, não exige infraestrutura nova, só reescrever a query. Quando a causa não é óbvia no plano, [Diagnóstico de Queries Lentas](/labs/web-dev/banco-de-dados/17-diagnostico-de-queries-lentas/) mostra como investigar buffers, esperas de lock e ordenação em disco antes de decidir a correção.
 
 ## Por onde começar
 
