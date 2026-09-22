@@ -95,7 +95,7 @@ Onde você encontra Raft rodando: etcd (o banco de configuração do Kubernetes)
 
 ## Paxos vs Raft na prática
 
-Os dois resolvem o mesmo problema e dão as mesmas garantias: enquanto a maioria dos nós estiver viva e conseguir se falar, o sistema decide e permanece consistente; se a maioria cair ou a rede partir o cluster ao meio, o sistema para de aceitar escritas em vez de arriscar uma inconsistência. É a escolha por consistência do [teorema de CAP](/labs/web-dev/banco-de-dados/04-teorema-de-cap/), feita no nível do algoritmo.
+Os dois resolvem o mesmo problema e dão as mesmas garantias: enquanto a maioria dos nós estiver viva e conseguir se falar, o sistema decide e permanece consistente; se a maioria cair ou a rede partir o cluster ao meio, o sistema para de aceitar escritas em vez de arriscar uma inconsistência. É a escolha por consistência do [teorema de CAP](/labs/web-dev/banco-de-dados/05-teorema-de-cap/), feita no nível do algoritmo.
 
 A diferença é de engenharia, não de poder:
 

@@ -2,7 +2,7 @@
 
 ## Escolher banco é sobre a carga de trabalho, não sobre a ferramenta
 
-A pergunta "qual desses três bancos é o melhor" não tem resposta boa, porque ela está errada desde o início. A pergunta certa é "que tipo de carga de trabalho (workload) esse dado específico tem", o mesmo raciocínio já usado em [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/).
+A pergunta "qual desses três bancos é o melhor" não tem resposta boa, porque ela está errada desde o início. A pergunta certa é "que tipo de carga de trabalho (workload) esse dado específico tem", o mesmo raciocínio já usado em [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/).
 
 Um exemplo real ajuda a fixar a ideia: o Next Gen Stats, o sistema que transforma o rastreamento de jogadores e bola da NFL em estatísticas ao vivo, usa os três bancos desta nota ao mesmo tempo, cada um num papel diferente:
 
@@ -16,17 +16,17 @@ Para entender quando cada banco se encaixa melhor, o caminho é abrir cada um po
 
 ## PostgreSQL: heap e Write-Ahead Log
 
-A arquitetura interna do PostgreSQL já tem uma nota inteira dedicada a ela, [Postgres vs MySQL: arquitetura interna](/labs/web-dev/banco-de-dados/11-postgres-vs-mysql/), então aqui vai só o recap necessário para comparar com MongoDB e Cassandra mais adiante.
+A arquitetura interna do PostgreSQL já tem uma nota inteira dedicada a ela, [Postgres vs MySQL: arquitetura interna](/labs/web-dev/banco-de-dados/12-postgres-vs-mysql/), então aqui vai só o recap necessário para comparar com MongoDB e Cassandra mais adiante.
 
 O Postgres guarda as linhas de uma tabela numa estrutura chamada **heap**, sem ordenação física nenhuma. Os índices ficam totalmente separados, cada um apontando para a posição física da linha na heap. Quando uma linha é atualizada, o Postgres não sobrescreve o espaço, ele escreve uma versão nova e marca a antiga como obsoleta (é o MVCC, com as versões vivendo na própria tabela até o `autovacuum` limpar). Toda mudança passa antes por um log único, o **Write-Ahead Log (WAL)**, usado tanto para recuperação de queda quanto para replicação.
 
-Antes de decidir como executar uma query SQL, o Postgres consulta o **query planner**: ele olha as estatísticas da tabela (quantas linhas, distribuição dos valores) e escolhe entre varrer a tabela inteira ou usar um índice, entre os vários tipos de junção disponíveis, e assim por diante. Como esse planejamento funciona e como ler o plano gerado por um `EXPLAIN` está detalhado em [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/).
+Antes de decidir como executar uma query SQL, o Postgres consulta o **query planner**: ele olha as estatísticas da tabela (quantas linhas, distribuição dos valores) e escolhe entre varrer a tabela inteira ou usar um índice, entre os vários tipos de junção disponíveis, e assim por diante. Como esse planejamento funciona e como ler o plano gerado por um `EXPLAIN` está detalhado em [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/).
 
 O resultado prático: cada escrita no Postgres é uma atualização "in place" na mesma estrutura de tabela, com o WAL garantindo que nada se perca no caminho. É um design pensado para consistência forte e transações complexas, não para ingestão bruta de volume.
 
 ## MongoDB: documentos, WiredTiger e Journal
 
-O MongoDB guarda dados como **documentos** no formato BSON (um JSON binário, com suporte a mais tipos que o JSON puro, como datas e inteiros de 64 bits), agrupados em **coleções**. Diferente de uma tabela SQL, documentos da mesma coleção podem ter campos diferentes entre si, é o **schema flexível** que a nota de [NoSQL](/labs/web-dev/banco-de-dados/10-nosql/) já descreve na categoria "document".
+O MongoDB guarda dados como **documentos** no formato BSON (um JSON binário, com suporte a mais tipos que o JSON puro, como datas e inteiros de 64 bits), agrupados em **coleções**. Diferente de uma tabela SQL, documentos da mesma coleção podem ter campos diferentes entre si, é o **schema flexível** que a nota de [NoSQL](/labs/web-dev/banco-de-dados/11-nosql/) já descreve na categoria "document".
 
 Por baixo, desde a versão 3.2 o MongoDB usa o **WiredTiger** como storage engine padrão. Duas peças do WiredTiger fazem o trabalho pesado:
 
@@ -40,11 +40,11 @@ flowchart LR
     C -->|checkpoint a cada 60s| D[(Arquivos de dados)]
 ```
 
-Réplicas do MongoDB (o **replica set**) elegem um nó primário via um algoritmo baseado em Raft, o mesmo mecanismo já citado na tabela de [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/). Só o primário aceita escritas, e os secundários replicam a partir dele.
+Réplicas do MongoDB (o **replica set**) elegem um nó primário via um algoritmo baseado em Raft, o mesmo mecanismo já citado na tabela de [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/). Só o primário aceita escritas, e os secundários replicam a partir dele.
 
 ## Cassandra: LSM tree, Memtable, SSTable e compaction
 
-O Cassandra é um banco **wide-column** distribuído, desenhado desde a raiz para aguentar volume de escrita altíssimo espalhado por muitos nós (a categoria já apresentada em [NoSQL](/labs/web-dev/banco-de-dados/10-nosql/)). A engine por trás disso segue um modelo bem diferente do B-tree que Postgres e MongoDB usam: o **LSM tree** (Log-Structured Merge Tree).
+O Cassandra é um banco **wide-column** distribuído, desenhado desde a raiz para aguentar volume de escrita altíssimo espalhado por muitos nós (a categoria já apresentada em [NoSQL](/labs/web-dev/banco-de-dados/11-nosql/)). A engine por trás disso segue um modelo bem diferente do B-tree que Postgres e MongoDB usam: o **LSM tree** (Log-Structured Merge Tree).
 
 A ideia central do LSM tree é nunca gastar tempo procurando onde uma linha já existe para atualizá-la no lugar. Toda escrita, seja um insert, um update ou um delete, vira uma escrita nova, sempre em sequência, sempre no fim de uma estrutura. O caminho de uma escrita passa por três peças:
 
@@ -65,7 +65,7 @@ O problema desse modelo é que, com o tempo, o mesmo dado pode acabar espalhado 
 
 Esse é o trade-off do LSM tree resumido: escrita barulhenta e sequencial, sempre rápida, mesmo sob volume gigantesco, em troca de uma leitura que pode custar mais até a compaction rodar e arrumar a casa. É basicamente o oposto do que Postgres e MongoDB fazem, os dois otimizados para atualizar um registro no lugar e ler ele de um jeito só, previsível.
 
-Réplicas entre nós do Cassandra usam **quorum** para decidir quando uma escrita está confirmada, o mesmo mecanismo detalhado na tabela de [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/).
+Réplicas entre nós do Cassandra usam **quorum** para decidir quando uma escrita está confirmada, o mesmo mecanismo detalhado na tabela de [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/).
 
 ## Comparando os três motores de armazenamento
 

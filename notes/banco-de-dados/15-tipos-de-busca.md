@@ -29,7 +29,7 @@ Sistemas de busca de verdade quase nunca usam um tipo só. Uma busca de e-commer
 
 Casa termos exatos da consulta contra os termos guardados no índice. Se você busca `notebook`, ele acha os documentos que têm a palavra `notebook` indexada, e pronto: sem plural, sem sinônimo, sem "quis dizer".
 
-Por baixo costuma haver um **índice invertido**: para cada palavra, a lista de documentos onde ela aparece. Isso é o mesmo mecanismo detalhado em [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/), só que a busca por palavra-chave pura não faz o pré-processamento de linguagem (stemming, remoção de stopwords) antes de indexar.
+Por baixo costuma haver um **índice invertido**: para cada palavra, a lista de documentos onde ela aparece. Isso é o mesmo mecanismo detalhado em [Busca Full-Text](/labs/web-dev/banco-de-dados/16-busca-full-text-search/), só que a busca por palavra-chave pura não faz o pré-processamento de linguagem (stemming, remoção de stopwords) antes de indexar.
 
 Funciona bem para campos controlados: tags, categorias, status, rótulos que vêm de uma lista fechada. Ali você não quer que o mecanismo "interprete" nada, quer o valor batido.
 
@@ -37,7 +37,7 @@ Funciona bem para campos controlados: tags, categorias, status, rótulos que vê
 
 É a busca por texto livre com noção de relevância. Antes de indexar, o texto passa por uma esteira: quebra em palavras (tokenização), padroniza (caixa baixa, sem acento), joga fora palavras vazias como "de" e "a" (stopwords) e reduz cada palavra ao radical (stemming), de modo que "corrida", "correndo" e "correr" viram a mesma coisa. Na consulta, o resultado sai ordenado por quanto cada documento combina com o que foi buscado.
 
-Esse tipo tem nota própria, com exemplos em PostgreSQL e MySQL: [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/). Vale a regra de lá: para a maioria das caixas de busca (produto, artigo, comentário, documentação), o full-text nativo do banco resolve sem subir infraestrutura nova.
+Esse tipo tem nota própria, com exemplos em PostgreSQL e MySQL: [Busca Full-Text](/labs/web-dev/banco-de-dados/16-busca-full-text-search/). Vale a regra de lá: para a maioria das caixas de busca (produto, artigo, comentário, documentação), o full-text nativo do banco resolve sem subir infraestrutura nova.
 
 ## Busca semântica
 
@@ -126,7 +126,7 @@ Na prática, você raramente escolhe _um_ tipo. Escolhe uma combinação e decid
 
 Quando a busca vive num sistema separado do banco (um Elasticsearch ao lado do Postgres), aparece o problema de **sincronização**: manter o índice de busca atualizado em relação à fonte de verdade, normalmente via um fluxo de eventos ou captura de mudanças (veja [Outbox Pattern](/labs/web-dev/transacoes-distribuidas/05-outbox-pattern/)).
 
-E fica a parte difícil, que nenhuma dessas ferramentas resolve sozinha: entender o que o usuário quis dizer e devolver os resultados na ordem que faz sentido para ele. Empilhar mais métodos de recuperação sem cuidar de intenção e ranqueamento costuma deixar a busca mais complexa sem deixá-la melhor. Sobre quando o banco basta e quando vale a pena um motor dedicado, vale reler a seção final de [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/).
+E fica a parte difícil, que nenhuma dessas ferramentas resolve sozinha: entender o que o usuário quis dizer e devolver os resultados na ordem que faz sentido para ele. Empilhar mais métodos de recuperação sem cuidar de intenção e ranqueamento costuma deixar a busca mais complexa sem deixá-la melhor. Sobre quando o banco basta e quando vale a pena um motor dedicado, vale reler a seção final de [Busca Full-Text](/labs/web-dev/banco-de-dados/16-busca-full-text-search/).
 
 ## Referências
 

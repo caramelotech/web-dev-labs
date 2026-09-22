@@ -50,7 +50,7 @@ Escopo: projeto de APIs - protocolos, estilos de comunicação, segurança e evo
 
 Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência, arquitetura interna das engines, performance de consultas (índices, planos de execução, diagnóstico de queries lentas) e busca (tipos de busca, full-text).
 
-- ⬜ Data modeling (relacional vs NoSQL), incluindo normalização
+- ⬜ Data modeling em NoSQL (embutir vs referenciar, modelagem orientada a consultas). A normalização relacional já tem nota
 - ⬜ Armazenamento distribuído (HDFS) e processamento distribuído com Spark
 
 ## Trilha 2: System Design

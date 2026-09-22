@@ -51,7 +51,7 @@ ORDER BY nome, id
 LIMIT 20;
 ```
 
-Como a coluna de ordenação está indexada, o banco faz uma busca direta na árvore do índice até a âncora e lê as 20 linhas seguintes. O custo de achar a linha 20 e a linha 5 milhões é o mesmo. Essa técnica é chamada de **keyset pagination** (paginação por chave), e ela só é rápida se a coluna do `ORDER BY` estiver indexada, ver [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/).
+Como a coluna de ordenação está indexada, o banco faz uma busca direta na árvore do índice até a âncora e lê as 20 linhas seguintes. O custo de achar a linha 20 e a linha 5 milhões é o mesmo. Essa técnica é chamada de **keyset pagination** (paginação por chave), e ela só é rápida se a coluna do `ORDER BY` estiver indexada, ver [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/).
 
 O que a API expõe é um **cursor**: um token opaco (normalmente o último valor visto, codificado em base64) que o cliente devolve na próxima chamada para continuar:
 

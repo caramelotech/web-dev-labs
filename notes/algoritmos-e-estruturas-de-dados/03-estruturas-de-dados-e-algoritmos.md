@@ -43,7 +43,7 @@ Aqui "escalabilidade" é o custo do código crescer devagar conforme os dados cr
 Um código que "funciona" passou nos testes de hoje, com poucos dados. Um código que "funciona bem" continua funcionando quando os dados crescem 100 vezes. Conhecer as estruturas e os algoritmos clássicos ajuda de três formas:
 
 - você escreve código mais eficiente sem esforço extra, porque já sabe qual ferramenta cabe em cada caso
-- você toma decisões de arquitetura com base em custo, e não em palpite. Um exemplo é o [índice de banco de dados](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/), que existe justamente para o banco não varrer a tabela inteira a cada consulta
+- você toma decisões de arquitetura com base em custo, e não em palpite. Um exemplo é o [índice de banco de dados](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/), que existe justamente para o banco não varrer a tabela inteira a cada consulta
 - você resolve problemas novos com mais facilidade, porque eles quase sempre são variações de problemas clássicos
 
 ## Mapa do que vem a seguir

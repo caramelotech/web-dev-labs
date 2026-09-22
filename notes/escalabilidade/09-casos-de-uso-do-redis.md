@@ -65,7 +65,7 @@ Rate limiting é limitar quantas requisições uma origem (um usuário, um IP, u
 Dois motivos:
 
 1. **O contador precisa ser compartilhado.** Se cada instância da API contasse as requisições localmente, um cliente batendo numa API com 3 instâncias no ar teria na prática 3x o limite. O contador tem que viver num lugar único, e o Redis é rápido o suficiente para ser consultado a cada requisição sem virar gargalo.
-2. **As operações são atômicas.** O comando `INCR` incrementa e devolve o novo valor numa tacada só, sem risco de duas requisições concorrentes lerem o mesmo valor e uma sobrescrever a outra (o problema de race condition que a nota de [Controle de Concorrência](/labs/web-dev/banco-de-dados/07-controle-de-concorrencia/) descreve).
+2. **As operações são atômicas.** O comando `INCR` incrementa e devolve o novo valor numa tacada só, sem risco de duas requisições concorrentes lerem o mesmo valor e uma sobrescrever a outra (o problema de race condition que a nota de [Controle de Concorrência](/labs/web-dev/banco-de-dados/08-controle-de-concorrencia/) descreve).
 
 Um rate limiter de janela fixa cabe em poucas linhas:
 
@@ -155,7 +155,7 @@ E torna ele inadequado quando a entrega precisa ser garantida. Nesse caso a esco
 
 ## Locks distribuídos
 
-Às vezes você precisa garantir que só um processo por vez execute uma tarefa: rodar um relatório agendado uma única vez mesmo com 5 instâncias no ar, ou impedir que dois serviços mexam no mesmo arquivo ao mesmo tempo. Quando o recurso disputado não está no banco de dados (senão você usaria um lock do próprio banco, como a nota de [Controle de Concorrência](/labs/web-dev/banco-de-dados/07-controle-de-concorrencia/) mostra), um lock distribuído no Redis é uma opção.
+Às vezes você precisa garantir que só um processo por vez execute uma tarefa: rodar um relatório agendado uma única vez mesmo com 5 instâncias no ar, ou impedir que dois serviços mexam no mesmo arquivo ao mesmo tempo. Quando o recurso disputado não está no banco de dados (senão você usaria um lock do próprio banco, como a nota de [Controle de Concorrência](/labs/web-dev/banco-de-dados/08-controle-de-concorrencia/) mostra), um lock distribuído no Redis é uma opção.
 
 A forma básica usa um `SET` com duas opções:
 

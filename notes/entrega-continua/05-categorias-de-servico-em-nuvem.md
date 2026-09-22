@@ -35,7 +35,7 @@ Dentro de um provedor de IaaS/PaaS, os serviços se organizam em algumas famíli
 | Observabilidade       | Métricas, logs e alertas                              | CloudWatch / Cloud Monitoring                              |
 | Identidade (IAM)      | Quem pode fazer o quê                                 | IAM / IAM                                                  |
 
-Quase toda peça deste lab tem uma versão "as a service": em vez de instalar e operar Redis, você usa um [cache gerenciado](/labs/web-dev/escalabilidade/08-cache-e-redis/); em vez de administrar um Postgres, usa um [banco gerenciado](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/); em vez de manter um cluster Kafka, usa mensageria gerenciada. O custo é sempre o mesmo trade-off: menos trabalho operacional, mais dependência do provedor e, em geral, conta mais cara por unidade.
+Quase toda peça deste lab tem uma versão "as a service": em vez de instalar e operar Redis, você usa um [cache gerenciado](/labs/web-dev/escalabilidade/08-cache-e-redis/); em vez de administrar um Postgres, usa um [banco gerenciado](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/); em vez de manter um cluster Kafka, usa mensageria gerenciada. O custo é sempre o mesmo trade-off: menos trabalho operacional, mais dependência do provedor e, em geral, conta mais cara por unidade.
 
 ## Storage: block, file e object
 

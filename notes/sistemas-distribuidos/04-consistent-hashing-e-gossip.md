@@ -72,7 +72,7 @@ Para não perder dados quando um nó cai, a chave não fica só no nó dono: ela
 
 - **Caches distribuídos**: clientes de Memcached e o Redis Cluster usam consistent hashing para decidir em qual nó cada chave vive, justamente para não perder o cache inteiro quando um nó entra ou sai (ver [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/))
 - **Sharding de banco**: é uma das estratégias de "sharding por hash" descritas em [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/), com a vantagem de rebalancear barato
-- **Cassandra e DynamoDB**: particionam os dados por um token ring, que é consistent hashing com vnodes (ver [Escolha de Banco de Dados](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/))
+- **Cassandra e DynamoDB**: particionam os dados por um token ring, que é consistent hashing com vnodes (ver [Escolha de Banco de Dados](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/))
 - **Load balancers**: quando você quer que o mesmo cliente caia sempre no mesmo backend (afinidade), sem guardar uma tabela de sessão
 
 ## Gossip protocol

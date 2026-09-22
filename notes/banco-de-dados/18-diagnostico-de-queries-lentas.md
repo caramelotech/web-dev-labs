@@ -2,7 +2,7 @@
 
 A query ficou lenta e o reflexo de muita gente é rodar um `CREATE INDEX`. Às vezes funciona. Outras vezes o gargalo estava em outro lugar (uma transação aberta segurando um lock, uma ordenação que estourou a memória, uma estatística velha enganando o planner) e o índice só sobra ali, ocupando disco e deixando toda escrita mais lenta. Esta nota é sobre o passo anterior: descobrir **o que** está lento antes de decidir a correção.
 
-A nota de [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/) já mostrou como um índice funciona e o básico do `EXPLAIN`. Aqui o foco é o método de investigação e as partes do plano que aquela nota não detalhou: buffers, esperas de lock, ordenação em disco e monitoramento em produção. Os exemplos usam PostgreSQL, e os números de saída são inventados só para ilustrar.
+A nota de [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/) já mostrou como um índice funciona e o básico do `EXPLAIN`. Aqui o foco é o método de investigação e as partes do plano que aquela nota não detalhou: buffers, esperas de lock, ordenação em disco e monitoramento em produção. Os exemplos usam PostgreSQL, e os números de saída são inventados só para ilustrar.
 
 ## Medir antes de otimizar
 
@@ -133,7 +133,7 @@ Alguns detalhes para ler certo:
 
 - Em nós que rodam várias vezes (`loops` maior que 1, comum em `Nested Loop`), o `actual time` e o `actual rows` mostrados são a **média por execução**. Para o total, multiplique por `loops`.
 - Com `LIMIT`, o nó pode parar cedo. `rows=1013` estimado contra `rows=10` real no exemplo acima não é erro de estatística, é o `LIMIT 10` cortando a leitura.
-- `Rows Removed by Filter` mostra quantas linhas o nó leu e jogou fora. Um número alto perto de poucas linhas úteis indica um filtro que poderia ser resolvido por índice (a nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/15-busca-full-text-search/) tem um exemplo com esse campo).
+- `Rows Removed by Filter` mostra quantas linhas o nó leu e jogou fora. Um número alto perto de poucas linhas úteis indica um filtro que poderia ser resolvido por índice (a nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/16-busca-full-text-search/) tem um exemplo com esse campo).
 
 Quando a estimativa está muito fora, o primeiro remédio costuma ser barato: atualizar as estatísticas.
 
@@ -177,7 +177,7 @@ O que a linha `Buffers` ajuda a enxergar:
 
 ## Esperas de lock
 
-Nem toda query lenta está trabalhando devagar. Algumas estão **paradas**, esperando uma transação que segura um lock sobre a mesma linha ou tabela (a nota de [Controle de Concorrência](/labs/web-dev/banco-de-dados/07-controle-de-concorrencia/) explica de onde vêm esses bloqueios). Um `UPDATE` que trava porque alguém esqueceu uma transação aberta é o clássico.
+Nem toda query lenta está trabalhando devagar. Algumas estão **paradas**, esperando uma transação que segura um lock sobre a mesma linha ou tabela (a nota de [Controle de Concorrência](/labs/web-dev/banco-de-dados/08-controle-de-concorrencia/) explica de onde vêm esses bloqueios). Um `UPDATE` que trava porque alguém esqueceu uma transação aberta é o clássico.
 
 Aqui vale corrigir uma ideia que circula em infográficos: o `EXPLAIN ANALYZE` **não** reporta o tempo de espera de lock. A saída traz tempo de planejamento, de execução e de triggers, mas não tem um campo dedicado à espera. Você pode ver um tempo alto e um plano bonito, sem nenhuma pista do motivo.
 
@@ -232,7 +232,7 @@ O limite por operação é o parâmetro **`work_mem`**, com padrão de 4 MB. Sub
 
 Por isso o caminho mais seguro costuma ser:
 
-1. Ver se um índice na coluna do `ORDER BY` entrega os dados já ordenados e elimina o `Sort` (a nota de [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/) mostra o B-tree ordenado servindo a essa função)
+1. Ver se um índice na coluna do `ORDER BY` entrega os dados já ordenados e elimina o `Sort` (a nota de [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/) mostra o B-tree ordenado servindo a essa função)
 2. Reduzir o volume ordenado: filtrar antes, buscar só as colunas necessárias, usar `LIMIT` quando faz sentido
 3. Se ainda precisa de mais memória, aumentar o `work_mem` só para a query ou transação em questão, e não no servidor inteiro:
 
@@ -283,9 +283,9 @@ Corrigir sem medir de novo é só palpite. Depois de criar um índice, atualizar
 - Rode mais de uma vez, para separar o efeito do cache do efeito da mudança
 - Teste com volume e distribuição de dados parecidos com os de produção, de preferência num ambiente de teste com uma cópia anonimizada dos dados
 - Ao analisar `INSERT`, `UPDATE` ou `DELETE`, use `BEGIN` ... `ROLLBACK`
-- Observe também o custo do outro lado: um índice novo deixa as escritas da tabela mais lentas (ver [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/))
+- Observe também o custo do outro lado: um índice novo deixa as escritas da tabela mais lentas (ver [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/))
 
-Se a query já está bem escrita, o plano é bom e mesmo assim o banco não dá conta, o problema deixou de ser a query. É a hora de olhar as técnicas de outra camada, como cache, replicação e particionamento, na ordem descrita em [Técnicas para Melhorar a Performance do Banco de Dados](/labs/web-dev/banco-de-dados/16-tecnicas-de-melhoria-de-performance/).
+Se a query já está bem escrita, o plano é bom e mesmo assim o banco não dá conta, o problema deixou de ser a query. É a hora de olhar as técnicas de outra camada, como cache, replicação e particionamento, na ordem descrita em [Técnicas para Melhorar a Performance do Banco de Dados](/labs/web-dev/banco-de-dados/17-tecnicas-de-melhoria-de-performance/).
 
 ## Referências
 

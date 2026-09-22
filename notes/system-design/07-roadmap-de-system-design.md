@@ -12,7 +12,7 @@ O que o sistema precisa fazer, e sob quais condições. É a área que define o 
 | ------ | ------------ |
 | Requisitos funcionais | [System Design: Fundamentos](/labs/web-dev/system-design/01-o-que-e-system-design/) |
 | Requisitos não funcionais | [System Design: Fundamentos](/labs/web-dev/system-design/01-o-que-e-system-design/) |
-| Trade-offs (consistency vs availability) | [Trade-offs Arquiteturais](/labs/web-dev/system-design/05-trade-offs-arquiteturais/) e [Teorema de CAP](/labs/web-dev/banco-de-dados/04-teorema-de-cap/) |
+| Trade-offs (consistency vs availability) | [Trade-offs Arquiteturais](/labs/web-dev/system-design/05-trade-offs-arquiteturais/) e [Teorema de CAP](/labs/web-dev/banco-de-dados/05-teorema-de-cap/) |
 | Constraints (ex: baixa latência) | [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/) |
 | Read-heavy vs write-heavy | [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/) |
 
@@ -33,15 +33,15 @@ Como os dados são organizados, armazenados e escalados.
 
 | Tópico | Onde estudar |
 | ------ | ------------ |
-| Relacional: ACID e indexação | [ACID](/labs/web-dev/banco-de-dados/03-acid/) e [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/12-indices-e-planos-de-execucao/) |
-| Relacional: normalização | Em breve |
-| NoSQL (document, column-oriented, key-value, graph) | [NoSQL](/labs/web-dev/banco-de-dados/10-nosql/) |
-| Armazenamento distribuído (S3, blob storage) | [Categorias de Serviço em Nuvem](/labs/web-dev/entrega-continua/04-categorias-de-servico-em-nuvem/) (object storage). HDFS ainda não tem nota própria |
+| Relacional: ACID e indexação | [ACID](/labs/web-dev/banco-de-dados/04-acid/) e [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/) |
+| Relacional: normalização | [Normalização de Banco de Dados](/labs/web-dev/banco-de-dados/02-normalizacao/) |
+| NoSQL (document, column-oriented, key-value, graph) | [NoSQL](/labs/web-dev/banco-de-dados/11-nosql/) |
+| Armazenamento distribuído (S3, blob storage) | [Categorias de Serviço em Nuvem](/labs/web-dev/entrega-continua/05-categorias-de-servico-em-nuvem/) (object storage). HDFS ainda não tem nota própria |
 | Escala horizontal vs sharding | [Escalabilidade](/labs/web-dev/escalabilidade/01-escalabilidade/) e [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/) |
 | Write master + read replicas | [Replicação e Escalabilidade do Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/) |
 | Spark (consulta distribuída) | Em breve |
 
-Para escolher entre as opções acima num caso real, veja também [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/06-escolha-de-banco-de-dados/).
+Para escolher entre as opções acima num caso real, veja também [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/).
 
 ## 04. APIs e segurança
 

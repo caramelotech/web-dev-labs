@@ -77,7 +77,7 @@ Se o seu caso não tolera nem esse atraso, CQRS com bancos separados provavelmen
 CQRS e [Event Sourcing](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/) aparecem quase sempre na mesma conversa, mas são padrões distintos:
 
 - **CQRS** separa leitura de escrita. Não diz nada sobre como você guarda o estado.
-- **Event Sourcing** guarda o estado como a sequência de eventos que aconteceram, em vez de só o valor atual. É a mesma ideia do [Ledger Pattern](/labs/web-dev/banco-de-dados/08-ledger-pattern/).
+- **Event Sourcing** guarda o estado como a sequência de eventos que aconteceram, em vez de só o valor atual. É a mesma ideia do [Ledger Pattern](/labs/web-dev/banco-de-dados/09-ledger-pattern/).
 
 Dá para usar CQRS sem Event Sourcing (o modelo de escrita é um banco normal que só publica eventos) e Event Sourcing sem CQRS (raro, mas possível). Quando os dois andam juntos, o encaixe é natural: o log de eventos é o modelo de escrita e a fonte da verdade, e as projeções constroem os modelos de leitura a partir dele. Se um modelo de leitura precisa mudar de forma, é só apagar e reprojetar do zero relendo os eventos.
 

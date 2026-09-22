@@ -1,6 +1,6 @@
 # Controle de Concorrência e Race Conditions
 
-A nota de [ACID](/labs/web-dev/banco-de-dados/03-acid/) explica que o **I** (Isolamento) garante que transações concorrentes não se atrapalhem, e que o banco oferece **níveis de isolamento** para isso. Só que escolher um nível de isolamento não resolve tudo sozinho: mesmo com o nível certo configurado, a forma como a aplicação lê, calcula e escreve um dado pode continuar gerando bugs de concorrência. Esta nota é sobre esse problema na prática: o que é uma **race condition**, por que ela aparece mesmo em código aparentemente simples, e quais estratégias existem para evitá-la.
+A nota de [ACID](/labs/web-dev/banco-de-dados/04-acid/) explica que o **I** (Isolamento) garante que transações concorrentes não se atrapalhem, e que o banco oferece **níveis de isolamento** para isso. Só que escolher um nível de isolamento não resolve tudo sozinho: mesmo com o nível certo configurado, a forma como a aplicação lê, calcula e escreve um dado pode continuar gerando bugs de concorrência. Esta nota é sobre esse problema na prática: o que é uma **race condition**, por que ela aparece mesmo em código aparentemente simples, e quais estratégias existem para evitá-la.
 
 ## O que é uma race condition
 
@@ -236,7 +236,7 @@ Transação A continua enxergando saldo = 50 (a versão 1, do snapshot dela)
 
 É esse mecanismo que faz o nível de isolamento **Repeatable Read** funcionar sem precisar travar a tabela inteira: no PostgreSQL, MySQL e na maioria dos bancos modernos, `Repeatable Read` é implementado via MVCC (também chamado de **snapshot isolation**), não via lock. As versões antigas (as "tuplas mortas" no jargão do Postgres) ficam ocupando espaço até um processo de limpeza (o `autovacuum` no Postgres) liberar elas.
 
-**O detalhe que a tabela de fenômenos da nota de [ACID](/labs/web-dev/banco-de-dados/03-acid/) não mostra:** mesmo com snapshot isolation evitando dirty read, non-repeatable read e phantom read, ainda sobra um problema chamado **write skew**. Ele acontece quando duas transações leem o mesmo dado, cada uma decide agir com base no que leu, e as duas escritas juntas violam uma regra que nenhuma delas quebraria sozinha.
+**O detalhe que a tabela de fenômenos da nota de [ACID](/labs/web-dev/banco-de-dados/04-acid/) não mostra:** mesmo com snapshot isolation evitando dirty read, non-repeatable read e phantom read, ainda sobra um problema chamado **write skew**. Ele acontece quando duas transações leem o mesmo dado, cada uma decide agir com base no que leu, e as duas escritas juntas violam uma regra que nenhuma delas quebraria sozinha.
 
 O exemplo clássico (dos hospitais): a regra é "sempre precisa ter pelo menos um médico de plantão". Dois médicos, Ana e Bruno, estão de plantão. Os dois, ao mesmo tempo, checam quantos médicos estão de plantão antes de pedir folga:
 
@@ -268,7 +268,7 @@ Quando o recurso compartilhado não vive dentro do banco de dados (por exemplo, 
 | Lock otimista       | Detecta alteração por número de versão, na hora de salvar | Conflitos pouco frequentes                                                                                 | Exige lógica de retry / tratamento de conflito    |
 | Lock distribuído    | Coordena instâncias via um serviço externo compartilhado  | Recursos compartilhados fora do banco                                                                      | Exige infraestrutura extra e tratamento de falhas |
 | MVCC (snapshot isolation) | O banco versiona a linha automaticamente, leitura nunca bloqueia escrita | Nível de isolamento Repeatable Read na maioria dos bancos modernos | Não evita write skew, só Serializable evita |
-| Ledger              | Registra eventos em vez de sobrescrever um valor único    | Dinheiro, auditoria, rastreabilidade (veja [Ledger Pattern](/labs/web-dev/banco-de-dados/08-ledger-pattern/)) | Maior complexidade arquitetural                   |
+| Ledger              | Registra eventos em vez de sobrescrever um valor único    | Dinheiro, auditoria, rastreabilidade (veja [Ledger Pattern](/labs/web-dev/banco-de-dados/09-ledger-pattern/)) | Maior complexidade arquitetural                   |
 
 ## Escolhendo uma estratégia na prática
 

@@ -168,7 +168,7 @@ O heap é a estrutura ideal para uma **fila de prioridade**: uma fila em que sai
 
 ## Onde aparecem no dia a dia
 
-- **Índices de banco de dados:** o índice B-tree da nota de [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/) é uma árvore balanceada de busca, parente da BST desta nota, ajustada para ler poucos blocos de disco. É por isso que uma busca em milhões de linhas leva poucos passos.
+- **Índices de banco de dados:** o índice B-tree da nota de [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/) é uma árvore balanceada de busca, parente da BST desta nota, ajustada para ler poucos blocos de disco. É por isso que uma busca em milhões de linhas leva poucos passos.
 - **Sistema de arquivos e DOM:** hierarquias de pastas e de tags HTML são árvores.
 - **Agendadores e filas de prioridade:** costumam usar heaps.
 

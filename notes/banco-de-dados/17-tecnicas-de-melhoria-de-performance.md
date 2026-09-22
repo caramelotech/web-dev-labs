@@ -6,15 +6,15 @@ Até aqui cada nota deste lab tratou uma técnica de banco de dados isoladamente
 
 | Técnica            | Ataca principalmente                          | Nota de referência                                                                                    |
 | ------------------ | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| Indexing           | leitura lenta por busca sem estrutura         | [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/)         |
-| Materialized Views | consulta cara recalculada toda hora           | [Views e Triggers](/labs/web-dev/banco-de-dados/02-views-e-triggers/)                                 |
+| Indexing           | leitura lenta por busca sem estrutura         | [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/)         |
+| Materialized Views | consulta cara recalculada toda hora           | [Views e Triggers](/labs/web-dev/banco-de-dados/03-views-e-triggers/)                                 |
 | Vertical Scaling   | servidor sem capacidade (CPU/RAM/disco)       | [Escalabilidade](/labs/web-dev/escalabilidade/01-escalabilidade/)                                     |
 | Denormalization    | leitura lenta por excesso de `JOIN`           | ver seção abaixo                                                                                      |
 | Database Caching   | mesma consulta repetida com frequência        | [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/)                                       |
 | Replication        | leitura concentrada num único servidor        | [Replicação de Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/)         |
 | Sharding           | volume/tráfego que não cabe numa máquina      | [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/) |
 | Partitioning       | tabela grande demais para manter numa peça só | ver seção abaixo                                                                                      |
-| Query Optimization | consulta mal escrita, mesmo com índice        | [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/)         |
+| Query Optimization | consulta mal escrita, mesmo com índice        | [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/)         |
 
 Cinco dessas técnicas (Indexing, Materialized Views, Vertical Scaling, Database Caching, Replication) já têm nota própria neste lab, então o resto desta página não repete o conteúdo, só resume em uma frase e linka para quem quiser o detalhe. As duas seções abaixo cobrem o que ainda faltava: Denormalization, que não tinha nota nenhuma, e a diferença entre Sharding e Partitioning, que a nota de escalabilidade trata como quase sinônimos e merece um esclarecimento.
 
@@ -84,7 +84,7 @@ Vale reforçar o custo do sharding descrito na nota de escalabilidade: ele quebr
 
 ## Query Optimization
 
-Antes de qualquer técnica acima, vale sempre checar se a consulta em si está bem escrita: evitar `SELECT *` quando só algumas colunas importam, evitar função em cima da coluna filtrada (`WHERE lower(email) = ?` ignora índice em `email`), e usar `EXPLAIN`/`EXPLAIN ANALYZE` para confirmar que o banco está de fato usando o índice esperado, tudo isso já foi coberto com exemplo prático em [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/13-indices-e-planos-de-execucao/). É, na prática, o primeiro lugar a olhar, porque é de graça: não exige mudar schema, não exige infraestrutura nova, só reescrever a query. Quando a causa não é óbvia no plano, [Diagnóstico de Queries Lentas](/labs/web-dev/banco-de-dados/17-diagnostico-de-queries-lentas/) mostra como investigar buffers, esperas de lock e ordenação em disco antes de decidir a correção.
+Antes de qualquer técnica acima, vale sempre checar se a consulta em si está bem escrita: evitar `SELECT *` quando só algumas colunas importam, evitar função em cima da coluna filtrada (`WHERE lower(email) = ?` ignora índice em `email`), e usar `EXPLAIN`/`EXPLAIN ANALYZE` para confirmar que o banco está de fato usando o índice esperado, tudo isso já foi coberto com exemplo prático em [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/). É, na prática, o primeiro lugar a olhar, porque é de graça: não exige mudar schema, não exige infraestrutura nova, só reescrever a query. Quando a causa não é óbvia no plano, [Diagnóstico de Queries Lentas](/labs/web-dev/banco-de-dados/18-diagnostico-de-queries-lentas/) mostra como investigar buffers, esperas de lock e ordenação em disco antes de decidir a correção.
 
 ## Por onde começar
 
