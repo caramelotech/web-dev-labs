@@ -21,6 +21,14 @@ Desenhe o esqueleto: cliente, CDN, load balancer, API Gateway, os serviços que 
 
 Nem todo sistema precisa de todas as peças desse esqueleto desde o início, um sistema pequeno pode começar só com cliente, um serviço e um banco. A etapa 2 (capacity planning) é o que diz quais peças já se justificam desde a primeira versão.
 
+### Defina as APIs antes de escolher tecnologia
+
+Antes de decidir banco, cache ou fila, liste as operações centrais que o sistema oferece. Num encurtador de URL, são duas: criar uma URL curta (`POST /urls`) e redirecionar (`GET /{shortCode}`). Só de escrever isso já aparece informação útil: uma operação é escrita e a outra é leitura, e a segunda vai ser chamada muito mais vezes que a primeira. A API mostra o que o sistema realmente precisa suportar, e evita infraestrutura para algo que ninguém vai chamar. Como definir contratos, códigos de resposta e versionamento está em [APIs](/labs/web-dev/apis/01-http-rest/).
+
+Com a API na mão, resista à vontade de desenhar tudo de uma vez. Comece pela arquitetura mais simples que atende aos requisitos (cliente, load balancer, servidor de aplicação e banco) e faça uma pergunta: **onde isso quebra quando o tráfego crescer?** É dessa resposta que saem as decisões de escalabilidade da etapa 4, uma de cada vez, cada uma com um motivo. O contrário (começar por Redis, Kafka e Kubernetes) tende a produzir um desenho cheio de peças que ninguém sabe justificar.
+
+Um exemplo completo desse raciocínio, com números, API, modelo de dados e evolução da arquitetura, está no estudo de caso [Encurtador de URL](/labs/web-dev/estudos-de-caso/01-encurtador-de-url/).
+
 ## Etapa 4: Escalabilidade
 
 Com o esqueleto no lugar e os números da etapa 2 em mãos, decida como cada parte escala: horizontal scaling atrás do load balancer, replicação e sharding no banco, cache para tirar carga de leitura do banco, filas para absorver picos de escrita. Toda essa camada está detalhada em [Escalabilidade e Infraestrutura](/labs/web-dev/escalabilidade/01-escalabilidade/).
