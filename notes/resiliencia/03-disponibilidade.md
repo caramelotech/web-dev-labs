@@ -48,3 +48,50 @@ Alcançar um SLO de disponibilidade alto depende de eliminar pontos únicos de f
 - **Disaster Recovery** (DR): o plano (e a infraestrutura) para recuperar o sistema depois de uma falha catastrófica, quando redundância e failover automático não foram suficientes. Envolve backups testados, um plano documentado de restauração e, geralmente, duas métricas: RTO (Recovery Time Objective, quanto tempo leva para restaurar o serviço) e RPO (Recovery Point Objective, quantos dados de dado mais recente podem ser perdidos no processo).
 
 Nenhuma dessas técnicas é gratuita: mais redundância significa mais infraestrutura para pagar e mais complexidade operacional para manter, o que reforça o ponto do início desta seção, cada nove a mais de disponibilidade tem um preço concreto, e a decisão de perseguir esse nove precisa levar em conta se o negócio realmente precisa dele.
+
+## Disaster Recovery
+
+Redundância e failover cobrem falhas comuns (uma máquina, uma zona). **Disaster Recovery (DR)** entra quando o problema é maior: uma região inteira fora do ar, um banco corrompido por um bug, um `DROP TABLE` na produção, um ataque de ransomware. Nesses casos, ter uma segunda cópia ligada nem sempre ajuda (a corrupção pode ter sido replicada para ela), e o que salva é um plano de recuperação pensado com antecedência.
+
+### RTO e RPO
+
+Todo plano de DR gira em torno de duas metas, definidas pelo negócio e não pela equipe técnica:
+
+- **RTO (Recovery Time Objective)**: quanto tempo o sistema pode ficar fora do ar até voltar. "RTO de 1 hora" significa que, depois do desastre, o serviço precisa estar de pé em até 1 hora.
+- **RPO (Recovery Point Objective)**: quantos dados você aceita perder, medido em tempo. "RPO de 5 minutos" significa que, na pior hipótese, os últimos 5 minutos de dados podem sumir. O RPO depende de quão frequentemente os dados são copiados.
+
+```mermaid
+flowchart LR
+    A[Último backup] -- RPO: dados perdidos --> B[Desastre]
+    B -- RTO: tempo fora do ar --> C[Serviço restaurado]
+```
+
+Metas menores custam mais. RTO e RPO de segundos exigem infraestrutura duplicada e sempre ligada; metas de horas cabem em backups baratos.
+
+### Estratégias de recuperação
+
+A AWS, no whitepaper de DR, organiza as estratégias em quatro níveis (a ideia vale para qualquer nuvem), do mais barato e lento ao mais caro e rápido:
+
+| Estratégia                   | Como funciona                                                                                                                               | RPO / RTO típicos                 | Custo      |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- | ---------- |
+| **Backup and restore**       | Só guarda backups (em outra região). No desastre, recria a infraestrutura e restaura os dados                                               | Horas / até 24h ou mais           | Mais baixo |
+| **Pilot light**              | Mantém ligado só o núcleo em outra região (o banco replicado, por exemplo). Os servidores de aplicação ficam desligados e sobem no desastre | Minutos / horas                   | Baixo      |
+| **Warm standby**             | Uma versão reduzida do sistema completo roda o tempo todo na outra região. No desastre, escala para o tamanho de produção                   | Segundos / minutos                | Médio      |
+| **Multi-site active/active** | Duas ou mais regiões atendem tráfego ao mesmo tempo. No desastre, o tráfego só deixa de ir para a região afetada                            | Próximo de zero / próximo de zero | Mais alto  |
+
+A analogia: backup and restore é ter um extintor no armário e comprar tudo de novo depois do incêndio. Pilot light é manter só a chama piloto de um aquecedor acesa, pronto para esquentar rápido. Warm standby é manter o aquecedor ligado no mínimo. Active/active é ter dois aquecedores funcionando o tempo todo.
+
+Recriar rapidamente a infraestrutura na outra região depende de tê-la descrita em código, o que liga DR a [Infraestrutura como Código](/labs/web-dev/entrega-continua/06-infraestrutura-como-codigo/).
+
+### Como escolher
+
+Comece pelo custo da indisponibilidade: quanto o negócio perde por hora fora do ar e quantos dados perdidos são inaceitáveis (pagamentos costumam exigir RPO próximo de zero; um blog aguenta muito mais). Componentes diferentes podem ter estratégias diferentes: o banco de pedidos com pilot light ou melhor, o sistema de relatórios com backup simples. Igualar tudo ao nível mais caro é desperdício.
+
+### Testar o plano
+
+Um plano de DR que nunca foi executado provavelmente não funciona: o backup está corrompido, a permissão para restaurar não existe, o passo a passo está desatualizado. Pratique restaurar backups periodicamente e faça simulações de desastre (_game days_), em que a equipe executa o plano de verdade num ambiente de teste e mede o RTO e o RPO reais contra as metas.
+
+## Referências
+
+- [Disaster recovery options in the cloud](https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html) - AWS Whitepaper, en
+- [REL13-BP02 Use defined recovery strategies to meet the recovery objectives](https://docs.aws.amazon.com/wellarchitected/latest/reliability-pillar/rel_planning_for_recovery_disaster_recovery.html) - AWS Well-Architected, en

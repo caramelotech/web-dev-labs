@@ -57,6 +57,32 @@ O que você ganha em autonomia de time e escalabilidade seletiva, você paga em:
 
 Por isso, times pequenos ou produtos ainda em validação costumam começar com um monólito bem organizado (ou um "monólito modular", com fronteiras internas claras) e só extrair microsserviços quando a dor de organização ou de escala justificar o custo extra.
 
+### Monólito modular
+
+Um **monólito modular** é uma aplicação que continua sendo um único deploy, mas por dentro é dividida em módulos com fronteiras claras, cada um responsável por uma área do negócio (pedidos, pagamentos, catálogo). É o meio-termo entre o monólito bagunçado, onde tudo chama tudo, e os microsserviços, onde cada módulo vira um serviço na rede.
+
+```mermaid
+flowchart TB
+    subgraph App["Um único deploy"]
+        direction LR
+        P[Módulo Pedidos] -->|interface pública| PG[Módulo Pagamentos]
+        P -->|interface pública| C[Módulo Catálogo]
+    end
+    App --> DB[(Banco único, schemas separados por módulo)]
+```
+
+Para a modularidade ser de verdade, e não só pastas bonitas, algumas regras precisam valer:
+
+- **Separar por domínio, não por camada**: em vez de `controllers/`, `services/` e `repositories/` para o sistema todo, cada módulo tem suas próprias camadas. O raciocínio de fronteiras é o mesmo de [decomposição e bounded context](/labs/web-dev/microsservicos/02-decomposicao-e-bounded-context/).
+- **Comunicação só por interface pública**: um módulo não importa classes internas de outro, só chama o que o outro expõe de propósito.
+- **Dados de cada módulo são dele**: sem `JOIN` cruzando tabelas de módulos diferentes. Quem precisa do dado pede pela interface. Esse é o ponto que mais escorrega na prática.
+
+O que se ganha: um único deploy e pipeline, transação ACID normal (sem [Saga](/labs/web-dev/transacoes-distribuidas/03-saga/) nem [dual-write](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/)), chamadas em memória sem latência de rede e debug com um stack trace só. Boa parte do benefício organizacional dos microsserviços (times trabalhando em áreas separadas) vem junto, sem o custo operacional.
+
+Os riscos são reais: as fronteiras existem só por disciplina, então basta uma pressa para alguém importar uma classe interna ou fazer um `JOIN` proibido, e o monólito modular vira monólito comum. Ferramentas de análise de dependência e testes de arquitetura ajudam a manter as regras. E como tudo escala junto, uma parte pesada continua puxando o sistema inteiro.
+
+Por isso o monólito modular funciona bem como **ponto de partida**: quando um módulo realmente precisar de escala ou deploy próprio, ele já tem fronteira e interface definidas, e extraí-lo como microsserviço (por exemplo com o Strangler Fig (visto mais adiante nesta nota)) é bem menos traumático. É a ideia do _MonolithFirst_ defendida por Martin Fowler: descubra as fronteiras certas dentro de um monólito antes de pagar o preço da distribuição.
+
 ## Cinco princípios de design
 
 Existe uma lista curta de princípios que serve como checklist mental na hora de desenhar ou revisar uma arquitetura de microsserviços. Nenhum deles é regra absoluta, mas quando um serviço fere vários ao mesmo tempo, quase sempre é sinal de que a fronteira está no lugar errado.
@@ -158,3 +184,8 @@ O ponto chave é que, em qualquer momento da migração, o sistema inteiro conti
 - **Definir fronteiras claras de serviço**: extrair um pedaço do monólito sem antes aplicar o raciocínio de [decomposição e bounded context](/labs/web-dev/microsservicos/02-decomposicao-e-bounded-context/) só transporta a bagunça para um lugar distribuído, o que costuma ser pior e mais difícil de corrigir do que deixar como monólito.
 - **Extrair, testar, repetir**: cada extração deve ser validada em produção (com monitoramento e, se possível, uma fração de tráfego por vez) antes de seguir para a próxima. Manter o caminho antigo disponível por um tempo como plano B, redirecionando o tráfego de volta ao monólito se algo der errado, reduz bastante o risco de cada etapa.
 - **Nunca fazer big bang rewrite**: reescrever tudo de uma vez significa meses (ou anos) sem entregar valor novo, uma base de código congelada nesse período, e o risco de descobrir um problema sério no projeto novo só perto do fim, quando já foi gasto o investimento inteiro sem nada em produção para mostrar. O Strangler Fig evita esse risco justamente por manter o sistema entregável e funcional a cada passo da migração, não só no final dela.
+
+## Referências
+
+- [bliki: Monolith First](https://martinfowler.com/bliki/MonolithFirst.html) - Martin Fowler, en
+- [Don't start with a monolith](https://martinfowler.com/articles/dont-start-monolith.html) - Stefan Tilkov, en

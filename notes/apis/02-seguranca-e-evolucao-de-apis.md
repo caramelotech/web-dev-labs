@@ -53,6 +53,41 @@ Autenticação responde a uma pergunta só: quem está fazendo essa requisição
 
 Autorização vem depois da autenticação e responde outra pergunta: agora que eu sei quem você é, você pode fazer isso? Um usuário autenticado pode estar tentando acessar um recurso que não é dele, ou executar uma ação (deletar, por exemplo) para a qual não tem permissão. Autenticação sem autorização é só meio caminho: o sistema sabe quem bateu na porta, mas deixa qualquer um entrar em qualquer sala.
 
+### Modelos de autorização: RBAC e ABAC
+
+Com dois usuários, dá para checar "o João pode apagar isso?" caso a caso. Com milhares de usuários e dezenas de ações, a pergunta precisa de um modelo. Os dois mais comuns são o RBAC e o ABAC.
+
+**RBAC (Role-Based Access Control)** liga permissões a **funções** (roles), e não a pessoas. Você define funções como `leitor`, `editor` e `admin`, dá a cada uma um conjunto de permissões e depois só atribui funções aos usuários. Quando alguém troca de time, você troca a função dela e pronto, sem mexer em permissão por permissão. É o modelo formalizado pelo NIST e o mais usado no mercado.
+
+```mermaid
+flowchart LR
+    U[Usuária Ana] --> R1[Função: editor]
+    U2[Usuário Bruno] --> R2[Função: leitor]
+    R1 --> P1[ler pedido]
+    R1 --> P2[editar pedido]
+    R2 --> P1
+```
+
+Dois detalhes que aparecem junto com RBAC:
+
+- **Hierarquia de funções**: uma função pode herdar as permissões de outra (`admin` inclui tudo que `editor` faz, e `editor` inclui tudo que `leitor` faz), o que evita repetir a lista.
+- **Princípio do menor privilégio**: cada função recebe só o que precisa para trabalhar. Um `admin` para todo mundo é conveniente até o dia em que uma conta é comprometida.
+
+O ponto fraco do RBAC é que ele só olha _quem você é_ (sua função). Regras como "editor só pode editar pedidos da própria loja" ou "só em horário comercial" não cabem numa função sem multiplicar o número de funções (`editor-loja-1`, `editor-loja-2`...), o famoso _role explosion_.
+
+**ABAC (Attribute-Based Access Control)** resolve isso decidindo por **atributos**: do usuário (departamento, cargo), do recurso (dono, sensibilidade) e do contexto (horário, IP, dispositivo). A regra vira algo como "permitir editar se `usuario.loja == pedido.loja`". É mais flexível e mais difícil de auditar, porque a decisão depende de várias regras combinadas em vez de uma tabela simples.
+
+|              | RBAC                                 | ABAC                                                 |
+| ------------ | ------------------------------------ | ---------------------------------------------------- |
+| Decide por   | Função do usuário                    | Atributos de usuário, recurso e contexto             |
+| Simplicidade | Alta                                 | Média a baixa                                        |
+| Regras finas | Limitado                             | Muito bom                                            |
+| Bom para     | Perfis fixos (admin, editor, leitor) | Regras dependentes de contexto ou de dono do recurso |
+
+Na prática, muitos sistemas combinam os dois: RBAC para o grosso ("essa função acessa esse módulo") e uma checagem de atributo para o fino ("mas só os dados da própria loja").
+
+Sobre **onde** a decisão acontece: o [API Gateway](/labs/web-dev/escalabilidade/07-api-gateway/) costuma validar o token e barrar o que é óbvio (função sem acesso àquela rota). Regras que dependem dos dados (o pedido é dessa loja?) só o serviço dono do dado consegue avaliar, então a checagem final fica lá. Não confie apenas no gateway: um serviço interno chamado direto por outro serviço também precisa validar. As funções do usuário costumam viajar dentro do token (claims do JWT), como visto em [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/06-sso-oauth-oidc-saml/).
+
 ### Comunicação segura: HTTPS e mTLS
 
 **HTTPS** é HTTP rodando sobre TLS: os dados trafegam criptografados entre cliente e servidor, o que impede que alguém capturando o tráfego na rede (um Wi-Fi público, um proxy comprometido) leia ou altere o conteúdo. É o mínimo inegociável para qualquer API exposta na internet.
@@ -247,3 +282,8 @@ Na prática, existem dois jeitos de chegar nessa especificação:
 - **Contract-first (Design-first)**: o arquivo OpenAPI é escrito antes do código, como um contrato acordado entre quem consome e quem implementa a API. Times de frontend e backend podem trabalhar em paralelo a partir do mesmo contrato, e ferramentas conseguem gerar tanto o esqueleto do servidor quanto clientes HTTP tipados a partir do mesmo arquivo.
 
 Qualquer que seja a abordagem, o ponto central é o mesmo: manter a especificação como fonte da verdade evita o cenário clássico de documentação manual em wiki, que fica desatualizada na primeira mudança de endpoint que alguém esquece de anotar em outro lugar.
+
+## Referências
+
+- [Role-Based Access Control (RBAC): Features and Motivations](https://www.nist.gov/publications/role-based-access-control-rbac-features-and-motivations) - NIST, en
+- [role-based access control (RBAC) - Glossary](https://csrc.nist.gov/glossary/term/role_based_access_control) - NIST CSRC, en
