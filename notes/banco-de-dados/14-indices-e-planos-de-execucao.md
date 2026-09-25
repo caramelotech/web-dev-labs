@@ -58,6 +58,97 @@ Além do B-tree simples de uma coluna, os que mais aparecem no dia a dia:
 
 Bancos também têm tipos especializados para casos que o B-tree não atende bem: **GIN** para texto e campos com vários valores (arrays, JSONB), **GiST** e **BRIN** para dados geográficos e faixas. O GIN é o motor da [Busca Full-Text](/labs/web-dev/banco-de-dados/16-busca-full-text-search/).
 
+## Índices hash, bitmap e espacial
+
+### Índice hash
+
+O índice hash guarda o resultado de uma função de hash aplicada ao valor da coluna, e a busca vai direto ao "balde" certo, em tempo médio constante (O(1)). Pense num armário com gavetas numeradas: você calcula o número da gaveta a partir do nome e abre direto, sem folhear nada.
+
+```sql
+CREATE INDEX idx_usuarios_email_hash ON usuarios USING hash (email);
+
+SELECT * FROM usuarios WHERE email = 'ana@exemplo.com';  -- usa o índice
+SELECT * FROM usuarios WHERE email > 'a';                -- não usa
+```
+
+O preço dessa velocidade é a perda da ordem: o hash espalha os valores, então o índice não sabe dizer qual valor vem antes de qual. Ele só responde a `=`. Faixas (`>`, `BETWEEN`), `ORDER BY` e `LIKE 'abc%'` ficam de fora.
+
+Na prática, o hash raramente compensa. O B-tree já resolve igualdade muito bem, atende faixa e ordenação, e a diferença de velocidade costuma ser pequena. Vale olhar o que cada banco oferece:
+
+- **PostgreSQL**: tem índice hash, criado com `USING hash`. A documentação o descreve como limitado à comparação por `=`.
+- **MySQL (InnoDB)**: você não cria índice hash. O InnoDB tem o _adaptive hash index_, um hash em memória que ele monta sozinho sobre páginas de B-tree muito acessadas. Índice hash declarado por você só existe na engine MEMORY.
+
+### Índice bitmap
+
+Um índice bitmap guarda, para cada valor distinto da coluna, uma sequência de bits com um bit por linha da tabela: `1` se a linha tem aquele valor, `0` se não. Numa coluna `status` com os valores `ativo`, `inativo` e `bloqueado`, o índice tem três sequências de bits.
+
+```mermaid
+flowchart LR
+    subgraph Tabela
+        L1["linha 1: ativo"]
+        L2["linha 2: inativo"]
+        L3["linha 3: ativo"]
+        L4["linha 4: bloqueado"]
+    end
+    subgraph Bitmaps
+        B1["ativo:     1 0 1 0"]
+        B2["inativo:   0 1 0 0"]
+        B3["bloqueado: 0 0 0 1"]
+    end
+    Tabela --> Bitmaps
+```
+
+O ponto forte é combinar filtros: `WHERE status = 'ativo' AND regiao = 'sul'` vira uma operação `AND` bit a bit entre dois bitmaps, que o processador faz muito rápido. Por isso esse índice aparece em **data warehouses e sistemas OLAP**, com colunas de **baixa cardinalidade** (poucos valores distintos, como status, sexo, flags booleanas) e dados que são mais lidos do que escritos.
+
+O ponto fraco é a escrita. Um único `UPDATE` pode travar muitas linhas do índice de uma vez (a documentação da Oracle avisa que ele não serve para OLTP com muitas transações concorrentes). Em coluna de alta cardinalidade o índice também perde a vantagem, porque vira milhares de sequências quase vazias.
+
+Um detalhe que costuma confundir: **PostgreSQL e MySQL/InnoDB não têm índice bitmap persistente**. Ele existe no Oracle e em bancos analíticos. O "Bitmap Heap Scan" que aparece no plano de execução do PostgreSQL (visto em [Diagnóstico de Queries Lentas](/labs/web-dev/banco-de-dados/18-diagnostico-de-queries-lentas/)) é outra coisa: um bitmap temporário, montado em memória durante a query, para visitar as páginas da tabela em ordem.
+
+### Índice espacial
+
+Perguntas como "quais restaurantes estão a menos de 5 km daqui?" ou "qual motorista está mais perto do embarque?" não se resolvem com B-tree: latitude e longitude formam duas dimensões, e um índice ordenado só sabe ordenar em uma.
+
+O índice espacial organiza os dados por região do espaço. A estrutura clássica é a **R-tree**, que agrupa pontos e formas próximos dentro de retângulos, e esses retângulos dentro de retângulos maiores. Para achar o que está perto, o banco descarta de uma vez todos os retângulos longe do ponto consultado.
+
+```sql
+-- PostgreSQL com a extensão PostGIS
+CREATE INDEX idx_restaurantes_local ON restaurantes USING gist (localizacao);
+
+SELECT nome
+FROM restaurantes
+WHERE ST_DWithin(localizacao, ST_MakePoint(-38.52, -3.73)::geography, 5000);
+```
+
+Os nomes mudam por banco, a ideia é a mesma: no PostgreSQL, o índice espacial é um GiST, e o PostGIS fornece as funções; no MySQL, o índice `SPATIAL`; no MongoDB, o índice `2dsphere`. A parte de busca geográfica em si, como recurso de produto, está em [Tipos de Busca](/labs/web-dev/banco-de-dados/15-tipos-de-busca/).
+
+## Qual índice escolher
+
+O índice certo depende do que a query faz, não só de qual coluna aparece no `WHERE`. A tabela junta os tipos vistos até aqui e o de [Busca Full-Text](/labs/web-dev/banco-de-dados/16-busca-full-text-search/):
+
+| Se a query...                                           | Use             | Observação                                   |
+| ------------------------------------------------------- | --------------- | -------------------------------------------- |
+| É uma consulta comum, com igualdade, faixa ou ordenação | B-tree          | O padrão, na dúvida comece por ele           |
+| Só compara por igualdade exata                          | Hash            | Ganho pequeno, raramente compensa            |
+| Filtra por várias colunas juntas                        | Composto        | A ordem das colunas importa                  |
+| Usa só colunas que já estão no índice                   | Coberto         | Vira index-only scan                         |
+| Só interessa a um subconjunto das linhas                | Parcial         | Menor e mais barato de manter                |
+| Busca palavras dentro de texto                          | Full-text (GIN) | Ver a nota de busca full-text                |
+| Busca por localização ou proximidade                    | Espacial (GiST) | Precisa de PostGIS ou equivalente            |
+| Faz análise sobre coluna de poucos valores              | Bitmap          | Só onde existe, e para dados pouco alterados |
+
+Para ver o índice coberto em ação no PostgreSQL, a cláusula `INCLUDE` adiciona colunas ao índice só para serem lidas, sem participarem da ordenação:
+
+```sql
+CREATE INDEX idx_pedidos_usuario
+ON pedidos (usuario_id)
+INCLUDE (valor_total, criado_em);
+
+-- responde só com o índice (Index Only Scan)
+SELECT valor_total, criado_em FROM pedidos WHERE usuario_id = 42;
+```
+
+Um último lembrete: escolher o tipo certo não substitui olhar o plano de execução. Confirme com `EXPLAIN` que o banco realmente usou o índice, e lembre do custo de manter cada índice em escrita e espaço, visto no começo da nota.
+
 ## Quando o banco usa ou ignora o índice
 
 Criar o índice não obriga o banco a usá-lo. Quem decide, query a query, é o **otimizador** (query planner): ele estima o custo de cada estratégia possível e escolhe a mais barata. Isso depende de:
@@ -98,3 +189,7 @@ A nota de [Busca Full-Text](/labs/web-dev/banco-de-dados/16-busca-full-text-sear
 - [Índices - Documentação do PostgreSQL, capítulo 11](https://www.postgresql.org/docs/current/indexes.html) - PostgreSQL, en
 - [Use The Index, Luke! - Markus Winand](https://use-the-index-luke.com/) - Markus Winand, en
 - [How to Read Postgres EXPLAIN: A Guide to Scan Types](https://www.crunchydata.com/blog/postgres-scan-types-in-explain-plans) - Crunchy Data, en
+- [PostgreSQL: Index Types](https://www.postgresql.org/docs/current/indexes-types.html) - PostgreSQL, en
+- [PostgreSQL: Index-Only Scans and Covering Indexes](https://www.postgresql.org/docs/current/indexes-index-only-scans.html) - PostgreSQL, en
+- [MySQL: Adaptive Hash Index](https://dev.mysql.com/doc/refman/8.4/en/innodb-adaptive-hash.html) - MySQL, en
+- [O que é extensão espacial PostGIS para PostgreSQL](https://4linux.com.br/o-que-e-postgis/) - 4Linux, pt-BR
