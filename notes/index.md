@@ -5,6 +5,7 @@ Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao
 ## O que você vai encontrar
 
 - **Fundamentos Web** - o alicerce do front-end: HTML e CSS
+- **Front-end Avançado** - além do alicerce: JavaScript, React e os padrões mais recentes de data fetching e renderização
 - **Algoritmos e Estruturas de Dados** - a base para resolver problemas: raciocínio, estruturas de dados, complexidade (Big O) e padrões de resolução
 - **Engenharia de Software** - escrever código que dá para manter: princípios, padrões e testes
 - **APIs** - como os sistemas conversam: protocolos, estilos de comunicação, segurança e evolução

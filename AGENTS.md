@@ -14,6 +14,7 @@ As notas são publicadas no site do Caramelo Labs em `https://caramelotech.com.b
 notes/           # Notas em Markdown puro - cada arquivo vira uma página no site
   index.md                    # Página de entrada do lab no site
   fundamentos/                # Fundamentos de front-end: HTML e CSS
+  frontend-avancado/          # Além do alicerce: JavaScript, React e padrões recentes de data fetching e renderização
   algoritmos-e-estruturas-de-dados/  # Base para resolver problemas: raciocínio, estruturas de dados, complexidade (Big O), paradigmas de algoritmos e padrões de resolução
   engenharia-de-software/     # Design e qualidade de código: princípios, padrões e testes
   apis/                       # Projeto de APIs: protocolos, estilos de comunicação, segurança e evolução
