@@ -2,7 +2,7 @@
 
 As notas anteriores abriram o Kafka por dentro: [topic, partição, offset e consumer group](/labs/web-dev/mensageria/03-kafka/), [garantias de entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/) e [producer idempotente](/labs/web-dev/mensageria/06-producer-idempotente/). Esta fecha o assunto pelo outro lado: onde o Kafka costuma ser usado de verdade.
 
-Existem cinco padrões que aparecem o tempo todo. Não são categorias oficiais, é só a forma prática de agrupar o que as empresas fazem com Kafka. Cada um tem uma arquitetura típica e um conjunto de trade-offs, e na prática eles se misturam bastante.
+Existem seis padrões que aparecem o tempo todo. Não são categorias oficiais, é só a forma prática de agrupar o que as empresas fazem com Kafka. Cada um tem uma arquitetura típica e um conjunto de trade-offs, e na prática eles se misturam bastante.
 
 ## Pipelines de dados em tempo real
 
@@ -117,6 +117,31 @@ Tem uma distinção importante aqui. O CDC te entrega `UPDATE pedidos SET status
 
 O CDC também é a tecnologia por trás do [Outbox Pattern](/labs/web-dev/transacoes-distribuidas/05-outbox-pattern/): lá, o Debezium lê uma tabela de outbox onde a aplicação grava eventos de domínio de propósito, resolvendo o [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/). Mesma ferramenta, propósito diferente.
 
+## Request/Reply
+
+Todos os casos até aqui são assíncronos por natureza: alguém publica, alguém consome, sem ninguém esperando resposta na hora. Às vezes, porém, um serviço precisa mesmo de uma resposta síncrona (um sistema legado que só sabe chamar e esperar, ou um fluxo que bloqueia até saber o resultado), e o Kafka é a única via de comunicação disponível entre as duas pontas. Dá para simular requisição-resposta em cima dele, só que com esforço manual, porque não é isso que o Kafka foi desenhado para fazer.
+
+A montagem básica usa dois topics: um de request e um de reply.
+
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant ReqTopic as Topic de request
+    participant Servico as Serviço processador
+    participant RepTopic as Topic de reply
+
+    Cliente->>ReqTopic: publica pedido (correlationId=abc123, replyTo=reply-topic)
+    Servico->>ReqTopic: consome pedido
+    Servico->>RepTopic: publica resposta (correlationId=abc123)
+    Cliente->>RepTopic: consome respostas e casa pelo correlationId
+```
+
+O cliente publica a requisição no topic de request e já inclui, nos headers da mensagem, um **correlation ID** (um UUID gerado na hora) e o nome do topic de reply. O serviço do outro lado processa e publica a resposta no topic de reply, carregando o mesmo correlation ID de volta. Do lado do cliente, um consumer fica lendo o topic de reply, e como várias respostas de várias chamadas diferentes passam por ali misturadas, é o correlation ID que diz qual resposta pertence a qual chamada, o cliente casa a resposta que chegou com a chamada pendente que tem o mesmo ID e libera quem estava esperando.
+
+Isso é o padrão que a Confluent cataloga como **Correlation Identifier**: um jeito genérico de rastrear qual mensagem de resposta corresponde a qual pedido quando o meio de transporte não garante isso sozinho. Implementar isso na mão dá para fazer, mas o ecossistema Spring já resolve: o `ReplyingKafkaTemplate` do Spring Kafka publica a requisição, cria o correlation ID, escuta o topic de reply e devolve um `Future` que completa quando a resposta correspondente chega, ficando parecido com uma chamada HTTP comum do ponto de vista de quem escreve o código.
+
+Vale a ressalva: request/reply sobre Kafka é a exceção, não a regra. Ele reintroduz o acoplamento síncrono que a mensageria existe para evitar (quem chama fica esperando, então trava se o outro lado atrasar), e a coordenação de correlation ID é uma peça extra que pode falhar (resposta que nunca chega, cliente que precisa de timeout e limpeza da correlação pendente). Se o caso é genuinamente síncrono, REST ou gRPC costumam ser a escolha mais simples e direta. Usar Kafka aqui só compensa quando as duas pontas já só têm o Kafka como canal, ou quando integrar com um sistema legado que exige um formato de resposta bloqueante não deixa outra opção.
+
 ## Qual padrão se aplica
 
 | O que você precisa                                                   | Padrão                            |
@@ -126,9 +151,12 @@ O CDC também é a tecnologia por trás do [Outbox Pattern](/labs/web-dev/transa
 | Calcular algo continuamente sobre o fluxo (contagem, janela, join)   | Processamento de streams          |
 | Concentrar log e métrica de tudo, com vários destinos                | Logs e métricas centralizados     |
 | Manter cache, índice ou réplica em dia com um banco                  | CDC                               |
+| Uma chamada síncrona precisa passar por cima do Kafka                | Request/Reply                     |
 
 Na prática esses padrões se combinam: um pipeline de dados usa processamento de streams na etapa de limpeza, e um sistema de CDC alimenta tanto o pipeline quanto, com cuidado, a sincronização de read models.
 
 ## Referências
 
 - [Kafka Use Cases (Level Up Coding)](https://blog.levelupcoding.com/p/kafka-use-cases)
+- [Synchronous Communication With Apache Kafka Using ReplyingKafkaTemplate](https://www.baeldung.com/spring-kafka-request-reply-synchronous) - Baeldung, en
+- [Correlation Identifier](https://developer.confluent.io/patterns/event/correlation-identifier/) - Confluent, en
