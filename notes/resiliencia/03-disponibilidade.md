@@ -81,7 +81,7 @@ A AWS, no whitepaper de DR, organiza as estratégias em quatro níveis (a ideia 
 
 A analogia: backup and restore é ter um extintor no armário e comprar tudo de novo depois do incêndio. Pilot light é manter só a chama piloto de um aquecedor acesa, pronto para esquentar rápido. Warm standby é manter o aquecedor ligado no mínimo. Active/active é ter dois aquecedores funcionando o tempo todo.
 
-Recriar rapidamente a infraestrutura na outra região depende de tê-la descrita em código, o que liga DR a [Infraestrutura como Código](/labs/web-dev/entrega-continua/06-infraestrutura-como-codigo/).
+Recriar rapidamente a infraestrutura na outra região depende de tê-la descrita em código, o que liga DR a [Infraestrutura como Código](/labs/web-dev/entrega-continua/07-infraestrutura-como-codigo/).
 
 ### Como escolher
 

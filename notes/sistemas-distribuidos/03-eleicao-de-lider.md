@@ -101,7 +101,7 @@ Na maioria dos casos você não escreve eleição de líder: usa um serviço pro
 
 - **Failover de primário de banco**: em Postgres/MySQL com réplicas, quando o primário cai, uma ferramenta de failover (Patroni, orchestrator) elege uma réplica para virar o novo primário. Veja [Replicação e Escalabilidade do Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/).
 - **Controller do Kafka**: um dos nós do cluster é eleito controller e cuida da atribuição de partições e líderes de réplica. Ver [Kafka](/labs/web-dev/mensageria/03-kafka/).
-- **Kubernetes**: componentes do control plane (scheduler, controller-manager) rodam em várias réplicas para alta disponibilidade, mas só a que segura o *lease* de liderança age; as outras ficam de prontidão. Ver [Kubernetes](/labs/web-dev/entrega-continua/02-kubernetes/).
+- **Kubernetes**: componentes do control plane (scheduler, controller-manager) rodam em várias réplicas para alta disponibilidade, mas só a que segura o *lease* de liderança age; as outras ficam de prontidão. Ver [Kubernetes](/labs/web-dev/entrega-continua/03-kubernetes/).
 - **Jobs agendados distribuídos**: quando o mesmo cron roda em várias instâncias, a eleição de líder garante que só uma dispare a execução.
 
 Nem todo sistema distribuído usa líder. A abordagem sem líder, com nós trocando informação por gossip e resolvendo conflito por quórum, é o outro extremo do espectro e está em [Consistent Hashing e Gossip](/labs/web-dev/sistemas-distribuidos/04-consistent-hashing-e-gossip/). Ter líder simplifica a coerência das decisões; não ter líder tolera melhor a perda de nós. É um trade-off, não uma resposta única.

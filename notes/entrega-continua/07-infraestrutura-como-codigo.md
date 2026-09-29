@@ -89,7 +89,7 @@ O ganho maior aparece quando a infraestrutura entra no mesmo fluxo do código:
 - A mudança de infraestrutura vira **pull request**; o `plan` roda automaticamente e aparece como comentário para quem revisa.
 - O `apply` roda no pipeline depois da aprovação, não da máquina de alguém.
 - Dev, staging e produção saem do mesmo código com variáveis diferentes (tamanho da máquina, número de réplicas), então os ambientes deixam de divergir.
-- Docker e Kubernetes cuidam de _como a aplicação roda_; IaC cuida de _onde ela roda_ (o cluster, a rede, o banco). Veja [Docker](/labs/web-dev/entrega-continua/01-docker/), [Kubernetes](/labs/web-dev/entrega-continua/02-kubernetes/) e [CI/CD para Microsserviços](/labs/web-dev/entrega-continua/03-ci-cd-para-microsservicos/).
+- Docker e Kubernetes cuidam de _como a aplicação roda_; IaC cuida de _onde ela roda_ (o cluster, a rede, o banco). Veja [Docker](/labs/web-dev/entrega-continua/01-docker/), [Kubernetes](/labs/web-dev/entrega-continua/03-kubernetes/) e [CI/CD para Microsserviços](/labs/web-dev/entrega-continua/04-ci-cd-para-microsservicos/).
 
 ## Boas práticas
 

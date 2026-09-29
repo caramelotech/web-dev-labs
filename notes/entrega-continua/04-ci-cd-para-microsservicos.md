@@ -32,7 +32,7 @@ flowchart LR
 - **Empacotamento**: o código que passou nos testes é empacotado num artefato, tipicamente uma imagem Docker (veja [Docker](/labs/web-dev/entrega-continua/01-docker/)), pronta para ser executada em qualquer ambiente.
 - **Scan de segurança**: ferramentas automatizadas analisam o código (SAST) e as dependências usadas, procurando vulnerabilidades conhecidas antes que o artefato siga adiante.
 - **Push para repositório de artefatos**: a imagem aprovada é publicada num registro (um registry de imagens Docker, por exemplo), com uma tag que identifica exatamente essa versão.
-- **Deploy**: o artefato publicado é implantado no ambiente alvo (dev, QA, produção), normalmente aplicando a nova versão num cluster Kubernetes (veja [Kubernetes](/labs/web-dev/entrega-continua/02-kubernetes/)).
+- **Deploy**: o artefato publicado é implantado no ambiente alvo (dev, QA, produção), normalmente aplicando a nova versão num cluster Kubernetes (veja [Kubernetes](/labs/web-dev/entrega-continua/03-kubernetes/)).
 - **Testes de integração**: já no ambiente implantado, testes verificam se o serviço realmente funciona junto com suas dependências reais, não só isolado.
 - **Monitoramento e feedback**: depois do deploy, métricas, logs e alertas indicam se a nova versão está saudável, fechando o ciclo com informação real de produção.
 
@@ -49,6 +49,6 @@ flowchart LR
 
 Juntando tudo: um desenvolvedor faz um commit e dá push para o Git. Esse push dispara o servidor de CI, que builda o código, roda a suíte de testes e, se tudo passar, empacota o serviço numa imagem Docker seguindo o processo descrito em [Docker](/labs/web-dev/entrega-continua/01-docker/). A imagem passa por um scan de segurança e é publicada num repositório de artefatos com uma tag de versão.
 
-A partir daí, a etapa de deploy aplica essa nova imagem no cluster Kubernetes, seguindo o modelo declarativo descrito em [Kubernetes](/labs/web-dev/entrega-continua/02-kubernetes/): o Deployment sobe novos Pods com a versão atualizada, o rolling update troca as instâncias antigas pelas novas gradualmente, e o Service continua roteando tráfego sem interrupção durante a troca. Depois do deploy, testes de integração validam o comportamento real do serviço no ambiente, e o monitoramento acompanha logs, métricas e alertas para confirmar que a nova versão está saudável, ou para disparar um rollback rápido se não estiver.
+A partir daí, a etapa de deploy aplica essa nova imagem no cluster Kubernetes, seguindo o modelo declarativo descrito em [Kubernetes](/labs/web-dev/entrega-continua/03-kubernetes/): o Deployment sobe novos Pods com a versão atualizada, o rolling update troca as instâncias antigas pelas novas gradualmente, e o Service continua roteando tráfego sem interrupção durante a troca. Depois do deploy, testes de integração validam o comportamento real do serviço no ambiente, e o monitoramento acompanha logs, métricas e alertas para confirmar que a nova versão está saudável, ou para disparar um rollback rápido se não estiver.
 
 O resultado é uma linha contínua entre o código escrito por um desenvolvedor e esse mesmo código rodando, de forma confiável, em produção, repetida automaticamente a cada mudança e para cada um dos microsserviços do sistema, de forma independente.

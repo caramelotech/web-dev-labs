@@ -107,7 +107,7 @@ Sem lacunas planejadas no momento.
 
 ### `entrega-continua/`
 
-Escopo: empacotar, entregar e hospedar - Docker, Kubernetes, CI/CD para microsserviços e categorias de serviço em nuvem.
+Escopo: empacotar, entregar e hospedar - virtualização e containers, Docker, Kubernetes, CI/CD para microsserviços e categorias de serviço em nuvem.
 
 - ⬜ IaC (Terraform)
 

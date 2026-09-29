@@ -1,6 +1,6 @@
 # Padrões de Deployment
 
-A nota de [CI/CD para Microsserviços](/labs/web-dev/entrega-continua/03-ci-cd-para-microsservicos/) termina com o pipeline aplicando uma imagem nova no cluster Kubernetes, e menciona de passagem que "o rolling update troca as instâncias antigas pelas novas gradualmente". Rolling é só um jeito de fazer essa troca. Existem vários outros, e a diferença entre eles não é estética: cada um lida com um tipo de risco diferente.
+A nota de [CI/CD para Microsserviços](/labs/web-dev/entrega-continua/04-ci-cd-para-microsservicos/) termina com o pipeline aplicando uma imagem nova no cluster Kubernetes, e menciona de passagem que "o rolling update troca as instâncias antigas pelas novas gradualmente". Rolling é só um jeito de fazer essa troca. Existem vários outros, e a diferença entre eles não é estética: cada um lida com um tipo de risco diferente.
 
 Todo padrão de deployment resolve o mesmo problema básico (colocar código novo no ar sem quebrar o que já está funcionando), mas cada um decide de um jeito diferente onde fica o risco durante a transição: quanto tempo as duas versões coexistem, quantos usuários são afetados se a versão nova tiver um bug, quão rápido dá para voltar atrás, e quanta infraestrutura extra isso custa. Não existe padrão "melhor", existe o padrão certo para o que você está tentando proteger num deploy específico.
 
@@ -22,7 +22,7 @@ flowchart LR
     Antes --> Durante --> Depois
 ```
 
-É a estratégia nativa do Kubernetes: o `Deployment` controla quantas instâncias novas sobem por vez (`maxSurge`) e quantas instâncias antigas podem ficar indisponíveis ao mesmo tempo (`maxUnavailable`), garantindo que o serviço nunca fique totalmente fora do ar durante a troca (veja [Kubernetes](/labs/web-dev/entrega-continua/02-kubernetes/)).
+É a estratégia nativa do Kubernetes: o `Deployment` controla quantas instâncias novas sobem por vez (`maxSurge`) e quantas instâncias antigas podem ficar indisponíveis ao mesmo tempo (`maxUnavailable`), garantindo que o serviço nunca fique totalmente fora do ar durante a troca (veja [Kubernetes](/labs/web-dev/entrega-continua/03-kubernetes/)).
 
 O ponto fraco é justamente o que faz o rolling funcionar sem gastar o dobro de infraestrutura: por um tempo, a versão antiga e a nova atendem tráfego ao mesmo tempo. Se a versão nova mudou o formato de um dado que a versão antiga não entende (ou vice-versa), duas versões incompatíveis rodando juntas quebram alguma coisa no meio do caminho. Rolling pede que as duas versões sejam compatíveis entre si durante a transição.
 
@@ -98,7 +98,7 @@ A/B envia grupos de usuários diferentes para versões diferentes, mas o objetiv
 
 Deploy imutável não modifica instâncias que já existem: a versão nova sobe inteira numa infraestrutura nova (novos servidores, ou novos containers), e as instâncias antigas são descartadas por completo, nunca atualizadas em lugar (nada de SSH na máquina para trocar um binário).
 
-Esse padrão elimina uma classe inteira de bug conhecida como "configuration drift": duas instâncias que deveriam ser idênticas, mas divergem com o tempo porque alguém aplicou um patch manual numa e esqueceu da outra. Se toda instância nasce do mesmo artefato e nunca é modificada depois, esse tipo de divergência silenciosa não tem como acontecer. O trecho "artefatos imutáveis" já mencionado em [CI/CD para Microsserviços](/labs/web-dev/entrega-continua/03-ci-cd-para-microsservicos/) é o ingrediente que viabiliza esse padrão: se a imagem Docker não muda depois de construída, subir infraestrutura nova a partir dela garante, por construção, que é uma cópia exata da que foi testada.
+Esse padrão elimina uma classe inteira de bug conhecida como "configuration drift": duas instâncias que deveriam ser idênticas, mas divergem com o tempo porque alguém aplicou um patch manual numa e esqueceu da outra. Se toda instância nasce do mesmo artefato e nunca é modificada depois, esse tipo de divergência silenciosa não tem como acontecer. O trecho "artefatos imutáveis" já mencionado em [CI/CD para Microsserviços](/labs/web-dev/entrega-continua/04-ci-cd-para-microsservicos/) é o ingrediente que viabiliza esse padrão: se a imagem Docker não muda depois de construída, subir infraestrutura nova a partir dela garante, por construção, que é uma cópia exata da que foi testada.
 
 ## Como escolher
 
