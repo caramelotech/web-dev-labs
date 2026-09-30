@@ -187,6 +187,20 @@ Quando o consumer group não tem nenhum offset salvo (é um grupo novo, ou o off
 
 Sempre que um consumer entra ou sai do grupo (deploy, crash, autoscaling), o Kafka faz um **rebalance**: redistribui as partições entre os consumers que sobraram. Durante o rebalance o consumo para por um instante, então rebalances muito frequentes atrapalham. As configs `session.timeout.ms` e `heartbeat.interval.ms` controlam quão rápido o Kafka considera um consumer morto, e `max.poll.records` limita quantas mensagens vêm por `poll` para o processamento de um lote não estourar o tempo e disparar um rebalance sem querer.
 
+### Consumer lag
+
+**Consumer lag** é a distância entre o offset mais recente escrito na partição e o offset que o consumer group já commitou. Se o producer já escreveu até o offset 10.000 e o consumer group está commitado no 9.850, o lag daquele grupo naquela partição é 150: são 150 mensagens que já chegaram no Kafka mas que ainda ninguém processou.
+
+Um pouco de lag é normal, mensagens sempre demoram um instante entre serem escritas e serem lidas. O problema é o lag crescer sem parar, o que costuma ter uma destas causas:
+
+- **Consumer mais lento que o producer.** Se o producer publica 1.000 mensagens por segundo e o consumer processa 800, sobram 200 por segundo acumulando. Cedo ou tarde isso vira um lag gigante.
+- **Consumer parado.** Crash, deploy travado, exception não tratada que mata o processo: enquanto ninguém está lendo, o producer continua escrevendo, e o lag sobe de forma linear.
+- **Rebalance frequente.** Cada rebalance para o consumo por um instante (voltando à seção anterior). Se os rebalances acontecem toda hora, esses instantes se somam e o lag nunca dá conta de zerar.
+
+Dá para acompanhar o lag de um consumer group com a própria ferramenta que vem no Kafka, `kafka-consumer-groups.sh --describe --group <nome-do-grupo>`, que lista o offset atual, o offset mais recente da partição e a diferença entre os dois, partição por partição. Em produção, o mais comum é exportar essa mesma métrica para o Prometheus (o próprio consumer ou um exporter dedicado, como o Kafka Exporter, expõe o lag) e visualizar num painel do Grafana, com alerta disparando quando o lag ultrapassa um limite ou fica crescendo por tempo demais.
+
+Monitorar isso importa porque o lag é o sinal mais direto de que um consumer está para trás: é o mesmo problema descrito como anti-padrão em [Arquitetura Orientada a Eventos](/labs/web-dev/mensageria/02-arquitetura-orientada-a-eventos/), um consumidor falhando ou lento em silêncio, sem nenhuma chamada estourando na cara de ninguém como estouraria numa chamada síncrona. Sem um alerta de lag, a única forma de perceber o problema é um usuário reclamando que um e-mail ou uma notificação não chegou, horas depois do evento que deveria ter disparado ela.
+
 ## Retenção e compactação
 
 O Kafka não apaga uma mensagem quando ela é lida. Ele apaga quando a **política de retenção** manda. As duas mais comuns:
@@ -261,3 +275,4 @@ Nada disso fica garantido sozinho: alguém, ou alguma ferramenta, precisa checar
 
 - [Apache Kafka Documentation - Design](https://kafka.apache.org/documentation/#design) - Apache Kafka, en
 - [Kafka Internals (curso gratuito)](https://developer.confluent.io/courses/architecture/get-started/) - Confluent Developer, en
+- [Monitor Consumer Lag in Confluent Platform](https://docs.confluent.io/platform/current/monitor/monitor-consumer-lag.html) - Confluent, en
