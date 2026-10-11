@@ -1,6 +1,6 @@
 # RabbitMQ
 
-A nota de [Kafka](/labs/web-dev/mensageria/02-kafka/) mostrou uma implementação concreta de broker com um jeito próprio de organizar dados: log distribuído, particionado, que guarda mensagens por um tempo configurável. O RabbitMQ resolve o mesmo problema geral descrito em [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/), entregar mensagens de producers para consumers, mas parte de um modelo bem diferente por baixo dos panos. Entender os dois lado a lado ajuda a enxergar que "broker de mensageria" não é uma coisa só, é uma categoria com implementações que resolvem trade-offs diferentes.
+A nota de [Kafka](/labs/web-dev/mensageria/03-kafka/) mostrou uma implementação concreta de broker com um jeito próprio de organizar dados: log distribuído, particionado, que guarda mensagens por um tempo configurável. O RabbitMQ resolve o mesmo problema geral descrito em [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/), entregar mensagens de producers para consumers, mas parte de um modelo bem diferente por baixo dos panos. Entender os dois lado a lado ajuda a enxergar que "broker de mensageria" não é uma coisa só, é uma categoria com implementações que resolvem trade-offs diferentes.
 
 ## Smart broker, AMQP
 
@@ -64,5 +64,7 @@ Na prática, a escolha depende menos de qual dos dois é "melhor" e mais de qual
 
 - **RabbitMQ** tende a se sair bem quando o roteamento em si é complexo (várias filas recebendo subconjuntos diferentes de mensagens com base em regras), quando cada mensagem representa uma tarefa que deve ser processada uma vez e desaparecer (uma fila de jobs clássica), ou quando a aplicação precisa de garantias refinadas de entrega ponto a ponto oferecidas pelo AMQP.
 - **Kafka** tende a se sair melhor quando o volume de eventos é muito alto, quando múltiplos consumers independentes precisam ler o mesmo fluxo de eventos do começo ao fim, ou quando existe valor real em guardar o histórico de eventos e poder reprocessá-lo depois, como uma fonte de verdade replayável.
+
+RabbitMQ e Kafka não são as únicas opções. A nota [Escolhendo a Plataforma de Mensageria](/labs/web-dev/mensageria/10-escolhendo-a-plataforma-de-mensageria/) abre a comparação para Amazon SQS e Solace e lista os critérios que costumam decidir a escolha.
 
 Nenhum dos dois é estritamente superior, são ferramentas com filosofias diferentes para o mesmo problema de fundo: desacoplar quem produz de quem consome uma mensagem.

@@ -1,8 +1,8 @@
 # Casos de Uso do Kafka
 
-As notas anteriores abriram o Kafka por dentro: [topic, partição, offset e consumer group](/labs/web-dev/mensageria/02-kafka/), [garantias de entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/) e [producer idempotente](/labs/web-dev/mensageria/05-producer-idempotente/). Esta fecha o assunto pelo outro lado: onde o Kafka costuma ser usado de verdade.
+As notas anteriores abriram o Kafka por dentro: [topic, partição, offset e consumer group](/labs/web-dev/mensageria/03-kafka/), [garantias de entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/) e [producer idempotente](/labs/web-dev/mensageria/06-producer-idempotente/). Esta fecha o assunto pelo outro lado: onde o Kafka costuma ser usado de verdade.
 
-Existem cinco padrões que aparecem o tempo todo. Não são categorias oficiais, é só a forma prática de agrupar o que as empresas fazem com Kafka. Cada um tem uma arquitetura típica e um conjunto de trade-offs, e na prática eles se misturam bastante.
+Existem seis padrões que aparecem o tempo todo. Não são categorias oficiais, é só a forma prática de agrupar o que as empresas fazem com Kafka. Cada um tem uma arquitetura típica e um conjunto de trade-offs, e na prática eles se misturam bastante.
 
 ## Pipelines de dados em tempo real
 
@@ -29,7 +29,7 @@ flowchart LR
 
 É comum separar os topics em duas camadas: um topic **raw** recebe o evento como ele veio da fonte, e um job intermediário valida, limpa e enriquece esse dado, publicando o resultado num topic **curated**. Os consumidores de negócio leem só o curated, que já vem no formato certo.
 
-Quando a lógica de transformação muda, ou tinha um bug, você não precisa reextrair tudo da fonte. Como o Kafka guarda as mensagens pelo tempo da [política de retenção](/labs/web-dev/mensageria/02-kafka/), basta reposicionar o offset do job e reprocessar a partir do ponto necessário. A recuperação vira "replay a partir daqui" em vez de "reconstruir tudo na mão".
+Quando a lógica de transformação muda, ou tinha um bug, você não precisa reextrair tudo da fonte. Como o Kafka guarda as mensagens pelo tempo da [política de retenção](/labs/web-dev/mensageria/03-kafka/), basta reposicionar o offset do job e reprocessar a partir do ponto necessário. A recuperação vira "replay a partir daqui" em vez de "reconstruir tudo na mão".
 
 ## Sistemas orientados a evento
 
@@ -37,7 +37,7 @@ Pense no serviço de pedidos de um e-commerce. Quando um pedido é criado, vári
 
 Na versão acoplada, o serviço de pedidos chama esses cinco serviços, um por um. Cada serviço novo que precisa saber de pedidos obriga a mexer no código do serviço de pedidos. E se o serviço de analytics estiver fora do ar na hora, o que acontece com a criação do pedido?
 
-Na versão orientada a evento, o serviço de pedidos publica um evento `pedido-criado` no Kafka e encerra o trabalho dele. Billing, e-mail, analytics, estoque e antifraude têm cada um seu [consumer group](/labs/web-dev/mensageria/02-kafka/) lendo o mesmo topic, no próprio ritmo. Um serviço novo, digamos um programa de fidelidade, assina o topic e passa a reagir a pedidos sem ninguém tocar no serviço original.
+Na versão orientada a evento, o serviço de pedidos publica um evento `pedido-criado` no Kafka e encerra o trabalho dele. Billing, e-mail, analytics, estoque e antifraude têm cada um seu [consumer group](/labs/web-dev/mensageria/03-kafka/) lendo o mesmo topic, no próprio ritmo. Um serviço novo, digamos um programa de fidelidade, assina o topic e passa a reagir a pedidos sem ninguém tocar no serviço original.
 
 ```mermaid
 flowchart LR
@@ -51,7 +51,7 @@ flowchart LR
 
 Esse é o backbone dos microsserviços orientados a evento, o mesmo assunto visto em [Comunicação entre Serviços](/labs/web-dev/microsservicos/03-comunicacao-entre-servicos/).
 
-O preço é que o fluxo deixa de ser óbvio. Um único `pedido-criado` dispara vários workflows assíncronos espalhados por serviços diferentes. Responder "por que esse pedido não foi cobrado" exige [rastreamento distribuído](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/), e o contrato do evento precisa ser estável: se o serviço de pedidos muda o formato de `pedido-criado` sem cuidado, quebra todos os consumidores de uma vez. É por isso que a [evolução de schema](/labs/web-dev/mensageria/02-kafka/) pesa tanto nesse cenário.
+O preço é que o fluxo deixa de ser óbvio. Um único `pedido-criado` dispara vários workflows assíncronos espalhados por serviços diferentes. Responder "por que esse pedido não foi cobrado" exige [rastreamento distribuído](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/), e o contrato do evento precisa ser estável: se o serviço de pedidos muda o formato de `pedido-criado` sem cuidado, quebra todos os consumidores de uma vez. É por isso que a [evolução de schema](/labs/web-dev/mensageria/03-kafka/) pesa tanto nesse cenário.
 
 ## Processamento de streams
 
@@ -67,7 +67,7 @@ As ferramentas mais comuns:
 - **ksqlDB**: você escreve SQL sobre os streams e ele cuida do resto.
 - **Apache Flink**: uma engine à parte, mais robusta para estado grande e lógica complexa. É a que aparece com mais frequência em pipelines pesados.
 
-Como o cálculo de um evento às vezes depende dos anteriores (somar o total gasto por um usuário, por exemplo), os eventos de uma mesma entidade precisam cair na mesma partição e ser processados em ordem. Isso volta para a [escolha da chave no producer](/labs/web-dev/mensageria/02-kafka/): mesma chave, mesma partição, ordem preservada.
+Como o cálculo de um evento às vezes depende dos anteriores (somar o total gasto por um usuário, por exemplo), os eventos de uma mesma entidade precisam cair na mesma partição e ser processados em ordem. Isso volta para a [escolha da chave no producer](/labs/web-dev/mensageria/03-kafka/): mesma chave, mesma partição, ordem preservada.
 
 O ponto mais delicado é o **estado**. Um agregador do tipo "erros por serviço nos últimos 5 minutos" guarda contadores na memória. Se o processo cai, esse estado se perde. As ferramentas resolvem isso salvando o estado num topic compactado do próprio Kafka (o changelog): ao reiniciar, o processador reconstrói os contadores lendo esse topic. As **janelas** (windows) definem o recorte de tempo do cálculo: os últimos 5 minutos deslizando, cada hora cheia, ou a sessão de um usuário até 30 minutos de inatividade.
 
@@ -97,7 +97,7 @@ Guardar log para sempre no Kafka sai caro em disco, então o padrão é retenç�
 
 ## Change Data Capture (CDC)
 
-Nos casos anteriores, a aplicação publica o evento de propósito. No CDC, ninguém na aplicação escreve código para publicar nada: uma ferramenta observa o log de transações do banco (o WAL no Postgres, o binlog no MySQL, detalhados em [Postgres vs MySQL](/labs/web-dev/banco-de-dados/10-postgres-vs-mysql/)) e transforma cada `INSERT`, `UPDATE` e `DELETE` já commitado num evento no Kafka.
+Nos casos anteriores, a aplicação publica o evento de propósito. No CDC, ninguém na aplicação escreve código para publicar nada: uma ferramenta observa o log de transações do banco (o WAL no Postgres, o binlog no MySQL, detalhados em [Postgres vs MySQL](/labs/web-dev/banco-de-dados/12-postgres-vs-mysql/)) e transforma cada `INSERT`, `UPDATE` e `DELETE` já commitado num evento no Kafka.
 
 A ferramenta padrão é o **Debezium**, que roda como source connector do Kafka Connect. Você configura um connector apontando para o banco, e ele publica as mudanças em topics como `loja.public.pedidos`.
 
@@ -111,11 +111,36 @@ flowchart LR
     KT --> WH[(Data warehouse)]
 ```
 
-Serve para manter cópias derivadas do banco sempre em dia: invalidar o cache no instante em que a linha muda, atualizar o índice de busca, reconstruir um read model de CQRS, replicar para o data warehouse quase em tempo real. Tudo sem job de sincronização batch e sem um `SELECT ... WHERE updated_at > ?` martelando o banco de tempos em tempos.
+Serve para manter cópias derivadas do banco sempre em dia: invalidar o cache no instante em que a linha muda, atualizar o índice de busca, reconstruir um read model de [CQRS](/labs/web-dev/transacoes-distribuidas/06-cqrs/), replicar para o data warehouse quase em tempo real. Tudo sem job de sincronização batch e sem um `SELECT ... WHERE updated_at > ?` martelando o banco de tempos em tempos.
 
 Tem uma distinção importante aqui. O CDC te entrega `UPDATE pedidos SET status = 2 WHERE id = 99`, uma mudança de linha descrita no vocabulário da tabela. Isso não é a mesma coisa que `pagamento-capturado`, um evento de negócio com significado próprio. O CDC é ótimo para replicação e sincronização de dados. Para dirigir um workflow de negócio, o certo é um evento de domínio publicado de propósito pela aplicação, que carrega a intenção real. Fazer o serviço de e-mail reagir a `status = 2` amarra ele à estrutura interna da tabela de outro time, e no dia em que essa tabela mudar, quebra.
 
 O CDC também é a tecnologia por trás do [Outbox Pattern](/labs/web-dev/transacoes-distribuidas/05-outbox-pattern/): lá, o Debezium lê uma tabela de outbox onde a aplicação grava eventos de domínio de propósito, resolvendo o [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/). Mesma ferramenta, propósito diferente.
+
+## Request/Reply
+
+Todos os casos até aqui são assíncronos por natureza: alguém publica, alguém consome, sem ninguém esperando resposta na hora. Às vezes, porém, um serviço precisa mesmo de uma resposta síncrona (um sistema legado que só sabe chamar e esperar, ou um fluxo que bloqueia até saber o resultado), e o Kafka é a única via de comunicação disponível entre as duas pontas. Dá para simular requisição-resposta em cima dele, só que com esforço manual, porque não é isso que o Kafka foi desenhado para fazer.
+
+A montagem básica usa dois topics: um de request e um de reply.
+
+```mermaid
+sequenceDiagram
+    participant Cliente
+    participant ReqTopic as Topic de request
+    participant Servico as Serviço processador
+    participant RepTopic as Topic de reply
+
+    Cliente->>ReqTopic: publica pedido (correlationId=abc123, replyTo=reply-topic)
+    Servico->>ReqTopic: consome pedido
+    Servico->>RepTopic: publica resposta (correlationId=abc123)
+    Cliente->>RepTopic: consome respostas e casa pelo correlationId
+```
+
+O cliente publica a requisição no topic de request e já inclui, nos headers da mensagem, um **correlation ID** (um UUID gerado na hora) e o nome do topic de reply. O serviço do outro lado processa e publica a resposta no topic de reply, carregando o mesmo correlation ID de volta. Do lado do cliente, um consumer fica lendo o topic de reply, e como várias respostas de várias chamadas diferentes passam por ali misturadas, é o correlation ID que diz qual resposta pertence a qual chamada, o cliente casa a resposta que chegou com a chamada pendente que tem o mesmo ID e libera quem estava esperando.
+
+Isso é o padrão que a Confluent cataloga como **Correlation Identifier**: um jeito genérico de rastrear qual mensagem de resposta corresponde a qual pedido quando o meio de transporte não garante isso sozinho. Implementar isso na mão dá para fazer, mas o ecossistema Spring já resolve: o `ReplyingKafkaTemplate` do Spring Kafka publica a requisição, cria o correlation ID, escuta o topic de reply e devolve um `Future` que completa quando a resposta correspondente chega, ficando parecido com uma chamada HTTP comum do ponto de vista de quem escreve o código.
+
+Vale a ressalva: request/reply sobre Kafka é a exceção, não a regra. Ele reintroduz o acoplamento síncrono que a mensageria existe para evitar (quem chama fica esperando, então trava se o outro lado atrasar), e a coordenação de correlation ID é uma peça extra que pode falhar (resposta que nunca chega, cliente que precisa de timeout e limpeza da correlação pendente). Se o caso é genuinamente síncrono, REST ou gRPC costumam ser a escolha mais simples e direta. Usar Kafka aqui só compensa quando as duas pontas já só têm o Kafka como canal, ou quando integrar com um sistema legado que exige um formato de resposta bloqueante não deixa outra opção.
 
 ## Qual padrão se aplica
 
@@ -126,9 +151,12 @@ O CDC também é a tecnologia por trás do [Outbox Pattern](/labs/web-dev/transa
 | Calcular algo continuamente sobre o fluxo (contagem, janela, join)   | Processamento de streams          |
 | Concentrar log e métrica de tudo, com vários destinos                | Logs e métricas centralizados     |
 | Manter cache, índice ou réplica em dia com um banco                  | CDC                               |
+| Uma chamada síncrona precisa passar por cima do Kafka                | Request/Reply                     |
 
 Na prática esses padrões se combinam: um pipeline de dados usa processamento de streams na etapa de limpeza, e um sistema de CDC alimenta tanto o pipeline quanto, com cuidado, a sincronização de read models.
 
 ## Referências
 
 - [Kafka Use Cases (Level Up Coding)](https://blog.levelupcoding.com/p/kafka-use-cases)
+- [Synchronous Communication With Apache Kafka Using ReplyingKafkaTemplate](https://www.baeldung.com/spring-kafka-request-reply-synchronous) - Baeldung, en
+- [Correlation Identifier](https://developer.confluent.io/patterns/event/correlation-identifier/) - Confluent, en

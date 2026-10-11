@@ -75,11 +75,3 @@ Na prática, os bancos garantem isso escrevendo as mudanças em um **write-ahead
 | C     | Regras de negócio sempre respeitadas      | O banco continua num estado válido depois?               |
 | I     | Transações concorrentes não se atrapalham | Uma transação vê efeitos de outra ainda incompleta?      |
 | D     | Mudanças confirmadas são permanentes      | Os dados sobrevivem a uma falha logo depois do `COMMIT`? |
-
-# Recapitulando
-
-- ACID é um conjunto de garantias que tornam transações em banco de dados relacional confiáveis.
-- Atômica: a transação acontece por inteiro ou não acontece.
-- Consistente: a transação nunca deixa o banco num estado que viole as regras definidas.
-- Isolada (independente): transações concorrentes não interferem nos resultados umas das outras.
-- Durável: depois do `COMMIT`, o dado está salvo mesmo que o sistema falhe em seguida.

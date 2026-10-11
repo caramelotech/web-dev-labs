@@ -10,9 +10,15 @@ Algumas notas em `notes/` ainda são esqueleto (só headings, sem conteúdo). Pa
 
 ### `fundamentos/`
 
-Escopo: fundamentos de front-end (HTML e CSS). Não cobre fundamentos de programação.
+Escopo: fundamentos de front-end (HTML e CSS). Fundamentos de programação (algoritmos, estruturas de dados, complexidade) ficam em `algoritmos-e-estruturas-de-dados/`.
 
-- ⬜ Decidir se algoritmos, estruturas de dados e complexidade (Big O) entram neste lab (pasta própria `algoritmos-e-estruturas-de-dados/`) ou ficam fora do escopo
+Sem lacunas planejadas no momento.
+
+### `algoritmos-e-estruturas-de-dados/`
+
+Escopo: base para resolver problemas - pilares de estudo, lógica e pensamento computacional, estruturas de dados, complexidade (Big O), paradigmas de projeto de algoritmos e padrões de resolução de problemas.
+
+Sem lacunas planejadas no momento.
 
 ### `engenharia-de-software/`
 
@@ -37,47 +43,49 @@ Escopo: design e qualidade de código, princípios, padrões de projeto e testes
 
 Escopo: projeto de APIs - protocolos, estilos de comunicação, segurança e evolução.
 
-Sem lacunas planejadas no momento.
+- ⬜ Ataques web comuns: DDoS e XSS
+- ⬜ TLS/SSL em detalhe (handshake, certificados, cadeia de confiança)
 
 ### `banco-de-dados/`
 
-Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência e arquitetura interna das engines.
+Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência, arquitetura interna das engines, performance de consultas (índices, planos de execução, diagnóstico de queries lentas) e busca (tipos de busca, full-text).
 
-- ⬜ Índices e planos de execução
-- ⬜ Data modeling (relacional vs NoSQL)
+- ⬜ Data modeling em NoSQL (embutir vs referenciar, modelagem orientada a consultas). A normalização relacional já tem nota
+- ⬜ Armazenamento distribuído (HDFS) e processamento distribuído com Spark
 
 ## Trilha 2: System Design
 
 ### `system-design/`
 
-Escopo: projeto de sistemas - fundamentos, capacity planning, latência, trade-offs e metodologia.
+Escopo: projeto de sistemas - fundamentos, capacity planning, latência, trade-offs, metodologia e o roadmap de tópicos.
 
-Sem lacunas planejadas no momento.
+- ⬜ Usuários e padrões de uso (tipos, roles, demografia, picos, web vs mobile)
+- ⬜ Fundamentos de rede: TCP vs UDP, RTT
+- ⬜ Paralelização e threads (capacidade de um servidor)
 
 ### `sistemas-distribuidos/`
 
 Escopo: consistência, replicação e coordenação entre nós. CAP e PACELC ficam em `banco-de-dados/`.
 
 - ⬜ Consistência causal
-- ⬜ Consensus (Raft/Paxos) em profundidade
 
 ### `escalabilidade/` (rótulo do sidebar: "Escalabilidade e Infraestrutura")
 
-Escopo: escalar carga e a infraestrutura que sustenta isso - particionamento, replicação, CDN, load balancer, service discovery, API Gateway, cache, rate limiting.
+Escopo: escalar carga e a infraestrutura que sustenta isso - particionamento, replicação, CDN, load balancer, service discovery, API Gateway, cache, casos de uso do Redis, rate limiting.
 
-Sem lacunas planejadas no momento.
+- ⬜ Forward proxy vs reverse proxy
 
 ### `transacoes-distribuidas/`
 
-Escopo: manter dados coerentes entre serviços sem uma transação única - consistência transacional, 2PC, Saga, dual-write, Outbox, CDC, Event Sourcing.
+Escopo: manter dados coerentes entre serviços sem uma transação única - consistência transacional, 2PC, Saga, dual-write, Outbox, CDC, Event Sourcing, CQRS.
 
 Sem lacunas planejadas no momento.
 
 ### `mensageria/`
 
-Escopo: comunicação assíncrona - filas, brokers (Kafka, RabbitMQ), evolução de schema, garantias de entrega, idempotência e casos de uso.
+Escopo: comunicação assíncrona - arquitetura orientada a eventos, filas, brokers (Kafka, RabbitMQ), comparação de plataformas (Kafka, RabbitMQ, SQS, Solace), evolução de schema, garantias de entrega, idempotência e casos de uso.
 
-- ⬜ SQS/SNS em detalhe (fora do escopo desta rodada)
+- ⬜ SQS/SNS em detalhe (só há um comparativo de alto nível por enquanto)
 
 ### `resiliencia/`
 
@@ -99,9 +107,8 @@ Sem lacunas planejadas no momento.
 
 ### `entrega-continua/`
 
-Escopo: empacotar e entregar - Docker, Kubernetes, CI/CD para microsserviços.
+Escopo: empacotar, entregar e hospedar - virtualização e containers, Docker, Kubernetes, CI/CD para microsserviços e categorias de serviço em nuvem.
 
-- ⬜ Categorias de serviço AWS (compute, storage, rede), sem aprofundar em cada serviço
 - ⬜ IaC (Terraform)
 
 ### `estudos-de-caso/`

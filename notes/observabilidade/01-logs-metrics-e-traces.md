@@ -75,6 +75,35 @@ Cada span carrega metadados: qual serviço executou aquele trecho, quanto tempo 
 
 Para isso funcionar, o **trace ID** (um identificador único gerado no primeiro serviço que recebe a requisição) precisa ser propagado adiante em cada chamada seguinte, normalmente indo dentro de um header HTTP como `traceparent`. Sem essa propagação de contexto, cada serviço geraria spans isolados, sem nenhuma forma de juntá-los depois.
 
+## Mapa das diferenças
+
+As três seções acima explicaram cada pilar por conta própria. Colocando os três lado a lado, dá para ver que eles não são versões concorrentes da mesma coisa, cada um responde a uma pergunta que os outros dois não conseguem responder.
+
+|                       | Logs                                                      | Métricas                                             | Traces                                                               |
+| --------------------- | --------------------------------------------------------- | ---------------------------------------------------- | -------------------------------------------------------------------- |
+| Pergunta que responde | O que aconteceu neste ponto?                              | Como o sistema está se comportando?                  | Por onde a requisição passou?                                        |
+| Formato do dado       | evento com timestamp, em texto ou JSON                    | número agregado numa série temporal                  | árvore de spans, cada um com seu tempo                               |
+| Granularidade         | cada evento, um por um                                    | agregado por janela de tempo                         | uma requisição inteira, span a span                                  |
+| Volume e custo        | alto, cresce junto com o tráfego                          | baixo e quase constante                              | médio, quase sempre amostrado                                        |
+| Bom para              | ver o detalhe exato de um erro                            | perceber tendência, alertar, ter o panorama de saúde | descobrir onde o tempo foi gasto numa requisição                     |
+| Ponto cego            | não dá visão agregada nem mostra o caminho entre serviços | não diz o que causou a mudança                       | não serve para agregar comportamento nem para o detalhe fino do erro |
+
+Um jeito rápido de lembrar: **a métrica avisa que algo quebrou, o trace mostra onde quebrou, o log explica por que quebrou**. É a mesma requisição vista de três ângulos.
+
+```mermaid
+flowchart LR
+    Q[Checkout ficou lento] --> M[Métrica: o quê]
+    Q --> T[Trace: onde]
+    Q --> L[Log: por quê]
+    M --> M2["p99 subiu de 200 ms para 2 s às 14h32"]
+    T --> T2["o span do payments-service levou 1,8 s dos 2 s"]
+    L --> L2["payments-service: timeout ao chamar o serviço antifraude"]
+```
+
+Esse encadeamento (alerta de métrica, depois trace para achar o span, depois log para a causa) é o fluxo de investigação típico, detalhado na seção "Observabilidade distribuída", mais abaixo.
+
+O erro comum é tratar os três como alternativas ("para que trace se já tenho log?") e acabar com só um deles. Cada pilar sozinho tem um ponto cego, e os pontos cegos dos três não se sobrepõem: é por isso que a resposta certa é ter os três, ligados pelo mesmo identificador de correlação.
+
 ## Correlação
 
 Propagar o trace ID entre serviços é um caso específico de um problema mais geral: como conectar registros que, sozinhos, estão espalhados em lugares diferentes (logs de serviços diferentes, métricas, spans de trace) mas pertencem à mesma operação.
@@ -104,3 +133,10 @@ Isso resolve os três problemas que mais aparecem em sistemas distribuídos:
 - **Identificar o serviço causador da falha**: quando um erro aparece no fim da cadeia, o trace mostra se ele nasceu ali ou se é reflexo de uma falha em um serviço anterior
 
 Vale reforçar que os três pilares se complementam, não competem entre si. Métricas avisam que algo está errado (latência subiu, error rate disparou). Traces mostram onde, apontando o span ou o serviço problemático. Logs explicam por quê, com o detalhe do erro específico que aconteceu naquele ponto. Um sistema observável de verdade tem os três funcionando juntos e conectados pelo mesmo identificador de correlação.
+
+## Referências
+
+- [Os 3 pilares da observabilidade: logs, métricas e traces unificados](https://www.elastic.co/pt/blog/3-pillars-of-observability) - Elastic, pt-BR
+- [Três Pilares da Observabilidade](https://dev.to/ezziomoreira/tres-pilares-da-observabilidade-1p6d) - Ézzio Moreira (DEV Community), pt-BR
+- [Signals (Logs, Metrics, Traces)](https://opentelemetry.io/docs/concepts/signals/) - documentação oficial do OpenTelemetry, inglês
+- [Three pillars of observability: Logs, metrics and traces](https://www.ibm.com/think/insights/observability-pillars) - IBM, inglês

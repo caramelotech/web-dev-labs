@@ -9,6 +9,7 @@ As notas deste repositório são publicadas no site do [Caramelo Labs](https://c
 | Tópico                   | Descrição                                              |
 | ------------------------ | ------------------------------------------------------ |
 | Fundamentos Web          | HTML e CSS                                             |
+| Algoritmos e Estruturas de Dados | Big O, estruturas de dados, algoritmos e padrões de resolução |
 | Engenharia de Software   | Design de código, princípios SOLID                     |
 | APIs                     | HTTP e REST                                            |
 | Databases                | SQL e ACID                                             |

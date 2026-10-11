@@ -101,13 +101,6 @@ append event -> event store -> projecoes derivadas
 - Monitoramento de inconsistências
 - Dead letter queues
 
-## Resumo
-
-- Dual-write gera inconsistências entre sistemas
-- A causa principal é a falta de transação distribuída
-- Retry sozinho não resolve
-- Outbox, CDC e event sourcing são caminhos reais
-
 ## Referências
 
 - [Bug da Escrita-Dupla: como EVITAR o Erro Fatal de Dual-Write em Sistemas Distribuidos | Leonardo Zamariola](https://www.youtube.com/watch?v=E_j__O7j07Y)

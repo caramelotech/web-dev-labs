@@ -21,7 +21,7 @@ Escreve X = 10 no nó 1
 Lê X no nó 2 -> precisa retornar 10 (nunca o valor antigo)
 ```
 
-Vale reforçar: essa consistência não é a mesma coisa que o **C** de [ACID](/labs/web-dev/banco-de-dados/02-acid/). A consistência do ACID garante que uma transação respeite as regras de negócio (chaves estrangeiras, `CHECK`, `NOT NULL`). Já a consistência do CAP é sobre todos os nós concordarem sobre qual é o valor atual de um dado, quase como se existisse uma única cópia dos dados mesmo estando replicados.
+Vale reforçar: essa consistência não é a mesma coisa que o **C** de [ACID](/labs/web-dev/banco-de-dados/04-acid/). A consistência do ACID garante que uma transação respeite as regras de negócio (chaves estrangeiras, `CHECK`, `NOT NULL`). Já a consistência do CAP é sobre todos os nós concordarem sobre qual é o valor atual de um dado, quase como se existisse uma única cópia dos dados mesmo estando replicados.
 
 ### Disponibilidade (A)
 
@@ -73,15 +73,6 @@ Nenhuma escolha é "certa" no absoluto, depende do problema. Um sistema bancári
 ## CAP não é a palavra final
 
 O CAP só descreve o que acontece **durante** uma partição, mas a maior parte do tempo um sistema distribuído está operando normalmente, sem nenhuma partição ativa. Nesses momentos, a troca real não é entre consistência e disponibilidade, é entre consistência e **latência** (o tempo que leva para sincronizar os nós antes de responder). Essa extensão do CAP é o Teorema de PACELC.
-
-## Recapitulando
-
-- O Teorema de CAP descreve o limite de um sistema distribuído: durante uma partição de rede, só é possível garantir consistência ou disponibilidade, não as duas.
-- Consistência (C): toda leitura retorna o dado mais recente ou um erro (diferente da consistência do ACID, que é sobre regras de negócio).
-- Disponibilidade (A): toda requisição recebe alguma resposta, mesmo que o dado esteja desatualizado.
-- Tolerância a partição (P): não é uma escolha, é uma realidade de qualquer sistema com mais de um nó.
-- A escolha prática do CAP é entre CP (recusa responder para não errar) e AP (responde mesmo com risco de dado velho).
-- Fora de uma partição, a troca deixa de ser C vs A e passa a ser consistência vs latência, o que o PACELC explica.
 
 ## Referências
 

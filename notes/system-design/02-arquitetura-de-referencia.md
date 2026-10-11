@@ -6,7 +6,8 @@ Antes de mergulhar em cada componente separadamente, vale ter uma imagem mental 
 
 ```mermaid
 flowchart LR
-    Client[Cliente] --> CDN[CDN]
+    Client[Cliente] --> DNS[DNS]
+    DNS --> CDN[CDN]
     CDN --> LB[Load Balancer]
     LB --> GW[API Gateway]
     GW --> S1[Microsserviço A]
@@ -24,10 +25,11 @@ flowchart LR
 Lendo esse diagrama da esquerda para a direita:
 
 - O **cliente** (navegador, app mobile) faz uma requisição
+- O **DNS** traduz o nome de domínio (`api.exemplo.com`) para o endereço IP de quem vai atender a requisição, geralmente o load balancer ou a borda da CDN. É o primeiro passo de qualquer requisição, e a resposta fica em cache no cliente e nos resolvedores intermediários por um tempo (o TTL do registro), então essa tradução não acontece toda vez
 - A **CDN** intercepta pedidos por conteúdo estático (imagens, JS, CSS) direto de um ponto próximo do usuário, sem nem chegar ao backend
 - O **Load Balancer** distribui as requisições que chegam entre várias instâncias do backend, para nenhuma máquina ficar sobrecarregada sozinha
 - O **API Gateway** centraliza autenticação, roteamento e outras preocupações transversais antes de encaminhar a requisição para o microsserviço certo
-- Os **microsserviços** contêm a lógica de negócio. Eles consultam o **Redis** para dados que precisam de leitura rápida e frequente, e o **banco de dados** para o estado persistente e confiável
+- Os **microsserviços** contêm a lógica de negócio. Dentro de cada um, o código costuma ser dividido em camadas (recebe a requisição, aplica a regra de negócio, fala com o banco), assunto de [Arquitetura em Camadas](/labs/web-dev/engenharia-de-software/02-arquitetura-em-camadas/). Eles consultam o **Redis** para dados que precisam de leitura rápida e frequente, e o **banco de dados** para o estado persistente e confiável
 - Trabalho que não precisa ser feito na hora (enviar um e-mail, processar um pagamento em lote, gerar um relatório) é jogado em uma **fila** (Kafka, RabbitMQ, SQS), e processado depois por **workers** assíncronos
 
 Nenhum sistema real usa todas essas peças ao mesmo tempo desde o primeiro dia. Um MVP pode rodar só com cliente, um servidor e um banco. Mas conforme a carga cresce, cada uma dessas peças entra no design para resolver um gargalo específico, e é exatamente essa ordem (o que adicionar e por quê) que as próximas notas desta seção e da seção de Escalabilidade e Infraestrutura cobrem em detalhe:
@@ -40,3 +42,8 @@ Nenhum sistema real usa todas essas peças ao mesmo tempo desde o primeiro dia. 
 - Microsserviços: [Fundamentos de Microsserviços](/labs/web-dev/microsservicos/01-fundamentos-de-microsservicos/)
 
 Vale notar que esse diagrama já é o resultado de várias decisões de trade-off (por que ter um API Gateway em vez de expor os microsserviços direto, por que ter cache antes do banco). O motivo de cada peça existir fica muito mais claro depois de estudar [Capacity Planning](/labs/web-dev/system-design/03-capacity-planning/) e [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/): é a carga esperada e o orçamento de latência que dizem quais dessas peças realmente valem a complexidade de adicionar.
+
+## Referências
+
+- [System Design Course - APIs, Databases, Caching, CDNs, Load Balancing & Production Infra](https://youtu.be/C842vFY5kRo) - Hayk Simonyan (freeCodeCamp.org), en, vídeo
+- [What is a Distributed System?](https://aws.amazon.com/what-is/distributed-computing/) - AWS, en

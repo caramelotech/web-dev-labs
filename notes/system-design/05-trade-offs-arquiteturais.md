@@ -6,11 +6,11 @@ Todo design de sistema é, no fundo, uma sequência de escolhas entre duas coisa
 
 ### Consistência vs disponibilidade
 
-Coberto em detalhe no [Teorema de CAP](/labs/web-dev/banco-de-dados/03-teorema-de-cap/): durante uma partição de rede, o sistema escolhe entre responder com um dado possivelmente desatualizado (disponibilidade) ou recusar a resposta até garantir o dado mais recente (consistência). Sistemas financeiros tendem a priorizar consistência; feeds e contadores sociais tendem a priorizar disponibilidade.
+Coberto em detalhe no [Teorema de CAP](/labs/web-dev/banco-de-dados/05-teorema-de-cap/): durante uma partição de rede, o sistema escolhe entre responder com um dado possivelmente desatualizado (disponibilidade) ou recusar a resposta até garantir o dado mais recente (consistência). Sistemas financeiros tendem a priorizar consistência; feeds e contadores sociais tendem a priorizar disponibilidade.
 
 ### Latência vs consistência
 
-Coberto pelo [PACELC](/labs/web-dev/banco-de-dados/04-teorema-de-pacelc/): mesmo sem partição de rede, esperar a confirmação de mais réplicas antes de responder (mais consistência) custa mais tempo de resposta (mais latência). Um checkout de e-commerce pode aceitar uns milissegundos a mais de latência para garantir que o estoque não vendeu em dobro; um sistema de busca pode preferir responder rápido com resultado ligeiramente desatualizado.
+Coberto pelo [PACELC](/labs/web-dev/banco-de-dados/06-teorema-de-pacelc/): mesmo sem partição de rede, esperar a confirmação de mais réplicas antes de responder (mais consistência) custa mais tempo de resposta (mais latência). Um checkout de e-commerce pode aceitar uns milissegundos a mais de latência para garantir que o estoque não vendeu em dobro; um sistema de busca pode preferir responder rápido com resultado ligeiramente desatualizado.
 
 ### Custo vs disponibilidade
 
@@ -26,7 +26,7 @@ Um monólito é mais simples de desenvolver, testar e implantar no começo, mas 
 
 ### SQL vs NoSQL
 
-Detalhado em [NoSQL](/labs/web-dev/banco-de-dados/09-nosql/). Relacional dá consistência forte e um modelo de dados rígido e previsível; NoSQL dá flexibilidade de esquema e escala horizontal mais natural, ao custo de garantias mais fracas.
+Detalhado em [NoSQL](/labs/web-dev/banco-de-dados/11-nosql/). Relacional dá consistência forte e um modelo de dados rígido e previsível; NoSQL dá flexibilidade de esquema e escala horizontal mais natural, ao custo de garantias mais fracas.
 
 ### Cache vs consistência
 
@@ -39,6 +39,10 @@ Chamadas síncronas são mais simples de raciocinar (peça, espere, receba), mas
 ### Throughput vs latência
 
 Como visto em [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/), técnicas que aumentam o throughput total do sistema (batching, filas, processamento em lote) costumam aumentar a latência de cada operação individual. Um sistema pode otimizar para "processar o máximo de operações por segundo" ou para "responder cada operação o mais rápido possível", raramente consegue maximizar os dois ao mesmo tempo.
+
+### Processamento em lote vs streaming
+
+Batch coleta os dados e processa um bloco grande de uma vez, num horário agendado, o que é simples e barato quando o resultado pode esperar (um relatório que só precisa estar pronto de manhã). Streaming processa cada evento continuamente, assim que ele chega, aprofundado em [Processamento de streams](/labs/web-dev/mensageria/08-casos-de-uso-do-kafka/), o que entrega resultado sempre atualizado ao custo de mais peças em movimento para operar. A pergunta que decide entre os dois não é técnica, é sobre a necessidade real de atualização do dado: se esperar algumas horas não muda nenhuma decisão, batch resolve mais barato; se a informação só tem valor nos próximos segundos, como numa detecção de fraude, streaming se paga. Na prática boa parte dos sistemas usa os dois ao mesmo tempo, streaming cuidando do fluxo ao vivo e um job batch rodando por trás para reprocessar o que falhou ou ficou pendente.
 
 ### Strong consistency vs eventual consistency
 

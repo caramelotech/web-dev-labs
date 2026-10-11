@@ -1,6 +1,6 @@
 # Como Estruturar um System Design
 
-Depois de estudar CDN, load balancer, cache, filas, réplicas e todos os outros componentes individualmente, falta a peça final: uma ordem de raciocínio para juntar tudo isso na hora de projetar um sistema do zero, seja numa entrevista, seja num projeto real. Esta nota fecha a seção de System Design com essa metodologia, em nove etapas, e um checklist de cenários de falha para testar o design no final.
+Depois de estudar CDN, load balancer, cache, filas, réplicas e todos os outros componentes individualmente, falta a peça final: uma ordem de raciocínio para juntar tudo isso na hora de projetar um sistema do zero, seja numa entrevista, seja num projeto real. Esta nota reúne essa metodologia, em nove etapas, e um checklist de cenários de falha para testar o design no final. Para um mapa de todos os tópicos que costumam aparecer num design, veja o [Roadmap de System Design](/labs/web-dev/system-design/07-roadmap-de-system-design/).
 
 ## Etapa 1: Requisitos
 
@@ -21,6 +21,14 @@ Desenhe o esqueleto: cliente, CDN, load balancer, API Gateway, os serviços que 
 
 Nem todo sistema precisa de todas as peças desse esqueleto desde o início, um sistema pequeno pode começar só com cliente, um serviço e um banco. A etapa 2 (capacity planning) é o que diz quais peças já se justificam desde a primeira versão.
 
+### Defina as APIs antes de escolher tecnologia
+
+Antes de decidir banco, cache ou fila, liste as operações centrais que o sistema oferece. Num encurtador de URL, são duas: criar uma URL curta (`POST /urls`) e redirecionar (`GET /{shortCode}`). Só de escrever isso já aparece informação útil: uma operação é escrita e a outra é leitura, e a segunda vai ser chamada muito mais vezes que a primeira. A API mostra o que o sistema realmente precisa suportar, e evita infraestrutura para algo que ninguém vai chamar. Como definir contratos, códigos de resposta e versionamento está em [APIs](/labs/web-dev/apis/01-http-rest/).
+
+Com a API na mão, resista à vontade de desenhar tudo de uma vez. Comece pela arquitetura mais simples que atende aos requisitos (cliente, load balancer, servidor de aplicação e banco) e faça uma pergunta: **onde isso quebra quando o tráfego crescer?** É dessa resposta que saem as decisões de escalabilidade da etapa 4, uma de cada vez, cada uma com um motivo. O contrário (começar por Redis, Kafka e Kubernetes) tende a produzir um desenho cheio de peças que ninguém sabe justificar.
+
+Um exemplo completo desse raciocínio, com números, API, modelo de dados e evolução da arquitetura, está no estudo de caso [Encurtador de URL](/labs/web-dev/estudos-de-caso/01-encurtador-de-url/).
+
 ## Etapa 4: Escalabilidade
 
 Com o esqueleto no lugar e os números da etapa 2 em mãos, decida como cada parte escala: horizontal scaling atrás do load balancer, replicação e sharding no banco, cache para tirar carga de leitura do banco, filas para absorver picos de escrita. Toda essa camada está detalhada em [Escalabilidade e Infraestrutura](/labs/web-dev/escalabilidade/01-escalabilidade/).
@@ -31,7 +39,7 @@ Um sistema que escala mas cai na primeira falha de rede não está pronto. Apliq
 
 ## Etapa 6: Dados
 
-Volte para a camada de dados com mais detalhe: SQL ou NoSQL (veja [NoSQL](/labs/web-dev/banco-de-dados/09-nosql/)), como modelar as entidades, quais índices o padrão de consulta exige, como a replicação está configurada e qual nível de consistência cada tipo de dado exige (veja [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/)).
+Volte para a camada de dados com mais detalhe: SQL ou NoSQL (veja [NoSQL](/labs/web-dev/banco-de-dados/11-nosql/)), como modelar as entidades, quais índices o padrão de consulta exige, como a replicação está configurada e qual nível de consistência cada tipo de dado exige (veja [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/)).
 
 ## Etapa 7: Performance
 
@@ -65,7 +73,7 @@ Ao longo de todas as notas de system design deste lab, um conjunto recorrente de
 | ----------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Retry, Timeout, Circuit Breaker, Bulkhead | [Timeout, Retry, Circuit Breaker e Bulkhead](/labs/web-dev/resiliencia/01-timeout-retry-circuit-breaker-e-bulkhead/)                                                                                            |
 | Idempotency                               | [Idempotência](/labs/web-dev/resiliencia/02-idempotencia/)                                                                                                                                                      |
-| Rate Limiting, Backpressure               | [Rate Limiting](/labs/web-dev/escalabilidade/09-rate-limiting/)                                                                                                                                                 |
+| Rate Limiting, Backpressure               | [Rate Limiting](/labs/web-dev/escalabilidade/10-rate-limiting/)                                                                                                                                                 |
 | Cache                                     | [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/)                                                                                                                                                 |
 | Queue, Pub/Sub                            | [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/)                                                                                                                                           |
 | Replication                               | [Replicação e Escalabilidade do Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/) e [Consistência e Replicação](/labs/web-dev/sistemas-distribuidos/01-consistencia-e-replicacao/) |

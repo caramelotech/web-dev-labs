@@ -1,6 +1,6 @@
 # Kafka
 
-A nota anterior, [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/), descreve o papel genérico de um broker: receber mensagens de producers e entregar para consumers. O Apache Kafka é hoje uma das implementações mais usadas desse papel, mas com um jeito próprio de organizar os dados que vale entender em detalhe, porque ele explica boa parte das decisões de projeto que aparecem ao usar Kafka na prática.
+A nota de [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/) descreve o papel genérico de um broker: receber mensagens de producers e entregar para consumers. O Apache Kafka é hoje uma das implementações mais usadas desse papel, mas com um jeito próprio de organizar os dados que vale entender em detalhe, porque ele explica boa parte das decisões de projeto que aparecem ao usar Kafka na prática.
 
 ## Conceitos fundamentais
 
@@ -17,7 +17,7 @@ flowchart TB
     end
 ```
 
-Quando o producer publica uma mensagem, o Kafka decide em qual partição ela cai (por padrão, com base numa chave que o producer envia, tipo o ID do pedido). Mensagens com a mesma chave sempre vão para a mesma partição, o que garante que a ordem entre elas seja preservada, isso é aprofundado na próxima nota, sobre [Garantias de Entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/).
+Quando o producer publica uma mensagem, o Kafka decide em qual partição ela cai (por padrão, com base numa chave que o producer envia, tipo o ID do pedido). Mensagens com a mesma chave sempre vão para a mesma partição, o que garante que a ordem entre elas seja preservada, isso é aprofundado na próxima nota, sobre [Garantias de Entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/).
 
 **Offset**: dentro de cada partição, toda mensagem recebe um número sequencial crescente, o offset (0, 1, 2, 3...). É basicamente o "número da posição" da mensagem naquela partição. O Kafka não remove uma mensagem assim que ela é lida, como uma fila tradicional faria, ele guarda a mensagem por um tempo configurável (dias, semanas) e é o consumer quem controla até qual offset já leu.
 
@@ -85,6 +85,54 @@ Alguém precisa coordenar tudo isso: saber quais brokers estão vivos, qual é o
 
 Do ponto de vista de quem usa o Kafka, ZooKeeper e KRaft fazem a mesma coisa; a diferença é operacional.
 
+O **controller** ativo é eleito por quórum entre os controllers do cluster: com N controllers, é preciso o voto de N/2 + 1 deles para decidir quem manda, o mesmo tipo de maioria que aparece em [Consenso: Paxos e Raft](/labs/web-dev/sistemas-distribuidos/02-consenso-paxos-e-raft/).
+
+## Armazenamento em disco e desempenho
+
+O Kafka guarda tudo em disco e ainda assim move gigabytes por segundo. Isso não é mágica, é um conjunto de decisões de projeto que evitam os dois gargalos clássicos de I/O: o seek de disco e a cópia de memória.
+
+### Segments e índice esparso
+
+Uma partição não é um arquivo gigante único. Ela é quebrada em **segments**: arquivos de tamanho parecido (o padrão é 1 GB, config `segment.bytes`). O Kafka escreve no segment ativo até ele encher, fecha esse arquivo e abre o próximo. A retenção e a compactação trabalham em cima de segments inteiros, é por isso que "apagar mensagem velha" no Kafka é barato: ele deleta o arquivo do segment todo de uma vez, não linha por linha.
+
+Cada segment tem três arquivos:
+
+| Arquivo      | O que guarda                                     |
+| ------------ | ------------------------------------------------ |
+| `.log`       | as mensagens em si, na ordem em que chegaram     |
+| `.index`     | mapa de offset para a posição em bytes no `.log` |
+| `.timeindex` | mapa de timestamp para posição no `.log`         |
+
+O `.index` é **esparso**: o Kafka não anota a posição de toda mensagem, só a cada N bytes escritos (config `index.interval.bytes`, padrão 4 KB). Assim o índice fica pequeno o suficiente para viver na memória mesmo numa partição com bilhões de mensagens. Para achar o offset 1.000.000, o Kafka pula para a entrada de índice mais próxima antes dele e lê sequencialmente o resto.
+
+### Por que a escrita é rápida
+
+O Kafka só faz uma coisa com o `.log`: **acrescenta no fim**. Nunca atualiza uma mensagem no meio, nunca reordena. Escrita sempre sequencial.
+
+Isso importa porque disco (tanto HDD quanto SSD) é ordens de grandeza mais rápido em acesso sequencial do que em acesso aleatório: no HDD a cabeça não precisa ficar se movendo, no SSD o controlador consegue escrever em blocos grandes contíguos. Um append sequencial em disco chega perto da velocidade de escrita na memória, e é aí que um banco tradicional, que precisa atualizar índices B-tree em posições espalhadas, perde para o Kafka em volume de escrita.
+
+### Por que a leitura é rápida
+
+Dois truques trabalham juntos na leitura.
+
+**OS page cache**: quando o Kafka escreve no `.log`, o sistema operacional mantém esses bytes num cache em memória (o page cache). Um consumer que está acompanhando o topic em tempo real lê mensagens que foram escritas há segundos, e essas mensagens ainda estão no page cache, então a leitura nem toca o disco. Num cluster Kafka saudável, com os consumers em dia, o disco quase não tem atividade de leitura.
+
+**Zero-copy (`sendfile`)**: para mandar mensagens pela rede até um consumer, o caminho ingênuo seria copiar os bytes do page cache para dentro da aplicação (a JVM do broker), e da aplicação para o buffer do socket. São duas cópias e duas trocas de contexto à toa, já que o broker não precisa nem olhar o conteúdo da mensagem. O Kafka usa a chamada de sistema `sendfile()`, que manda o kernel copiar direto do page cache para o socket de rede.
+
+```mermaid
+flowchart LR
+    subgraph SC["Sem zero-copy"]
+        A1[Page cache] --> A2[Buffer da aplicação] --> A3[Buffer do socket] --> A4[Rede]
+    end
+    subgraph CC["Com sendfile"]
+        B1[Page cache] --> B2[Buffer do socket] --> B3[Rede]
+    end
+```
+
+### A soma das partes
+
+Nenhuma dessas escolhas isolada é revolucionária. O ganho vem de todas juntas: append sequencial em disco, índice esparso na memória, page cache servindo as leituras, `sendfile` cortando as cópias, e o batch do lado do producer (visto na próxima seção) reduzindo o número de idas e voltas na rede. É essa pilha de trade-offs que dá ao Kafka o throughput que ele tem.
+
 ## Fluxo do producer
 
 Publicar uma mensagem não é só "manda pro Kafka". O producer faz algumas etapas antes:
@@ -97,7 +145,7 @@ flowchart LR
 ```
 
 1. **Serialização**: a chave e o valor da mensagem viram bytes (JSON, Avro, Protobuf, string simples).
-2. **Partitioner**: decide para qual partição a mensagem vai. Se a mensagem tem chave, o partitioner faz um hash da chave, então mensagens com a mesma chave sempre caem na mesma partição (o que preserva a ordem entre elas). Sem chave, ele distribui de forma equilibrada entre as partições.
+2. **Partitioner**: decide para qual partição a mensagem vai. Com chave, ele faz `hash(chave) % número de partições`, então mensagens com a mesma chave sempre caem na mesma partição (o que preserva a ordem entre elas). Sem chave, ele distribui de forma equilibrada (round robin). Também dá para escrever um **partitioner customizado** com a sua própria regra. A escolha da chave importa: uma chave mal escolhida ou concentra o tráfego numa única partição (uma **hot partition**, que vira gargalo enquanto as outras ficam ociosas) ou espalha demais e faz você perder a ordem que precisava.
 3. **Batching**: em vez de mandar uma mensagem por vez, o producer junta várias num lote (record batch) e envia de uma vez, o que é muito mais eficiente. As configs que controlam isso são `batch.size` (tamanho máximo do lote) e `linger.ms` (quanto tempo esperar juntando mensagens antes de mandar mesmo que o lote não tenha enchido). O lote ainda pode ser comprimido com `compression.type` (lz4, snappy, zstd).
 4. **Envio ao líder** da partição de destino.
 
@@ -111,7 +159,7 @@ Depois de enviar, o producer espera uma confirmação. O nível dessa confirmaç
 
 `acks=all` sozinho não basta: se o ISR encolheu para só o líder (todos os seguidores estão atrasados), "todos do ISR" vira "só o líder", e você está de volta ao risco do `acks=1`. Por isso `acks=all` costuma vir junto com **`min.insync.replicas=2`** na configuração do topic: se não houver pelo menos 2 réplicas no ISR, o Kafka recusa a escrita em vez de aceitar uma mensagem que pode se perder.
 
-Quando um envio falha por um motivo temporário (o líder mudou, deu timeout), o producer tenta de novo automaticamente, controlado por **`retries`**. O problema é que um retry pode duplicar a mensagem: o Kafka recebeu a primeira tentativa, a confirmação se perdeu no caminho, o producer reenvia. Para resolver isso existe **`enable.idempotence=true`**: o producer numera cada mensagem, e o broker ignora uma mensagem que já viu. Nas versões recentes do Kafka isso já vem ligado por padrão. O mecanismo (Producer ID, números de sequência) e o que ele cobre estão detalhados em [Producer Idempotente no Kafka](/labs/web-dev/mensageria/05-producer-idempotente/).
+Quando um envio falha por um motivo temporário (o líder mudou, deu timeout), o producer tenta de novo automaticamente, controlado por **`retries`**. O problema é que um retry pode duplicar a mensagem: o Kafka recebeu a primeira tentativa, a confirmação se perdeu no caminho, o producer reenvia. Para resolver isso existe **`enable.idempotence=true`**: o producer numera cada mensagem, e o broker ignora uma mensagem que já viu. Nas versões recentes do Kafka isso já vem ligado por padrão. O mecanismo (Producer ID, números de sequência) e o que ele cobre estão detalhados em [Producer Idempotente no Kafka](/labs/web-dev/mensageria/06-producer-idempotente/).
 
 ## Fluxo do consumer
 
@@ -139,6 +187,20 @@ Quando o consumer group não tem nenhum offset salvo (é um grupo novo, ou o off
 
 Sempre que um consumer entra ou sai do grupo (deploy, crash, autoscaling), o Kafka faz um **rebalance**: redistribui as partições entre os consumers que sobraram. Durante o rebalance o consumo para por um instante, então rebalances muito frequentes atrapalham. As configs `session.timeout.ms` e `heartbeat.interval.ms` controlam quão rápido o Kafka considera um consumer morto, e `max.poll.records` limita quantas mensagens vêm por `poll` para o processamento de um lote não estourar o tempo e disparar um rebalance sem querer.
 
+### Consumer lag
+
+**Consumer lag** é a distância entre o offset mais recente escrito na partição e o offset que o consumer group já commitou. Se o producer já escreveu até o offset 10.000 e o consumer group está commitado no 9.850, o lag daquele grupo naquela partição é 150: são 150 mensagens que já chegaram no Kafka mas que ainda ninguém processou.
+
+Um pouco de lag é normal, mensagens sempre demoram um instante entre serem escritas e serem lidas. O problema é o lag crescer sem parar, o que costuma ter uma destas causas:
+
+- **Consumer mais lento que o producer.** Se o producer publica 1.000 mensagens por segundo e o consumer processa 800, sobram 200 por segundo acumulando. Cedo ou tarde isso vira um lag gigante.
+- **Consumer parado.** Crash, deploy travado, exception não tratada que mata o processo: enquanto ninguém está lendo, o producer continua escrevendo, e o lag sobe de forma linear.
+- **Rebalance frequente.** Cada rebalance para o consumo por um instante (voltando à seção anterior). Se os rebalances acontecem toda hora, esses instantes se somam e o lag nunca dá conta de zerar.
+
+Dá para acompanhar o lag de um consumer group com a própria ferramenta que vem no Kafka, `kafka-consumer-groups.sh --describe --group <nome-do-grupo>`, que lista o offset atual, o offset mais recente da partição e a diferença entre os dois, partição por partição. Em produção, o mais comum é exportar essa mesma métrica para o Prometheus (o próprio consumer ou um exporter dedicado, como o Kafka Exporter, expõe o lag) e visualizar num painel do Grafana, com alerta disparando quando o lag ultrapassa um limite ou fica crescendo por tempo demais.
+
+Monitorar isso importa porque o lag é o sinal mais direto de que um consumer está para trás: é o mesmo problema descrito como anti-padrão em [Arquitetura Orientada a Eventos](/labs/web-dev/mensageria/02-arquitetura-orientada-a-eventos/), um consumidor falhando ou lento em silêncio, sem nenhuma chamada estourando na cara de ninguém como estouraria numa chamada síncrona. Sem um alerta de lag, a única forma de perceber o problema é um usuário reclamando que um e-mail ou uma notificação não chegou, horas depois do evento que deveria ter disparado ela.
+
 ## Retenção e compactação
 
 O Kafka não apaga uma mensagem quando ela é lida. Ele apaga quando a **política de retenção** manda. As duas mais comuns:
@@ -150,7 +212,7 @@ Existe uma terceira opção, o **log compaction**: em vez de apagar por idade, o
 
 ## Semânticas de entrega no Kafka
 
-A nota de [Garantias de Entrega](/labs/web-dev/mensageria/04-garantias-de-entrega/) explica as três semânticas em geral (at-most-once, at-least-once, exactly-once). No Kafka, cada uma sai de uma combinação de configuração:
+A nota de [Garantias de Entrega](/labs/web-dev/mensageria/05-garantias-de-entrega/) explica as três semânticas em geral (at-most-once, at-least-once, exactly-once). No Kafka, cada uma sai de uma combinação de configuração:
 
 - **At-most-once**: `acks` baixo no producer e/ou commit do offset no consumer **antes** de processar. Se algo cai no meio, a mensagem some, mas nunca duplica.
 - **At-least-once**: `acks=1` ou `acks=all` no producer e commit do offset **depois** de processar. É o comportamento padrão. Nada se perde, mas uma mensagem pode ser reprocessada.
@@ -160,7 +222,7 @@ Mesmo com EOS ligado, o "exatamente uma vez" só vale dentro do Kafka. Se o seu 
 
 ## Casos de uso comuns
 
-O Kafka costuma aparecer em cinco padrões recorrentes: pipelines de dados em tempo real, sistemas orientados a evento, processamento de streams, logs e métricas centralizados e Change Data Capture (CDC). Cada um, com a arquitetura típica e os trade-offs, está na nota [Casos de Uso do Kafka](/labs/web-dev/mensageria/06-casos-de-uso-do-kafka/).
+O Kafka costuma aparecer em cinco padrões recorrentes: pipelines de dados em tempo real, sistemas orientados a evento, processamento de streams, logs e métricas centralizados e Change Data Capture (CDC). Cada um, com a arquitetura típica e os trade-offs, está na nota [Casos de Uso do Kafka](/labs/web-dev/mensageria/08-casos-de-uso-do-kafka/).
 
 ## Principais configurações
 
@@ -208,3 +270,9 @@ Na prática, a recomendação geral é mirar em compatibilidade backward como pa
 - **Versionar eventos** quando a mudança é grande demais para caber numa evolução compatível, como reestruturar o payload inteiro. Nesse caso, um campo de versão no próprio evento, ou até um topic novo (`pedidos-criados-v2`), deixa explícito que aquilo é um contrato diferente e dá tempo para migrar os consumers de um lado para o outro sem quebra.
 
 Nada disso fica garantido sozinho: alguém, ou alguma ferramenta, precisa checar se uma mudança de schema realmente respeita a regra de compatibilidade antes de ir para produção. É aí que entra o **Schema Registry**, o mais usado é o Confluent Schema Registry: um serviço central que guarda todas as versões de schema de cada topic, normalmente escritas em **Avro** ou **Protobuf**, formatos binários compactos com schema bem definido, ao contrário de um JSON solto sem contrato nenhum. Antes de aceitar um schema novo, o registry valida contra a regra de compatibilidade configurada para aquele topic (backward, forward ou full) e recusa a publicação se a mudança quebrar o contrato. Isso tira a checagem de compatibilidade da cabeça de cada dev e coloca num ponto único, automatizado, que barra o problema antes dele virar incidente em produção.
+
+## Referências
+
+- [Apache Kafka Documentation - Design](https://kafka.apache.org/documentation/#design) - Apache Kafka, en
+- [Kafka Internals (curso gratuito)](https://developer.confluent.io/courses/architecture/get-started/) - Confluent Developer, en
+- [Monitor Consumer Lag in Confluent Platform](https://docs.confluent.io/platform/current/monitor/monitor-consumer-lag.html) - Confluent, en

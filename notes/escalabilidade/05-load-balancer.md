@@ -44,6 +44,15 @@ flowchart TB
 
 Quando a Instância 2 sai do anel, só as chaves que estavam atribuídas a ela precisam ser redistribuídas (para a próxima instância no sentido horário), as chaves das instâncias 1 e 3 continuam exatamente onde estavam. Isso é essencial em sistemas de cache distribuído e sharding, onde redistribuir tudo a cada mudança de topologia seria caro demais.
 
+### Outros algoritmos
+
+Os cinco de cima cobrem a maioria dos casos, mas load balancers de mercado (NGINX, HAProxy, AWS, NetScaler) documentam outras variações. Vale conhecer:
+
+- **Weighted Least Connections**: junta os dois algoritmos anteriores. Em vez de olhar só o número de conexões ativas, divide esse número pelo peso da instância, e manda a requisição para quem tiver a menor razão. Uma instância com peso 2 e 10 conexões ativas (razão 5) perde para uma com peso 1 e 4 conexões (razão 4), mesmo tendo menos conexão no total.
+- **Least Response Time**: olha ao mesmo tempo o número de conexões ativas e o tempo de resposta de cada instância, e manda para quem estiver respondendo mais rápido com menos carga. O detalhe é _como_ esse tempo é medido: pode vir do próprio tráfego real (o tempo até o primeiro byte de resposta, TTFB, de cada requisição que passou), ou de um monitor dedicado de health check que mede isso separadamente, em intervalos fixos. A primeira reage mais rápido a uma instância que piorou; a segunda não depende de ter tráfego passando para saber o estado de cada uma.
+- **Random**: escolhe uma instância aleatória entre as disponíveis, sem olhar carga nem conexões. Parece ingênuo, mas funciona bem quando as requisições são parecidas em custo e o número de instâncias é grande, porque a distribuição tende a ficar equilibrada mesmo sem controle nenhum. Existe uma variante ponderada, que usa o peso de cada instância no sorteio (a AWS chama a dela de "weighted random"), e pode vir acoplada a uma "mitigação de anomalia": se uma instância está respondendo mal, o sorteio para de escolher ela até que volte ao normal.
+- **Least Bandwidth**: manda para a instância que está consumindo menos banda de rede num intervalo recente (o NetScaler, por exemplo, mede isso numa janela de alguns segundos). Faz sentido quando as respostas variam muito de tamanho, como servir arquivo grande ou vídeo, onde "menos conexões" ou "resposta mais rápida" não captam o que está pesando de fato: o volume de dados trafegando.
+
 ## Health Checks
 
 Um load balancer só é útil se ele souber quais instâncias estão realmente saudáveis. Para isso, ele faz verificações periódicas, os **health checks**, geralmente batendo numa rota específica (`/health`) e esperando uma resposta de sucesso.
@@ -62,3 +71,9 @@ Um load balancer distribuindo tráfego entre **múltiplas instâncias** já é, 
 Também é comum distribuir as instâncias entre zonas de disponibilidade diferentes (**distribuição entre zonas**), que são data centers fisicamente separados dentro da mesma região de nuvem. Se uma zona inteira tiver um problema (falta de energia, incêndio, falha de rede local), as instâncias nas outras zonas continuam de pé.
 
 Por fim, vale lembrar que o próprio load balancer não pode virar um ponto único de falha: em produção, ele normalmente também é replicado (mais de um load balancer, com algum mecanismo de failover entre eles), para que a caída dele não derrube o sistema inteiro que ele deveria estar protegendo.
+
+## Referências
+
+- [Target groups for your Application Load Balancers](https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html) - AWS, en
+- [4.2. Balance - HAProxy Configuration Manual](https://www.haproxy.com/documentation/haproxy-configuration-manual/latest/#4.2-balance) - HAProxy, en
+- [Least response time method](https://docs.netscaler.com/en-us/citrix-adc/current-release/load-balancing/load-balancing-customizing-algorithms/leastresponsetime-method.html) - NetScaler (Citrix ADC), en
