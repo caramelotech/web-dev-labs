@@ -1,4 +1,4 @@
-# Exercicios
+# Exercícios
 
 Pratique o que aprendeu nas anotacoes e exemplos.
 

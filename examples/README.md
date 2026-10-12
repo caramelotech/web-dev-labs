@@ -1,22 +1,17 @@
-# Exemplos
+# Examples
 
-Esta pasta concentra os materiais praticos do repositorio.
-
-## Indice
-
-| Caminho | Tipo | Descricao |
-| --- | --- | --- |
-| `exercises.md` | Exercicios | Lista de desafios para praticar os conceitos das notas |
-| `projects.md` | Projetos | Propostas de mini projetos para consolidar o aprendizado |
+Este diretório reúne exemplos de código e projetos já implementados para acompanhar o conteúdo do Web Dev Labs.
 
 ## Como usar
 
-1. Leia a nota relacionada em `src/content/docs/`
-2. Resolva um exercicio em `exercises.md`
-3. Evolua para um projeto em `projects.md`
+1. Escolha um exemplo implementado
+2. Leia o README do exemplo, quando existir
+3. Execute o código no ambiente indicado
+4. Modifique, teste e experimente variações
 
-## Observacao
+## Prática guiada
 
-Os exemplos executaveis ainda estao em expansao. Quando novos materiais forem adicionados, este indice deve ser atualizado.
+As sugestões de exercícios e projetos ficam publicadas no hub:
 
-Mais detalhes estao em [../.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md).
+- [Exercícios](../notes/pratica/01-exercicios.md)
+- [Projetos](../notes/pratica/02-projetos.md)
