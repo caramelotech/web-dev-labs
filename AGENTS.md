@@ -14,6 +14,7 @@ As notas são publicadas no site do Caramelo Labs em `https://caramelotech.com.b
 notes/           # Notas em Markdown puro - cada arquivo vira uma página no site
   index.md                    # Página de entrada do lab no site
   fundamentos/                # Fundamentos de front-end: HTML e CSS
+  atomic-design/              # Arquitetura de componentes de interface: átomos, moléculas, organismos, templates e páginas
   frontend-avancado/          # Além do alicerce: JavaScript, React e padrões recentes de data fetching e renderização
   algoritmos-e-estruturas-de-dados/  # Base para resolver problemas: raciocínio, estruturas de dados, complexidade (Big O), paradigmas de algoritmos e padrões de resolução
   engenharia-de-software/     # Design e qualidade de código: princípios, padrões e testes
@@ -37,7 +38,7 @@ ROADMAP.md       # Backlog do que ainda falta cobrir (não publicado no site)
 
 O comentário ao lado de cada pasta é o **escopo** dela, não um índice das notas. Adicionar uma nota dentro de um escopo já descrito não exige atualizar esta lista - só mexa aqui quando criar uma seção nova ou quando o escopo de uma pasta mudar de fato.
 
-A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da escrita de código (Fundamentos, Algoritmos e Estruturas de Dados, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade, Entrega Contínua e System Design na Prática).
+A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da base de front-end (Fundamentos, Atomic Design, Front-end Avançado) e escrita de código (Algoritmos e Estruturas de Dados, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade, Entrega Contínua e System Design na Prática).
 
 ## Padrão de nomenclatura de pastas e arquivos
 

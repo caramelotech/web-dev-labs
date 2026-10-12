@@ -10,6 +10,7 @@ Thumbs.db
 
 # Claude & AI
 .claude/
+.codex/
 bash.exe.stackdump
 
 # Personal

@@ -5,6 +5,7 @@ Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao
 ## O que você vai encontrar
 
 - **Fundamentos Web** - o alicerce do front-end: HTML e CSS
+- **Atomic Design** - arquitetura de componentes de interface: da metodologia à estrutura de pastas
 - **Front-end Avançado** - além do alicerce: JavaScript, React e os padrões mais recentes de data fetching e renderização
 - **Algoritmos e Estruturas de Dados** - a base para resolver problemas: raciocínio, estruturas de dados, complexidade (Big O) e padrões de resolução
 - **Engenharia de Software** - escrever código que dá para manter: princípios, padrões e testes
@@ -24,7 +25,7 @@ Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao
 
 Navegue pelas seções na barra lateral. Se está começando, comece por Fundamentos Web.
 
-As seções seguem uma progressão pensada para entrevistas de backend: da escrita de código (Algoritmos e Estruturas de Dados, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade e Entrega Contínua).
+As seções seguem uma progressão pensada para entrevistas de backend: da base de frontend (Fundamentos Web, Atomic Design, Front-end Avançado) e escrita de código (Algoritmos e Estruturas de Dados, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade e Entrega Contínua).
 
 ## Além das notas
 
