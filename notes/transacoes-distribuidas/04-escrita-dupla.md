@@ -23,6 +23,23 @@ COMMIT
 
 Entre as operações podem acontecer falha de rede, timeout, crash da aplicação e retries duplicados.
 
+O caso mais comum é o do diagrama abaixo: um serviço de pagamentos aprova um PIX, grava no banco e só depois tenta avisar o serviço de pedidos pelo broker. O `COMMIT` dá certo, a rede cai antes de a mensagem chegar, e o pagamento fica aprovado sem que ninguém do lado de pedidos saiba.
+
+```mermaid
+sequenceDiagram
+    participant P as Payment Service
+    participant DB as PostgreSQL
+    participant B as RabbitMQ
+    participant O as Order Service
+
+    P->>DB: UPDATE pagamentos SET status = 'APROVADO'
+    DB-->>P: COMMIT ok ✅
+    P-xB: publish PagamentoAprovado (rede cai) ❌
+    Note over DB,O: Banco diz "aprovado", Order Service nunca recebeu o evento.<br/>O pedido fica "aguardando pagamento" para sempre.
+```
+
+Inverter a ordem (publicar primeiro, gravar depois) só troca o problema de lugar: se o `COMMIT` falhar depois da publicação, o Order Service recebe um evento de um pagamento que não existe no banco.
+
 ### Retries sozinhos não resolvem
 
 Tentativas de correção podem gerar eventos duplicados e efeitos colaterais inesperados.

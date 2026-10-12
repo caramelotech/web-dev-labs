@@ -70,6 +70,69 @@ LIMIT 100;
 
 Em vez de a aplicação consultar a tabela de tempos em tempos, uma ferramenta de CDC (como o Debezium, já mencionado na nota de [Dual-Write Problem](/labs/web-dev/transacoes-distribuidas/04-escrita-dupla/)) observa diretamente o log de transações do banco (o mesmo _write-ahead log_ usado para durabilidade, veja [ACID](/labs/web-dev/banco-de-dados/04-acid/)) e publica o evento assim que a linha é inserida na outbox, sem precisar consultar a tabela ativamente. É mais rápido e não sobrecarrega o banco com consultas repetidas, ao custo de uma peça de infraestrutura a mais para operar.
 
+Um efeito colateral interessante: como o CDC lê o log e não a tabela, a aplicação pode inserir o evento na outbox e apagá-lo **na mesma transação**. O `INSERT` fica registrado no log e é publicado, o `DELETE` é ignorado pelo conector, e a tabela outbox fica sempre vazia, sem precisar de job de limpeza. É a abordagem descrita no blog do próprio Debezium.
+
+## O fluxo passo a passo, com o broker fora do ar
+
+O diagrama genérico acima mostra o caminho feliz. O valor do padrão aparece de verdade quando algo dá errado, então vale acompanhar um caso concreto: um serviço de pagamentos aprova um PIX e precisa avisar o serviço de pedidos, usando PostgreSQL para a outbox, RabbitMQ como broker e um worker fazendo polling.
+
+```mermaid
+flowchart LR
+    P[Payment Service<br/>PIX aprovado] --> TX
+    subgraph TX[Mesma transação SQL]
+        T1[pagamentos<br/>status = APROVADO]
+        T2[outbox_events<br/>status = PENDENTE]
+    end
+    TX --> W[Worker<br/>lê eventos e publica]
+    W --> R[RabbitMQ]
+    R --> O[Order Service]
+```
+
+1. **Pagamento recebido.** O Payment Service recebe a confirmação de um PIX aprovado.
+2. **Transação atômica.** Na mesma transação, ele atualiza `pagamentos` para `APROVADO` e insere uma linha em `outbox_events` com status `PENDENTE`. Se a transação falhar, as duas mudanças sofrem rollback juntas.
+3. **Evento pendente.** No próximo ciclo, o worker encontra o evento `PagamentoAprovado` na outbox e tenta publicá-lo.
+4. **Falha no broker.** O RabbitMQ está fora do ar. A publicação não é confirmada, então o worker não mexe no status: o evento continua `PENDENTE`, guardado no banco.
+5. **Nova tentativa.** O RabbitMQ volta. No ciclo seguinte o worker encontra o mesmo evento, publica de novo, recebe a confirmação do broker (no RabbitMQ isso se chama _publisher confirm_) e só então marca a linha como `PUBLICADA`.
+6. **Entrega.** O Order Service consome `PagamentoAprovado` e libera o pedido.
+
+```mermaid
+sequenceDiagram
+    participant P as Payment Service
+    participant DB as PostgreSQL
+    participant W as Worker
+    participant R as RabbitMQ
+    participant O as Order Service
+
+    P->>DB: BEGIN
+    P->>DB: UPDATE pagamentos → APROVADO
+    P->>DB: INSERT outbox_events → PENDENTE
+    P->>DB: COMMIT
+
+    W->>DB: SELECT eventos PENDENTE
+    DB-->>W: PagamentoAprovado
+    W-xR: publish (broker offline) ❌
+    Note over W,DB: sem confirmação, o status não muda:<br/>evento segue PENDENTE no banco
+
+    W->>DB: SELECT eventos PENDENTE (próximo ciclo)
+    DB-->>W: PagamentoAprovado
+    W->>R: publish
+    R-->>W: confirm ✅
+    W->>DB: UPDATE outbox_events → PUBLICADA
+    R->>O: entrega PagamentoAprovado
+```
+
+Do ponto de vista de cada linha da outbox, o ciclo de vida é curto:
+
+```mermaid
+stateDiagram-v2
+    [*] --> PENDENTE: COMMIT da transação de negócio
+    PENDENTE --> PENDENTE: publicação falhou / sem confirmação
+    PENDENTE --> PUBLICADA: broker confirmou
+    PUBLICADA --> [*]: job de limpeza remove
+```
+
+Repare no ponto mais importante do passo 4: o pagamento já estava gravado e o cliente já tinha a resposta de sucesso. A queda do RabbitMQ atrasou o aviso ao Order Service, mas não perdeu nada nem travou o fluxo de pagamento.
+
 ## Idempotência: uma peça obrigatória, não opcional
 
 Existe um detalhe que não pode ser ignorado: o publisher pode publicar um evento com sucesso no broker, mas falhar (crashar, perder conexão) **antes** de conseguir marcar esse evento como processado no banco. Na próxima rodada, ele vai encontrar o mesmo evento ainda como "pendente" e publicá-lo de novo. O mesmo pode acontecer do lado do broker, que em geral garante entrega **pelo menos uma vez** (at-least-once), não exatamente uma vez.
@@ -104,3 +167,6 @@ Eventos já publicados com sucesso não precisam ficar para sempre na tabela. Se
 ## Referências
 
 - [Padrões de Resiliência - Transactional Outbox Pattern | André Secco](https://www.youtube.com/watch?v=Fl_zXWvK2F8)
+- [Pattern: Transactional outbox](https://microservices.io/patterns/data/transactional-outbox.html) - Chris Richardson, en
+- [Reliable Microservices Data Exchange With the Outbox Pattern](https://debezium.io/blog/2019/02/19/reliable-microservices-data-exchange-with-the-outbox-pattern/) - Gunnar Morling (Debezium), en
+- [Consumer Acknowledgements and Publisher Confirms](https://www.rabbitmq.com/docs/confirms) - RabbitMQ, en
