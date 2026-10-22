@@ -117,5 +117,5 @@ Escopo: system design na prática, problemas resolvidos ponta a ponta.
 
 ## Notas de escopo
 
-- Segurança (authn/authz, OWASP, OAuth2, JWT) tem uma primeira cobertura em `apis/02-seguranca-e-evolucao-de-apis.md`. Performance aparece espalhada nas notas que já a usam na prática (ex: índices dentro de Databases).
+- Segurança (authn/authz, OWASP, OAuth2, JWT) tem uma primeira cobertura em `apis/02-seguranca-e-evolucao-de-apis.md`, com JWT aprofundado em `apis/06-jwt.md`. Performance aparece espalhada nas notas que já a usam na prática (ex: índices dentro de Databases).
 - Prioridade sugerida: fechar os esqueletos pendentes de `/labs-fill` antes de abrir seções novas.

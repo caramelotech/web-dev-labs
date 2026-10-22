@@ -86,7 +86,7 @@ O ponto fraco do RBAC é que ele só olha _quem você é_ (sua função). Regras
 
 Na prática, muitos sistemas combinam os dois: RBAC para o grosso ("essa função acessa esse módulo") e uma checagem de atributo para o fino ("mas só os dados da própria loja").
 
-Sobre **onde** a decisão acontece: o [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/) costuma validar o token e barrar o que é óbvio (função sem acesso àquela rota). Regras que dependem dos dados (o pedido é dessa loja?) só o serviço dono do dado consegue avaliar, então a checagem final fica lá. Não confie apenas no gateway: um serviço interno chamado direto por outro serviço também precisa validar. As funções do usuário costumam viajar dentro do token (claims do JWT), como visto em [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/06-sso-oauth-oidc-saml/).
+Sobre **onde** a decisão acontece: o [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/) costuma validar o token e barrar o que é óbvio (função sem acesso àquela rota). Regras que dependem dos dados (o pedido é dessa loja?) só o serviço dono do dado consegue avaliar, então a checagem final fica lá. Não confie apenas no gateway: um serviço interno chamado direto por outro serviço também precisa validar. As funções do usuário costumam viajar dentro do token (claims do JWT), como visto em [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/07-sso-oauth-oidc-saml/).
 
 ### Comunicação segura: HTTPS e mTLS
 
