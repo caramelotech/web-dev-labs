@@ -343,6 +343,97 @@ FROM funcionarios f
 LEFT JOIN funcionarios g ON f.gerente_id = g.id;
 ```
 
+### Anti-join: encontrando o que ficou de fora
+
+Os JOINs acima respondem "o que combina". Muitas perguntas do dia a dia são o contrário: **o que não combina?** Quais usuários nunca fizeram pedido? Quais pagamentos não têm pedido correspondente? Esse padrão tem nome, **anti-join**, e a forma mais comum de escrever é um LEFT JOIN seguido de um filtro `IS NULL`:
+
+```sql
+-- Usuários que nunca fizeram nenhum pedido
+SELECT u.id, u.nome
+FROM usuarios u
+LEFT JOIN pedidos p ON p.usuario_id = u.id
+WHERE p.id IS NULL;
+```
+
+O raciocínio: o LEFT JOIN mantém todos os usuários e preenche as colunas de `pedidos` com `NULL` quando não acha correspondência. O `WHERE p.id IS NULL` fica justamente com essas linhas, as que "sobraram" sem par. Filtre por uma coluna que nunca é nula numa linha real (a chave primária é a escolha segura); se usar uma coluna que pode ser `NULL` de verdade, linhas com correspondência também passam pelo filtro.
+
+O mesmo padrão aparece em checagens de qualidade de dados, como transações sem cliente ou itens apontando para produto apagado.
+
+#### NOT EXISTS e a armadilha do NOT IN
+
+Dá para escrever o mesmo anti-join com subconsulta:
+
+```sql
+SELECT u.id, u.nome
+FROM usuarios u
+WHERE NOT EXISTS (
+    SELECT 1 FROM pedidos p WHERE p.usuario_id = u.id
+);
+```
+
+No PostgreSQL, `NOT EXISTS` e `LEFT JOIN ... IS NULL` costumam gerar o mesmo plano de execução (um *hash anti join*), então a escolha é de legibilidade. Muita gente acha o `NOT EXISTS` mais claro, porque ele diz literalmente "não existe pedido para este usuário".
+
+Já o `NOT IN`, que parece a forma mais natural, esconde uma armadilha:
+
+```sql
+-- Parece certo, mas...
+SELECT id, nome FROM usuarios
+WHERE id NOT IN (SELECT usuario_id FROM pedidos);
+```
+
+Se **um único** pedido tiver `usuario_id` nulo, essa consulta devolve zero linhas. O motivo está na lógica de três valores do SQL: `5 NOT IN (1, 2, NULL)` não é `TRUE`, é `NULL` ("não sei", porque 5 poderia ser igual ao valor desconhecido), e o `WHERE` descarta tudo que não é `TRUE`. Ninguém recebe erro, o resultado só vem vazio. Prefira `NOT EXISTS` ou o LEFT JOIN quando a coluna da subconsulta aceita `NULL`. 🪤
+
+#### FULL OUTER JOIN + IS NULL: divergências entre dois lados
+
+Quando nenhum dos dois lados é a fonte da verdade, por exemplo ao comparar os pedidos do sistema de vendas com as cobranças do gateway de pagamento, o FULL OUTER JOIN com `IS NULL` mostra as diferenças nas duas direções de uma vez:
+
+```sql
+SELECT p.id AS pedido_id, c.id AS cobranca_id
+FROM pedidos p
+FULL OUTER JOIN cobrancas c ON c.pedido_id = p.id
+WHERE p.id IS NULL OR c.id IS NULL;
+```
+
+Linhas com `pedido_id` nulo são cobranças sem pedido; linhas com `cobranca_id` nulo são pedidos que nunca foram cobrados. É a base de rotinas de **reconciliação** e de checagem de sincronização entre sistemas.
+
+O MySQL não tem FULL OUTER JOIN. A saída é juntar um LEFT JOIN com a parte que só existe do lado direito usando `UNION ALL`:
+
+```sql
+-- Emulação de FULL OUTER JOIN no MySQL
+SELECT p.id AS pedido_id, c.id AS cobranca_id
+FROM pedidos p
+LEFT JOIN cobrancas c ON c.pedido_id = p.id
+UNION ALL
+SELECT p.id, c.id
+FROM cobrancas c
+LEFT JOIN pedidos p ON c.pedido_id = p.id
+WHERE p.id IS NULL;
+```
+
+A segunda consulta pega só as cobranças sem pedido, o que evita repetir as linhas que já casaram na primeira. Usar `UNION` simples nas duas metades sem esse filtro também funciona, mas depende de remover duplicatas, o que custa mais e ainda pode apagar linhas que eram repetidas de verdade.
+
+### Como escolher o JOIN
+
+Escolher o tipo de JOIN é, na prática, escolher **quais linhas você aceita perder** no resultado. É aí que mora o erro silencioso mais comum: um INNER JOIN no lugar de um LEFT JOIN não dá erro nenhum, só some com registros. Um relatório de "faturamento por vendedor" com INNER JOIN simplesmente não mostra o vendedor novo que ainda não vendeu nada, e ninguém percebe até alguém perguntar por ele.
+
+Comece pela pergunta, não pela sintaxe:
+
+- Se a tabela da esquerda é a **fonte da verdade** (todos os clientes, todos os funcionários), use LEFT JOIN, para garantir que ninguém dela suma.
+- RIGHT JOIN faz o espelho disso, mas quase sempre é reescrito como LEFT JOIN trocando a ordem das tabelas. Ler a consulta da esquerda para a direita, com a tabela principal primeiro, é mais fácil de seguir.
+- Só use INNER JOIN quando registros sem par realmente não interessam (ex: só pedidos que têm pagamento confirmado).
+
+Uma cola mental para a pergunta que cada um responde:
+
+| JOIN                    | Pergunta que responde                         |
+| ----------------------- | --------------------------------------------- |
+| INNER                   | O que bate dos dois lados?                    |
+| LEFT                    | Tudo da minha base, com o que tiver do outro  |
+| LEFT + `IS NULL`        | O que da minha base não tem par do outro lado?|
+| FULL OUTER              | Tudo que existe em qualquer um dos lados      |
+| FULL OUTER + `IS NULL`  | Onde os dois lados divergem?                  |
+
+E sobre performance: o tipo de JOIN, sozinho, não diz se a consulta será rápida ou lenta. O que pesa é se a chave de junção tem índice, o tamanho das tabelas, como os dados estão distribuídos, os filtros aplicados antes da junção e o plano que o banco escolhe. Um LEFT JOIN bem indexado vence fácil um INNER JOIN numa coluna sem índice. Para saber de verdade, olhe o `EXPLAIN`, assunto de [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/).
+
 ## UNION e UNION ALL
 
 Enquanto o `JOIN` cola tabelas lado a lado (mais colunas), o `UNION` empilha resultados um embaixo do outro (mais linhas). Serve quando você tem duas consultas que produzem o mesmo formato de linha e quer o resultado das duas junto.
@@ -433,3 +524,9 @@ ROLLBACK;
 ```
 
 Propriedades ACID: Atomicidade, Consistência, Isolamento, Durabilidade.
+
+## Referências
+
+- [Joins Between Tables](https://www.postgresql.org/docs/current/tutorial-join.html) - PostgreSQL Docs, en
+- [Subquery Expressions (EXISTS, NOT IN)](https://www.postgresql.org/docs/current/functions-subquery.html) - PostgreSQL Docs, en
+- [NOT IN vs. NOT EXISTS vs. LEFT JOIN / IS NULL: PostgreSQL](https://explainextended.com/2009/09/16/not-in-vs-not-exists-vs-left-join-is-null-postgresql/) - Quassnoi (Explain Extended), en
