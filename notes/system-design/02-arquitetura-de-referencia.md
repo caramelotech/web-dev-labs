@@ -35,9 +35,9 @@ Lendo esse diagrama da esquerda para a direita:
 Nenhum sistema real usa todas essas peças ao mesmo tempo desde o primeiro dia. Um MVP pode rodar só com cliente, um servidor e um banco. Mas conforme a carga cresce, cada uma dessas peças entra no design para resolver um gargalo específico, e é exatamente essa ordem (o que adicionar e por quê) que as próximas notas desta seção e da seção de Escalabilidade e Infraestrutura cobrem em detalhe:
 
 - CDN: [CDN (Content Delivery Network)](/labs/web-dev/escalabilidade/04-cdn/)
-- Load Balancer: [Load Balancer](/labs/web-dev/escalabilidade/05-load-balancer/)
-- API Gateway: [API Gateway](/labs/web-dev/escalabilidade/07-api-gateway/)
-- Cache: [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/)
+- Load Balancer: [Load Balancer](/labs/web-dev/escalabilidade/06-load-balancer/)
+- API Gateway: [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/)
+- Cache: [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)
 - Filas e Kafka: [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/)
 - Microsserviços: [Fundamentos de Microsserviços](/labs/web-dev/microsservicos/01-fundamentos-de-microsservicos/)
 

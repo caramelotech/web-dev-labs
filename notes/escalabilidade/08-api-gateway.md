@@ -17,7 +17,7 @@ Concentrar as requisições num único ponto de entrada permite centralizar preo
 - **Roteamento**: decide, com base na URL ou em outros dados da requisição, qual serviço deve tratá-la (ex: `/usuarios/*` vai para o serviço de usuários).
 - **Autenticação**: verifica se quem está fazendo a requisição é quem diz ser (ex: validar um token JWT), antes de deixar a requisição seguir adiante.
 - **Autorização**: verifica se, além de autenticado, o usuário tem permissão para aquela ação específica.
-- **Rate limiting**: limita quantas requisições um cliente pode fazer num intervalo de tempo, protegendo os serviços de trás contra abuso ou picos excessivos (aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/10-rate-limiting/)).
+- **Rate limiting**: limita quantas requisições um cliente pode fazer num intervalo de tempo, protegendo os serviços de trás contra abuso ou picos excessivos (aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/)).
 - **TLS termination**: o gateway é quem lida com a criptografia HTTPS na borda do sistema; a comunicação entre o gateway e os serviços internos pode acontecer sem esse custo extra, dentro de uma rede já considerada confiável.
 - **Logging**: registra as requisições que entram no sistema num único lugar, o que facilita auditoria e depuração.
 - **Observabilidade**: como todo tráfego passa por ele, o gateway é um ponto natural para coletar métricas (quantas requisições, quanto tempo cada uma leva, quantos erros) do sistema como um todo, alimentando o que é aprofundado em [Observabilidade](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/).
@@ -45,6 +45,65 @@ flowchart LR
     LB2 --> P1[Instância 1]
     LB2 --> P2[Instância 2]
 ```
+
+## API Gateway vs Load Balancer vs Reverse Proxy
+
+Quando entra o terceiro personagem, o [reverse proxy](/labs/web-dev/escalabilidade/05-reverse-proxy/), a confusão aumenta, porque os três ficam na frente dos serviços, recebem a requisição e repassam adiante. O jeito mais útil de separar é pela pergunta que cada um responde:
+
+| Componente    | Pergunta que responde                                 | Exemplo de decisão                                                     |
+| ------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
+| Reverse proxy | "Por onde a requisição entra e para onde ela vai?"    | `blog.loja.com` vai para o servidor do blog, com TLS terminado aqui    |
+| Load balancer | "Qual instância atende esta requisição?"              | Das 4 réplicas saudáveis da API, manda para a réplica 3                |
+| API Gateway   | "Esta requisição pode passar? E de que jeito?"        | Token válido, dentro do limite de 100 req/min, roteia para `/v2/pedidos` |
+
+### Onde eles se sobrepõem
+
+Na prática, a fronteira é borrada. Um load balancer L7 e um API Gateway **são** reverse proxies, só que especializados: o primeiro é um reverse proxy focado em distribuir carga entre réplicas, o segundo é um reverse proxy focado em políticas de API. Por isso uma mesma ferramenta pode fazer os três papéis. Um NGINX bem configurado termina TLS, distribui entre instâncias com um bloco `upstream` e aplica rate limiting por rota, tudo no mesmo arquivo de configuração.
+
+O que muda não é o software, é o **papel** que ele está cumprindo naquele ponto da arquitetura.
+
+### Nem todo load balancer é proxy
+
+A recíproca não vale sempre. Alguns load balancers não ficam no caminho completo da requisição:
+
+- **L4 em modo Direct Server Return (DSR)**: o load balancer recebe só a ida. Ele repassa o pacote para o servidor escolhido trocando apenas o endereço MAC de destino (camada de enlace), e o servidor responde **direto para o cliente**, sem voltar pelo balanceador. Como as respostas costumam ser bem maiores que as requisições, isso alivia muito o load balancer. O preço: ele não enxerga HTTP, então não dá para fazer TLS termination, cache ou roteamento por URL.
+- **Balanceamento via DNS**: o servidor de DNS devolve IPs diferentes para clientes diferentes, e cada cliente conecta direto no servidor que recebeu. Não existe nenhum intermediário no caminho dos dados.
+
+Nesses casos não há proxy nenhum, só a escolha de destino.
+
+### Composição em camadas
+
+Em sistemas maiores, os três aparecem empilhados, cada um fazendo o seu pedaço:
+
+```mermaid
+flowchart LR
+    C[Cliente] --> CDN[CDN / reverse proxy<br/>na borda]
+    CDN --> LB[Load balancer]
+    LB --> GW1[API Gateway 1]
+    LB --> GW2[API Gateway 2]
+    GW1 --> S1[Serviço de Pedidos]
+    GW1 --> S2[Serviço de Usuários]
+    GW2 --> S1
+    GW2 --> S2
+```
+
+A CDN absorve tráfego estático e ataques na borda, o load balancer espalha o que sobra entre as réplicas do gateway, e o gateway aplica autenticação, rate limiting e roteamento até o serviço certo.
+
+### Cuidado com políticas duplicadas
+
+Empilhar camadas tem um efeito colateral pouco óbvio: cada uma costuma vir com suas próprias configurações de [timeout e retry](/labs/web-dev/resiliencia/01-timeout-retry-circuit-breaker-e-bulkhead/). Se o load balancer tenta 3 vezes e o gateway, a cada tentativa, também tenta 3 vezes, um serviço lento recebe até 9 chamadas para cada requisição do cliente, justamente quando ele já está sofrendo. 😬
+
+O mesmo vale para timeouts desalinhados: se o gateway desiste em 5 segundos mas o load balancer na frente dele desiste em 2, o cliente recebe erro enquanto o gateway ainda está trabalhando à toa. A regra prática é decidir **uma** camada responsável por retry, e configurar os timeouts de fora para dentro em ordem decrescente (a camada mais externa espera um pouco mais que a de dentro).
+
+### Como escolher
+
+Comece pela intenção, não pela ferramenta:
+
+- Precisa só publicar uma aplicação com HTTPS, cache e esconder o servidor? Um reverse proxy resolve.
+- Tem várias réplicas do mesmo serviço e precisa espalhar carga e tirar instâncias doentes do caminho? É trabalho de load balancer.
+- Tem vários serviços expostos para clientes diferentes e quer centralizar autenticação, rate limiting e versionamento? Aí entra o API Gateway.
+
+Num sistema pequeno, um único NGINX costuma cobrir as três intenções. Separar em componentes dedicados faz sentido quando cada papel passa a ter dono, escala ou ciclo de mudança diferente.
 
 ## Padrões avançados de gateway
 
@@ -108,3 +167,5 @@ Isso mantém os microsserviços de trás enxutos, falando uma única versão do 
 ## Referências
 
 - [API Gateway: por que ele é peça-chave em arquiteturas de microservices (e quando evitar)](https://dev.to/paulo_henriquefusco_bbdb/pi-gateway-por-que-ele-e-peca-chave-em-arquiteturas-de-api-gateway-por-que-ele-e-peca-chave-em-4omk) - Paulo Henrique Fusco, pt-BR
+- [API Gateway vs Reverse Proxy vs Load Balancer](https://api7.ai/learning-center/api-gateway-guide/api-gateway-vs-reverse-proxy-vs-load-balancer) - API7.ai, en
+- [Layer 4 load balancing Direct Server Return mode](https://www.haproxy.com/blog/layer-4-load-balancing-direct-server-return-mode) - HAProxy Technologies, en

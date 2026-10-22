@@ -69,12 +69,6 @@ Escopo: consistência, replicação e coordenação entre nós. CAP e PACELC fic
 
 - ⬜ Consistência causal
 
-### `escalabilidade/` (rótulo do sidebar: "Escalabilidade e Infraestrutura")
-
-Escopo: escalar carga e a infraestrutura que sustenta isso - particionamento, replicação, CDN, load balancer, service discovery, API Gateway, cache, casos de uso do Redis, rate limiting.
-
-- ⬜ Forward proxy vs reverse proxy
-
 ### `transacoes-distribuidas/`
 
 Escopo: manter dados coerentes entre serviços sem uma transação única - consistência transacional, 2PC, Saga, dual-write, Outbox, CDC, Event Sourcing, CQRS.

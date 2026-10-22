@@ -10,7 +10,7 @@ Até aqui cada nota deste lab tratou uma técnica de banco de dados isoladamente
 | Materialized Views | consulta cara recalculada toda hora           | [Views e Triggers](/labs/web-dev/banco-de-dados/03-views-e-triggers/)                                 |
 | Vertical Scaling   | servidor sem capacidade (CPU/RAM/disco)       | [Escalabilidade](/labs/web-dev/escalabilidade/01-escalabilidade/)                                     |
 | Denormalization    | leitura lenta por excesso de `JOIN`           | ver seção abaixo                                                                                      |
-| Database Caching   | mesma consulta repetida com frequência        | [Cache e Redis](/labs/web-dev/escalabilidade/08-cache-e-redis/)                                       |
+| Database Caching   | mesma consulta repetida com frequência        | [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)                                       |
 | Replication        | leitura concentrada num único servidor        | [Replicação de Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/)         |
 | Sharding           | volume/tráfego que não cabe numa máquina      | [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/) |
 | Partitioning       | tabela grande demais para manter numa peça só | ver seção abaixo                                                                                      |

@@ -49,7 +49,7 @@ O detalhe importante desse algoritmo é o **burst**: como o bucket acumula token
 
 Rate limiting pode ser configurado em vários níveis, e sistemas maduros normalmente combinam mais de um:
 
-- **API Gateway**: o ponto mais comum de aplicar, porque centraliza todo o tráfego que entra no sistema (veja [API Gateway](/labs/web-dev/escalabilidade/07-api-gateway/)).
+- **API Gateway**: o ponto mais comum de aplicar, porque centraliza todo o tráfego que entra no sistema (veja [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/)).
 - **Serviço**: um limite específico de um microsserviço particularmente sensível a carga, além do limite geral do gateway.
 - **Usuário**: limite por conta autenticada, o mais justo quando o sistema já sabe quem está fazendo a requisição.
 - **IP**: útil antes mesmo de autenticação existir (ex: proteção contra força bruta no próprio endpoint de login), mas menos preciso, porque vários usuários podem compartilhar o mesmo IP (ex: numa rede corporativa).

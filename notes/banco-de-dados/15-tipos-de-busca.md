@@ -52,7 +52,7 @@ flowchart LR
     V1 -.perto no espaço vetorial.- V2
 ```
 
-Onde isso roda: a extensão `pgvector` no Postgres, bancos vetoriais dedicados, os Vector Sets do Redis (veja [Casos de Uso do Redis](/labs/web-dev/escalabilidade/09-casos-de-uso-do-redis/)). O custo é ter um modelo de embedding no caminho (para indexar e para consultar) e mais um índice para manter.
+Onde isso roda: a extensão `pgvector` no Postgres, bancos vetoriais dedicados, os Vector Sets do Redis (veja [Casos de Uso do Redis](/labs/web-dev/escalabilidade/10-casos-de-uso-do-redis/)). O custo é ter um modelo de embedding no caminho (para indexar e para consultar) e mais um índice para manter.
 
 ## Busca híbrida
 

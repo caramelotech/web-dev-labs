@@ -97,7 +97,7 @@ Na prática, um sistema maduro costuma combinar as três: gateway na borda, mesh
 
 É fácil confundir os dois, porque ambos são proxies que aplicam políticas de tráfego. A diferença está em qual tráfego cada um cuida:
 
-- O [API Gateway](/labs/web-dev/escalabilidade/07-api-gateway/) fica no tráfego norte-sul: entre o cliente externo (navegador, app) e o sistema.
+- O [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/) fica no tráfego norte-sul: entre o cliente externo (navegador, app) e o sistema.
 - O service mesh fica no tráfego leste-oeste: entre um serviço e outro, dentro do sistema.
 
 Eles se complementam e normalmente coexistem: o gateway é a porta de entrada, o mesh organiza a conversa interna.
