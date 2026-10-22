@@ -103,7 +103,7 @@ Sobre **onde** a decisão acontece: o [API Gateway](/labs/web-dev/escalabilidade
 
 Na prática, os dois costumam trabalhar juntos: um fluxo OAuth2 termina emitindo um **access token**, e esse access token é, na maioria das implementações modernas, um JWT.
 
-**Como o JWT funciona:** um JWT é uma string com três partes separadas por ponto, `header.payload.signature`, cada uma codificada em Base64:
+**Como o JWT funciona:** um JWT é uma string com três partes separadas por ponto, `header.payload.signature`, cada uma codificada em Base64URL (uma variação do Base64 que troca `+` e `/` por `-` e `_` e dispensa o `=` final, para o token poder ir numa URL sem escapar nada):
 
 ```
 eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MjAwMDAwMDB9.4f8a3d...
