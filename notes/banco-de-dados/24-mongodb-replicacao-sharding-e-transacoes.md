@@ -36,14 +36,14 @@ Para montar um replica set local de estudo, suba três `mongod` com o mesmo `--r
 rs.initiate({
   _id: "rs0",
   members: [
-    { _id: 0, host: "localhost:27017", priority: 2 },  // preferido para ser primário
+    { _id: 0, host: "localhost:27017", priority: 2 }, // preferido para ser primário
     { _id: 1, host: "localhost:27018", priority: 1 },
-    { _id: 2, host: "localhost:27019", priority: 1 }
-  ]
-})
+    { _id: 2, host: "localhost:27019", priority: 1 },
+  ],
+});
 
-rs.status()   // estado de cada membro: PRIMARY, SECONDARY, lag, saúde
-rs.conf()     // configuração atual
+rs.status(); // estado de cada membro: PRIMARY, SECONDARY, lag, saúde
+rs.conf(); // configuração atual
 ```
 
 A aplicação se conecta informando o replica set na URI (`mongodb://host1,host2,host3/?replicaSet=rs0`), e o driver descobre sozinho quem é o primário e acompanha as trocas.
@@ -81,8 +81,8 @@ Três configurações controlam o equilíbrio entre consistência, durabilidade 
 ```js
 db.pedidos.insertOne(
   { clienteId: 42, total: Decimal128("99.90") },
-  { writeConcern: { w: "majority", j: true, wtimeout: 5000 } }
-)
+  { writeConcern: { w: "majority", j: true, wtimeout: 5000 } },
+);
 ```
 
 - `w: 1`: só o primário confirma. Mais rápido, mas se o primário cair antes de replicar, a escrita pode sofrer rollback.
@@ -100,7 +100,7 @@ db.pedidos.insertOne(
 **Read preference** define **de qual membro** ler:
 
 ```js
-db.produtos.find({ categoria: "livros" }).readPref("secondaryPreferred")
+db.produtos.find({ categoria: "livros" }).readPref("secondaryPreferred");
 // ou na URI: mongodb://.../?replicaSet=rs0&readPreference=secondaryPreferred
 ```
 
@@ -138,13 +138,13 @@ Uma correção importante a materiais desatualizados: sharding **está disponív
 A **shard key** é o campo (ou conjunto de campos) usado para decidir em qual shard cada documento fica. Ela é a decisão mais importante do sharding, porque define se a carga se espalha ou se concentra num shard só.
 
 ```js
-sh.enableSharding("loja")   // necessário em versões mais antigas; nas recentes é implícito
+sh.enableSharding("loja"); // necessário em versões mais antigas; nas recentes é implícito
 
 // Sharding por intervalo (ranged)
-sh.shardCollection("loja.pedidos", { clienteId: 1, criadoEm: 1 })
+sh.shardCollection("loja.pedidos", { clienteId: 1, criadoEm: 1 });
 
 // Sharding por hash (hashed)
-sh.shardCollection("loja.eventos", { dispositivoId: "hashed" })
+sh.shardCollection("loja.eventos", { dispositivoId: "hashed" });
 ```
 
 São duas estratégias (alguns materiais listam três, contando a mesma duas vezes com nomes diferentes):
@@ -166,20 +166,23 @@ Os dados de uma coleção sharded são divididos em intervalos contíguos da sha
 E se a escolha foi ruim? Antes do MongoDB 4.4 a shard key era praticamente definitiva. O 4.4 passou a permitir refinar uma chave existente acrescentando campos ao fim dela, e desde o **5.0** o `reshardCollection` permite trocá-la por completo com a coleção no ar. Funciona, mas é uma operação pesada, que reescreve a coleção inteira.
 
 ```js
-db.adminCommand({ reshardCollection: "loja.pedidos", key: { clienteId: "hashed" } })
+db.adminCommand({
+  reshardCollection: "loja.pedidos",
+  key: { clienteId: "hashed" },
+});
 ```
 
 ## Replicação vs sharding
 
 Os dois são confundidos com frequência, mas resolvem problemas diferentes:
 
-| | Replicação (replica set) | Sharding |
-| --- | --- | --- |
-| Problema que resolve | Disponibilidade e durabilidade | Capacidade (dados e escrita além de uma máquina) |
-| Cada nó guarda | Todos os dados | Uma parte dos dados |
-| Escala escrita? | Não, só o primário escreve | Sim, cada shard tem seu primário |
-| Escala leitura? | Um pouco, lendo de secundários (com lag) | Sim, a carga se divide entre shards |
-| Complexidade | Baixa a moderada | Alta (shard key, mongos, config servers, balancer) |
+|                      | Replicação (replica set)                 | Sharding                                           |
+| -------------------- | ---------------------------------------- | -------------------------------------------------- |
+| Problema que resolve | Disponibilidade e durabilidade           | Capacidade (dados e escrita além de uma máquina)   |
+| Cada nó guarda       | Todos os dados                           | Uma parte dos dados                                |
+| Escala escrita?      | Não, só o primário escreve               | Sim, cada shard tem seu primário                   |
+| Escala leitura?      | Um pouco, lendo de secundários (com lag) | Sim, a carga se divide entre shards                |
+| Complexidade         | Baixa a moderada                         | Alta (shard key, mongos, config servers, balancer) |
 
 Em produção, um replica set é o ponto de partida mínimo, mesmo para sistemas pequenos (o Atlas, por exemplo, sempre cria um). Sharding é para quando um replica set bem indexado, numa máquina maior, já não dá conta, e não precisa vir antes disso. Um cluster sharded usa os dois ao mesmo tempo: os dados são divididos em shards, e cada shard é replicado.
 
@@ -197,25 +200,28 @@ Elas não funcionam num `mongod` isolado (standalone); para estudar localmente, 
 O jeito recomendado de usar é a API `withTransaction`, que executa a função, faz commit e **repete automaticamente** a transação em caso de erros transitórios (como conflito de escrita ou troca de primário):
 
 ```js
-const session = db.getMongo().startSession()
+const session = db.getMongo().startSession();
 
 try {
-  session.withTransaction(() => {
-    const contas = session.getDatabase("banco").contas
+  session.withTransaction(
+    () => {
+      const contas = session.getDatabase("banco").contas;
 
-    const r = contas.updateOne(
-      { _id: "ana", saldo: { $gte: 100 } },
-      { $inc: { saldo: -100 } }
-    )
-    if (r.modifiedCount === 0) throw new Error("Saldo insuficiente")
+      const r = contas.updateOne(
+        { _id: "ana", saldo: { $gte: 100 } },
+        { $inc: { saldo: -100 } },
+      );
+      if (r.modifiedCount === 0) throw new Error("Saldo insuficiente");
 
-    contas.updateOne({ _id: "bruno" }, { $inc: { saldo: 100 } })
-  }, {
-    readConcern: { level: "snapshot" },
-    writeConcern: { w: "majority" }
-  })
+      contas.updateOne({ _id: "bruno" }, { $inc: { saldo: 100 } });
+    },
+    {
+      readConcern: { level: "snapshot" },
+      writeConcern: { w: "majority" },
+    },
+  );
 } finally {
-  session.endSession()
+  session.endSession();
 }
 ```
 

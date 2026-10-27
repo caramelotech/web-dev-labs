@@ -2,7 +2,7 @@
 
 ## O que é TypeScript
 
-TypeScript é JavaScript com um sistema de tipos estático por cima. Todo código JavaScript válido também é TypeScript válido (por isso se diz que ele é um *superset* do JavaScript), e o que o TypeScript acrescenta é a possibilidade de dizer, no próprio código, que tipo de valor cada variável, parâmetro e retorno deve ter.
+TypeScript é JavaScript com um sistema de tipos estático por cima. Todo código JavaScript válido também é TypeScript válido (por isso se diz que ele é um _superset_ do JavaScript), e o que o TypeScript acrescenta é a possibilidade de dizer, no próprio código, que tipo de valor cada variável, parâmetro e retorno deve ter.
 
 ```ts
 function saudacao(nome: string): string {
@@ -10,7 +10,7 @@ function saudacao(nome: string): string {
 }
 
 saudacao("Ana"); // ok
-saudacao(42);    // erro: Argument of type 'number' is not assignable to parameter of type 'string'.
+saudacao(42); // erro: Argument of type 'number' is not assignable to parameter of type 'string'.
 ```
 
 O fluxo de trabalho tem três passos: você escreve o código com as anotações de tipo, o compilador (`tsc`) confere se tudo bate, e no fim sai JavaScript comum, que roda em qualquer lugar onde JavaScript roda (navegador, Node.js, Deno, Bun).
@@ -22,7 +22,7 @@ flowchart LR
     C --> D["Navegador, Node.js..."]
 ```
 
-O detalhe mais importante para quem está começando: **os tipos não existem em tempo de execução**. Na hora de gerar o JavaScript, o compilador simplesmente apaga as anotações (isso se chama *type erasure*). O código acima vira:
+O detalhe mais importante para quem está começando: **os tipos não existem em tempo de execução**. Na hora de gerar o JavaScript, o compilador simplesmente apaga as anotações (isso se chama _type erasure_). O código acima vira:
 
 ```js
 function saudacao(nome) {
@@ -41,12 +41,12 @@ Em JavaScript puro, um erro como chamar `usuario.nmoe` (com erro de digitação)
 - As assinaturas de funções viram documentação que não fica desatualizada, porque o compilador a confere.
 - Uma classe inteira de bugs some: `undefined is not a function`, `cannot read properties of null` e companhia.
 
-| | JavaScript | TypeScript |
-| --- | --- | --- |
-| Tipagem | Dinâmica | Estática, opcional e gradual |
-| Quando os erros de tipo aparecem | Em execução | Ao escrever/compilar |
-| Etapa extra | Nenhuma | Checagem de tipos (e às vezes transpilação) |
-| Modelo de execução | O mesmo: no fim, tudo é JavaScript | |
+|                                  | JavaScript                         | TypeScript                                  |
+| -------------------------------- | ---------------------------------- | ------------------------------------------- |
+| Tipagem                          | Dinâmica                           | Estática, opcional e gradual                |
+| Quando os erros de tipo aparecem | Em execução                        | Ao escrever/compilar                        |
+| Etapa extra                      | Nenhuma                            | Checagem de tipos (e às vezes transpilação) |
+| Modelo de execução               | O mesmo: no fim, tudo é JavaScript |                                             |
 
 "Gradual" quer dizer que você pode adotar o TypeScript aos poucos: renomear um arquivo `.js` para `.ts` e ir adicionando tipos conforme avança.
 
@@ -97,18 +97,18 @@ meu-app/
 └── tsconfig.json
 ```
 
-Por padrão, o compilador emite arquivos `.js` espelhando a estrutura de `src/` dentro da pasta de saída. Ele também pode gerar arquivos de declaração `.d.ts` (só os tipos, usados por quem consome uma biblioteca - veja [Módulos e declarações](/labs/web-dev/typescript/11-modulos-e-declaracoes/)) e *source maps*, que permitem depurar o `.ts` original mesmo rodando o `.js`.
+Por padrão, o compilador emite arquivos `.js` espelhando a estrutura de `src/` dentro da pasta de saída. Ele também pode gerar arquivos de declaração `.d.ts` (só os tipos, usados por quem consome uma biblioteca - veja [Módulos e declarações](/labs/web-dev/typescript/11-modulos-e-declaracoes/)) e _source maps_, que permitem depurar o `.ts` original mesmo rodando o `.js`.
 
 ## O tsconfig.json essencial
 
 O `tsconfig.json` diz ao compilador quais arquivos pertencem ao projeto e como tratá-los. As opções mais básicas:
 
-| Opção | Para que serve | Exemplo |
-| --- | --- | --- |
-| `target` | Versão do JavaScript gerado | `"es2022"`, `"esnext"` |
-| `module` | Sistema de módulos da saída | `"nodenext"`, `"esnext"` |
-| `rootDir` | Onde estão os fontes | `"src"` |
-| `outDir` | Onde o JS compilado é gravado | `"dist"` |
+| Opção     | Para que serve                | Exemplo                  |
+| --------- | ----------------------------- | ------------------------ |
+| `target`  | Versão do JavaScript gerado   | `"es2022"`, `"esnext"`   |
+| `module`  | Sistema de módulos da saída   | `"nodenext"`, `"esnext"` |
+| `rootDir` | Onde estão os fontes          | `"src"`                  |
+| `outDir`  | Onde o JS compilado é gravado | `"dist"`                 |
 
 Um ponto de partida para um projeto Node.js simples:
 
@@ -139,14 +139,14 @@ O TypeScript 6.0 (março de 2026) mudou vários valores padrão, e muito materia
 
 `strict` é uma chave mestra que liga um conjunto de checagens mais rigorosas. As mais importantes:
 
-| Flag | O que faz |
-| --- | --- |
-| `noImplicitAny` | Proíbe que o TS assuma `any` silenciosamente (ex.: parâmetro sem tipo) |
-| `strictNullChecks` | `null` e `undefined` deixam de caber em qualquer tipo |
-| `strictFunctionTypes` | Checa parâmetros de funções de forma mais correta |
-| `strictBindCallApply` | Tipa `bind`, `call` e `apply` |
-| `strictPropertyInitialization` | Exige que campos de classe sejam inicializados |
-| `useUnknownInCatchVariables` | A variável do `catch` passa a ser `unknown` |
+| Flag                           | O que faz                                                              |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| `noImplicitAny`                | Proíbe que o TS assuma `any` silenciosamente (ex.: parâmetro sem tipo) |
+| `strictNullChecks`             | `null` e `undefined` deixam de caber em qualquer tipo                  |
+| `strictFunctionTypes`          | Checa parâmetros de funções de forma mais correta                      |
+| `strictBindCallApply`          | Tipa `bind`, `call` e `apply`                                          |
+| `strictPropertyInitialization` | Exige que campos de classe sejam inicializados                         |
+| `useUnknownInCatchVariables`   | A variável do `catch` passa a ser `unknown`                            |
 
 O efeito do `strictNullChecks` é o mais sentido na prática:
 
@@ -166,7 +166,7 @@ Comece o projeto em modo strict. Ligar o `strict` depois, num código grande, co
 
 Por muito tempo, "TypeScript exige uma etapa de build" foi verdade absoluta. Hoje não é mais:
 
-- O **Node.js** executa arquivos `.ts` diretamente com *type stripping*: ele apaga as anotações de tipo e roda o resto. O recurso vem ligado por padrão desde o Node 23.6 (e 22.18 na linha LTS) e é considerado estável desde as versões 25.2 e 24.12.
+- O **Node.js** executa arquivos `.ts` diretamente com _type stripping_: ele apaga as anotações de tipo e roda o resto. O recurso vem ligado por padrão desde o Node 23.6 (e 22.18 na linha LTS) e é considerado estável desde as versões 25.2 e 24.12.
 - **Deno** e **Bun** também rodam TypeScript direto.
 
 ```bash
@@ -177,7 +177,7 @@ Dois cuidados. Primeiro, o Node **não checa tipos**: ele só remove as anotaç�
 
 - `enum` (veja [Tipos básicos](/labs/web-dev/typescript/02-tipos-basicos/))
 - `namespace` com código dentro
-- *parameter properties* em construtores (veja [Classes e POO](/labs/web-dev/typescript/07-classes-e-poo/))
+- _parameter properties_ em construtores (veja [Classes e POO](/labs/web-dev/typescript/07-classes-e-poo/))
 
 A opção `erasableSyntaxOnly` (TypeScript 5.8) faz o `tsc` acusar essas construções, garantindo que o código roda em qualquer ferramenta que só apaga tipos:
 

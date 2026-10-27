@@ -41,8 +41,8 @@ O que se ganha:
 Para consultar e indexar campos embutidos, use a dot notation (detalhada em [MongoDB: CRUD e consultas](/labs/web-dev/banco-de-dados/20-mongodb-crud-e-consultas/)):
 
 ```js
-db.usuarios.find({ "endereco.cidade": "Jaipur" })
-db.usuarios.createIndex({ "endereco.cidade": 1 })
+db.usuarios.find({ "endereco.cidade": "Jaipur" });
+db.usuarios.createIndex({ "endereco.cidade": 1 });
 ```
 
 ## Referências entre documentos
@@ -61,14 +61,21 @@ Para juntar os dois, há dois caminhos:
 
 ```js
 // 1. Na aplicação: duas consultas
-const produto = db.produtos.findOne({ _id: 1 })
-const categoria = db.categorias.findOne({ _id: produto.categoriaId })
+const produto = db.produtos.findOne({ _id: 1 });
+const categoria = db.categorias.findOne({ _id: produto.categoriaId });
 
 // 2. No banco, com $lookup no aggregation pipeline (um left outer join)
 db.produtos.aggregate([
   { $match: { _id: 1 } },
-  { $lookup: { from: "categorias", localField: "categoriaId", foreignField: "_id", as: "categoria" } }
-])
+  {
+    $lookup: {
+      from: "categorias",
+      localField: "categoriaId",
+      foreignField: "_id",
+      as: "categoria",
+    },
+  },
+]);
 ```
 
 O `$lookup` está detalhado em [MongoDB: aggregation pipeline](/labs/web-dev/banco-de-dados/23-mongodb-aggregation-pipeline/). Ele funciona bem, mas é mais caro que ler um documento só; se quase toda leitura precisa dele, o modelo provavelmente deveria embutir.
@@ -152,9 +159,13 @@ Os modelos reais raramente são 100% embutidos ou 100% referenciados. Dois padr�
 ```js
 db.produtos.updateOne(
   { _id: 1 },
-  { $push: { avaliacoesRecentes: { $each: [novaAvaliacao], $position: 0, $slice: 10 } } }
-)
-db.avaliacoes.insertOne({ produtoId: 1, ...novaAvaliacao })
+  {
+    $push: {
+      avaliacoesRecentes: { $each: [novaAvaliacao], $position: 0, $slice: 10 },
+    },
+  },
+);
+db.avaliacoes.insertOne({ produtoId: 1, ...novaAvaliacao });
 ```
 
 O preço dos dois padrões é a **duplicação**: se a Ana mudar de nome, os pedidos antigos continuam com o nome antigo até alguém atualizar. Às vezes isso é até desejável (o pedido deve guardar o nome e o endereço **do momento da compra**, como uma nota fiscal). Quando não é, você precisa de um processo para propagar a mudança (`updateMany` na hora, um job assíncrono, ou eventos), e a regra de bolso é duplicar só campos que **mudam pouco** e são **lidos muito**.
@@ -173,15 +184,15 @@ O preço dos dois padrões é a **duplicação**: se a Ana mudar de nome, os ped
 
 Para cada relacionamento, responda:
 
-| Pergunta | Tende a embutir | Tende a referenciar |
-| --- | --- | --- |
-| Quantos itens existem do lado "muitos"? | Poucos e com limite conhecido | Muitos ou sem limite |
-| Os dados são lidos juntos na maioria das consultas? | Sim | Não, cada um tem suas telas |
-| O dado relacionado é consultado sozinho? | Raramente | Com frequência |
-| O dado relacionado muda com frequência? | Pouco | Muito (e é compartilhado) |
-| Vários documentos compartilham o mesmo dado? | Não | Sim (duplicar exigiria sincronizar) |
-| O documento pode crescer até perto de 16 MB? | Não | Sim |
-| Os dados precisam mudar juntos atomicamente? | Sim | Não (ou aceita transação) |
+| Pergunta                                            | Tende a embutir               | Tende a referenciar                 |
+| --------------------------------------------------- | ----------------------------- | ----------------------------------- |
+| Quantos itens existem do lado "muitos"?             | Poucos e com limite conhecido | Muitos ou sem limite                |
+| Os dados são lidos juntos na maioria das consultas? | Sim                           | Não, cada um tem suas telas         |
+| O dado relacionado é consultado sozinho?            | Raramente                     | Com frequência                      |
+| O dado relacionado muda com frequência?             | Pouco                         | Muito (e é compartilhado)           |
+| Vários documentos compartilham o mesmo dado?        | Não                           | Sim (duplicar exigiria sincronizar) |
+| O documento pode crescer até perto de 16 MB?        | Não                           | Sim                                 |
+| Os dados precisam mudar juntos atomicamente?        | Sim                           | Não (ou aceita transação)           |
 
 Quando as respostas ficam divididas, o híbrido (extended reference ou subset) costuma ser a saída. E nenhum modelo é definitivo: como o schema é flexível, dá para evoluir conforme as consultas reais aparecem, medindo com `explain()` (veja [MongoDB: índices](/labs/web-dev/banco-de-dados/22-mongodb-indices/)) em vez de adivinhar.
 
