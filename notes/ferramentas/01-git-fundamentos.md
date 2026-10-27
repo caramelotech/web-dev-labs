@@ -2,6 +2,42 @@
 
 Git é um sistema de controle de versão distribuído que rastreia mudanças no código ao longo do tempo. GitHub é uma plataforma que hospeda repositórios Git e adiciona ferramentas de colaboração como pull requests e code review.
 
+## O que é controle de versão
+
+Quem nunca teve uma pasta com `trabalho-final.zip`, `trabalho-final-v2.zip` e `trabalho-final-agora-vai.zip`? Controle de versão é a solução organizada para esse problema: um sistema que guarda o histórico de cada mudança nos arquivos, com quem mudou, quando e por quê, e que deixa voltar a qualquer ponto desse histórico.
+
+Na prática, o Git resolve várias dores de uma vez:
+
+- Rastreia o que mudou em cada arquivo, linha por linha
+- Deixa várias pessoas trabalharem no mesmo projeto sem uma sobrescrever o trabalho da outra
+- Mantém versões diferentes do projeto ao mesmo tempo (a estável e a que está em desenvolvimento, por exemplo)
+- Permite voltar a um estado anterior quando algo quebra
+- Funciona como backup, já que cada cópia do repositório carrega o histórico inteiro
+
+### Centralizado x distribuído
+
+Sistemas mais antigos, como o SVN, são **centralizados**: existe um servidor com o histórico, e cada pessoa só tem na máquina a versão atual dos arquivos. Sem acesso ao servidor, não dá para ver o histórico nem registrar mudanças.
+
+O Git é **distribuído**: cada clone é uma cópia completa do repositório, com todo o histórico. Dá para commitar, criar branches e consultar o log sem internet, e a comunicação com o servidor só acontece quando você decide enviar ou buscar alterações.
+
+```mermaid
+flowchart LR
+    subgraph Centralizado
+        S[(Servidor com histórico)] --- A1[Dev A: só arquivos atuais]
+        S --- B1[Dev B: só arquivos atuais]
+    end
+    subgraph Distribuído
+        R[(Remoto com histórico)] --- A2[(Dev A: histórico completo)]
+        R --- B2[(Dev B: histórico completo)]
+    end
+```
+
+Outras características que aparecem no dia a dia: o Git é rápido (quase tudo acontece localmente), criar branches é barato, e cada commit guarda um retrato (snapshot) do projeto inteiro, não só uma lista de diferenças.
+
+### Git x GitHub
+
+Git é a ferramenta de versionamento que roda na sua máquina. GitHub é um serviço na nuvem que hospeda repositórios Git e adiciona colaboração por cima (pull requests, issues, automação). A diferença é detalhada em [GitHub](/labs/web-dev/ferramentas/05-github/).
+
 ## Conceitos fundamentais
 
 ### Repositório
@@ -12,6 +48,26 @@ Há dois tipos:
 
 - **Local:** na sua máquina
 - **Remoto:** em um servidor (GitHub, GitLab, etc.)
+
+### A pasta .git
+
+O `git init` cria uma pasta oculta `.git` na raiz do projeto. É ali que o Git guarda tudo: os objetos (o conteúdo dos arquivos e dos commits), as referências (branches e tags), o arquivo `HEAD` e a configuração local do repositório (`.git/config`).
+
+```
+.git/
+├── HEAD        # para onde você está apontando agora
+├── config      # configurações só deste repositório
+├── objects/    # conteúdo de commits e arquivos
+└── refs/       # branches e tags
+```
+
+Duas consequências práticas: apagar a `.git` apaga o histórico inteiro (a pasta volta a ser uma pasta comum), e mexer nos arquivos dela à mão é pedir para corromper o repositório. Use sempre os comandos do Git.
+
+### Commit
+
+Um commit é um retrato salvo do projeto num momento específico. Além do conteúdo, ele guarda autor, data, mensagem e uma referência ao commit anterior (o "pai"), e é essa corrente de pais que forma o histórico.
+
+Cada commit é identificado por um hash SHA-1 de 40 caracteres, normalmente exibido abreviado (`a1b2c3d`). O hash é calculado a partir de tudo que o commit contém, inclusive o pai. Se qualquer coisa mudar (uma vírgula na mensagem, por exemplo), o hash muda junto. Por isso comandos que reescrevem histórico, como rebase e `--amend`, geram commits novos em vez de editar os antigos.
 
 ### Branches
 
@@ -24,6 +80,19 @@ feature/login   ────────●──●──●──
 ```
 
 A branch principal costuma se chamar `main` (antes era `master`).
+
+### HEAD
+
+HEAD é o marcador de "você está aqui". Normalmente ele aponta para a branch atual, e a branch aponta para o último commit dela. Quando você faz um commit novo, a branch avança e o HEAD vai junto.
+
+```bash
+cat .git/HEAD
+# ref: refs/heads/main
+```
+
+Muitos comandos aceitam posições relativas ao HEAD: `HEAD~1` é o commit anterior, `HEAD~3` é três commits para trás. Você vai ver essa notação em `git diff HEAD~1`, `git reset HEAD~1` e `git rebase -i HEAD~3`.
+
+Criar, mesclar e rebasear branches (e o caso do "detached HEAD") ficam em [Branches, Merge e Rebase](/labs/web-dev/ferramentas/02-branches-merge-e-rebase/).
 
 ### Staging Area
 
@@ -45,6 +114,42 @@ git config --global user.name "Seu Nome"
 git config --global user.email "seu@email.com"
 git config --global core.editor "code --wait"  # VS Code como editor padrão
 ```
+
+### Níveis de configuração
+
+O `git config` grava configurações em três níveis, e o mais específico vence:
+
+| Nível       | Flag       | Vale para                             | Onde fica                         |
+| ----------- | ---------- | ------------------------------------- | --------------------------------- |
+| Sistema     | `--system` | Todos os usuários da máquina          | arquivo `gitconfig` da instalação |
+| Global      | `--global` | Seu usuário, em todos os repositórios | `~/.gitconfig`                    |
+| Repositório | `--local`  | Só o repositório atual (é o padrão)   | `.git/config`                     |
+
+Um uso comum do nível local: usar o e-mail do trabalho só no repositório da empresa, sem mexer no global.
+
+```bash
+git config --local user.email "voce@empresa.com"
+git config --list --show-origin   # mostra cada configuração e de qual arquivo ela veio
+```
+
+Vale configurar também o nome da branch inicial. O GitHub usa `main` desde 2020, mas o `git init` ainda cria `master` por padrão (a documentação do Git avisa que isso muda para `main` no Git 3.0):
+
+```bash
+git config --global init.defaultBranch main
+```
+
+No Windows, o instalador Git for Windows traz o **Git Bash**, um terminal com os comandos Unix mais comuns (`ls`, `cat`, `grep`). Os exemplos desta seção funcionam nele sem adaptação.
+
+### Versão e ajuda
+
+```bash
+git --version          # confirma que o Git está instalado e qual versão
+git help commit        # abre o manual completo do comando
+git commit --help      # mesma coisa
+git commit -h          # resumo curto das opções, direto no terminal
+```
+
+O `-h` costuma bastar para lembrar uma flag; o manual completo é para quando você quer entender o comportamento.
 
 ## Comandos essenciais
 
@@ -96,222 +201,44 @@ Convenção de mensagens de commit (Conventional Commits):
 | `test:`     | Adição ou correção de testes              |
 | `chore:`    | Tarefas de manutenção (build, deps)       |
 
-### Trabalhar com branches
+### Inspecionar um commit
+
+O `git log` mostra a lista de commits; o `git show` abre um commit específico, com autor, data, mensagem e o diff do que ele mudou:
 
 ```bash
-git branch                    # listar branches locais
-git branch -a                 # listar locais e remotas
-
-git branch feature/login      # criar branch
-git checkout feature/login    # mudar para branch
-git checkout -b feature/login # criar e mudar em um comando
-
-# Forma moderna (Git 2.23+)
-git switch feature/login      # mudar para branch
-git switch -c feature/login   # criar e mudar
-
-git branch -d feature/login   # deletar branch (segura - bloqueia se não mesclada)
-git branch -D feature/login   # deletar branch (forçado)
+git show a1b2c3d     # um commit pelo hash
+git show HEAD        # o último commit da branch atual
+git show HEAD~2      # dois commits atrás
 ```
 
-### Guardar alterações temporariamente (stash)
-
-Cenário comum: você está no meio de uma alteração, sem terminar, quando precisa trocar de branch para resolver outra coisa. Comitar um código quebrado só para trocar de branch não é opção, e o Git também não deixa trocar de branch se isso for sobrescrever arquivos modificados.
-
-O `git stash` guarda o estado do working directory e da staging area numa pilha, sem exigir commit, e devolve uma árvore limpa:
+Algumas variações do `git log` ajudam a achar o commit certo antes de abrir:
 
 ```bash
-git stash                     # guarda alterações e limpa a árvore
-git switch outra-branch       # agora pode trocar sem conflito
-# resolve o que precisava
-git switch feature/login      # volta para a branch original
-git stash pop                 # reaplica as alterações guardadas
+git log -p                       # histórico com o diff de cada commit
+git log --author="Maria"         # só commits de uma pessoa
+git log -- src/carrinho.js       # só commits que mexeram nesse arquivo
+git log --since="2 weeks ago"    # só commits recentes
 ```
 
-Dá para guardar várias vezes seguidas; cada `git stash` empilha uma entrada nova, e `git stash list` mostra a pilha inteira.
+### Remover e renomear arquivos
 
-`pop` e `apply` reaplicam o mesmo jeito, a diferença é o que sobra na pilha depois:
-
-| Comando           | O que faz                                         |
-| ----------------- | ------------------------------------------------- |
-| `git stash pop`   | Aplica a última entrada e **remove** ela da pilha |
-| `git stash apply` | Aplica a última entrada e **mantém** ela na pilha |
-
-Use `apply` quando quiser aplicar o mesmo stash em mais de uma branch, ou quando não tem certeza se vai precisar dele de novo. Se der conflito ao aplicar, o Git não remove a entrada da pilha automaticamente, então você resolve o conflito e depois roda `git stash drop` para descartar.
-
-Por padrão, `git stash` só guarda arquivos que o Git já rastreia. Um arquivo novo, criado mas nunca adicionado com `git add`, fica de fora e continua sentado no working directory. Isso é intencional: stashear cada arquivo novo por padrão poderia varrer coisas que você nem queria tocar ainda. Quando esse arquivo novo também faz parte do que você quer guardar, use `-u`:
+Apagar ou renomear um arquivo pelo explorador funciona, mas deixa para você o trabalho de avisar o Git (`git add` da remoção). Os comandos próprios já fazem as duas coisas:
 
 ```bash
-git stash -u        # inclui arquivos untracked também
-git stash push -u   # mesma coisa, forma mais explícita
+git rm arquivo-velho.js           # apaga do disco e coloca a remoção no staging
+git rm --cached config.local.json # para de rastrear, mas mantém o arquivo no disco
+git mv utils.js helpers.js        # renomeia e coloca a mudança no staging
 ```
 
-### Sincronizar com remoto
+O `--cached` é o caminho para quando um arquivo entrou no repositório por engano e deveria estar no `.gitignore` (ver abaixo). Sobre o `git mv`: o Git não guarda "renomeações" de verdade, ele compara o conteúdo e deduz que `helpers.js` é o antigo `utils.js` quando os arquivos são parecidos o suficiente. Por isso, se você renomear e reescrever o arquivo no mesmo commit, o histórico pode mostrar um arquivo apagado e outro criado. `git log --follow helpers.js` segue o arquivo através das renomeações.
 
-```bash
-git remote -v                              # listar remotos configurados
-git remote add origin https://github.com/usuario/repo.git
+### Os próximos passos no terminal
 
-git push origin feature/login             # enviar branch para remoto
-git push -u origin feature/login          # enviar e configurar upstream (primeira vez)
-git push                                  # enviar para upstream configurado
+Com os comandos acima dá para trabalhar sozinho num repositório local. Os assuntos seguintes têm notas próprias:
 
-git pull origin main                      # buscar e mesclar do remoto
-git fetch origin                          # buscar sem mesclar
-git merge origin/main                     # mesclar após fetch
-```
-
-### Desfazer alterações
-
-```bash
-# Descartar alterações no working directory
-git restore arquivo.java
-
-# Remover arquivo do staging
-git restore --staged arquivo.java
-
-# Reverter commit (cria novo commit que desfaz)
-git revert abc1234
-
-# Mover HEAD para commit anterior (cuidado com --hard)
-git reset --soft HEAD~1   # mantém alterações no staging
-git reset --mixed HEAD~1  # mantém alterações no working directory
-git reset --hard HEAD~1   # descarta alterações permanentemente
-```
-
-## Merge
-
-Merge combina o histórico de duas branches.
-
-```bash
-git checkout main
-git merge feature/login
-```
-
-Git tenta fazer o merge automaticamente. Se houver alterações no mesmo trecho de código em ambas as branches, ocorre um conflito.
-
-### Fast-forward merge
-
-Quando `main` não teve commits desde que a branch foi criada, Git apenas avança o ponteiro:
-
-```
-Antes:  main ──●──●
-                    \
-        feature       ●──●
-
-Depois: main ──●──●──●──●
-```
-
-### Three-way merge
-
-Quando ambas avançaram, Git cria um commit de merge:
-
-```
-        main    ──●──●──●──────●
-                       \      /
-        feature  ────────●──●
-```
-
-## Rebase
-
-O merge junta o histórico de duas branches criando um commit de junção. O rebase faz outra coisa: pega os commits da sua branch e reaplica eles, um por um, como se você tivesse escrito cada um a partir de um ponto de partida diferente.
-
-```
-Antes:
-              A───B───C  feature
-             /
-main   ──D───E───F───G
-
-Depois de "git rebase main" em feature:
-                      A'──B'──C'  feature
-                     /
-main   ──D───E───F───G
-```
-
-Reparou no apóstrofo? `A'`, `B'` e `C'` não são os commits `A`, `B` e `C` movidos de lugar, são commits **novos**, com conteúdo parecido mas hash diferente, porque o hash de um commit depende do commit pai. Rebase reescreve o histórico.
-
-```bash
-git switch feature/login
-git rebase main
-```
-
-Isso importa na hora de decidir quando usar rebase:
-
-- **Seguro**: rebase numa branch local, que só existe na sua máquina, antes de abrir o PR. Ninguém mais tem esse histórico, então reescrevê-lo não afeta ninguém além de você.
-- **Arriscado**: rebase numa branch que já foi enviada com `push` e que outra pessoa já baixou. Como os commits mudam de hash, seu histórico local e o histórico remoto divergem completamente aos olhos do Git. Você precisaria forçar o push (`git push --force`), e quem já tinha puxado aquela branch fica com um histórico que não bate mais com o remoto, precisando corrigir a própria árvore na mão para continuar trabalhando.
-
-Na prática, a regra costuma ser: rebase a vontade na sua própria branch de feature antes do PR existir. Depois que o PR está aberto e outras pessoas podem ter puxado a branch para revisar ou continuar o trabalho, prefira merge.
-
-### Rebase interativo
-
-O `git rebase -i` abre um editor com a lista de commits e deixa você reescrever a história antes de aplicá-la de novo:
-
-```bash
-git rebase -i HEAD~3
-```
-
-```
-pick a1b2c3d adicionar validação de email
-pick e4f5g6h corrigir typo na mensagem de erro
-pick i7j8k9l ajustar teste que quebrou
-```
-
-Trocando a palavra no começo da linha, você decide o que fazer com cada commit:
-
-| Comando  | O que faz                                                 |
-| -------- | --------------------------------------------------------- |
-| `pick`   | Aplica o commit como está                                 |
-| `reword` | Aplica, mas deixa editar a mensagem                       |
-| `edit`   | Para nesse commit para você alterar o conteúdo            |
-| `squash` | Junta com o commit anterior, mantendo as duas mensagens   |
-| `fixup`  | Junta com o commit anterior, descartando a mensagem deste |
-| `drop`   | Remove o commit                                           |
-
-Um uso comum: três commits de "correção de typo" que só poluem o histórico virando um só, antes do PR:
-
-```
-pick a1b2c3d adicionar validação de email
-fixup e4f5g6h corrigir typo na mensagem de erro
-fixup i7j8k9l ajustar teste que quebrou
-```
-
-Depois de salvar, os três viram um commit único com a mensagem "adicionar validação de email".
-
-Se der conflito no meio do rebase (seja ele interativo ou não), o Git para no commit problemático:
-
-```bash
-# resolve o conflito no arquivo, depois:
-git add arquivo.java
-git rebase --continue   # segue para o próximo commit da lista
-
-git rebase --skip       # pula esse commit específico
-git rebase --abort      # cancela tudo, volta pro estado de antes do rebase
-```
-
-## Resolução de conflitos
-
-Quando duas branches modificam o mesmo trecho de código, Git marca o conflito no arquivo:
-
-```
-<<<<<<< HEAD
-    return saldo - taxa;
-=======
-    return saldo * (1 - taxa);
->>>>>>> feature/calculo-taxa
-```
-
-Para resolver:
-
-1. Abra o arquivo e edite manualmente para manter o código correto
-2. Remova os marcadores `<<<<<<<`, `=======` e `>>>>>>>`
-3. Adicione ao staging e faça commit:
-
-```bash
-git add arquivo.java
-git commit -m "merge: resolver conflito no cálculo de taxa"
-```
-
-IDEs como IntelliJ e VS Code têm interfaces visuais para resolução de conflitos que facilitam bastante.
+- Branches, merge, rebase e conflitos: [Branches, Merge e Rebase](/labs/web-dev/ferramentas/02-branches-merge-e-rebase/)
+- Stash, restore, reset e revert: [Desfazendo Alterações](/labs/web-dev/ferramentas/03-desfazendo-alteracoes/)
+- Remotos, push, pull e fetch: [Repositórios Remotos](/labs/web-dev/ferramentas/04-repositorios-remotos/)
 
 ## .gitignore
 
@@ -343,7 +270,54 @@ Arquivos já rastreados não são afetados pelo `.gitignore`. Para parar de rast
 git rm --cached arquivo-sensivel.env
 ```
 
+### Padrões úteis
+
+O exemplo acima é de um projeto Java. Em outras stacks, o que costuma ficar de fora são dependências baixadas, saídas de build e arquivos de log:
+
+```gitignore
+# Node
+node_modules/
+dist/
+
+# Python
+__pycache__/
+.venv/
+
+# Qualquer stack
+*.log
+.env
+!.env.example   # exceção: este arquivo de exemplo deve ser versionado
+```
+
+A sintaxe é curta: `*` casa qualquer sequência de caracteres, uma `/` no fim indica pasta, `!` cria uma exceção a uma regra anterior e `#` começa um comentário.
+
+Não precisa escrever do zero: o GitHub mantém o repositório [github/gitignore](https://github.com/github/gitignore) com modelos por linguagem, e a tela de criação de repositório oferece esses modelos. Para arquivos que são do seu computador e não do projeto (`.DS_Store`, configurações do editor), um `.gitignore` global evita repetir as mesmas linhas em todo repositório:
+
+```bash
+git config --global core.excludesFile ~/.gitignore_global
+```
+
+O `.env` aparece em quase todo exemplo por um motivo: ele costuma guardar senhas e chaves de API, e isso nunca deve ir para o repositório. O que fazer se um segredo vazar está em [GitHub](/labs/web-dev/ferramentas/05-github/).
+
+## Boas práticas de commit
+
+Um histórico útil é feito de commits pequenos, cada um com uma mudança lógica. "Corrige validação de e-mail" num commit e "renomeia pasta de testes" em outro, em vez de um commitão com tudo do dia. Commit pequeno é mais fácil de revisar, de entender meses depois e de reverter sem levar junto o que estava certo.
+
+A mensagem deve dizer o que muda de forma direta: `fix: corrigir validação de e-mail no cadastro` diz muito mais que `ajustes`. O formato completo está em [Conventional Commits e SemVer](/labs/web-dev/ferramentas/06-conventional-commits/).
+
+Antes de commitar, confira o que vai entrar:
+
+```bash
+git status            # quais arquivos estão no staging
+git diff --staged     # o conteúdo exato que vai para o commit
+```
+
+Esse hábito pega o `console.log` esquecido, o arquivo de build que escapou do `.gitignore` e, principalmente, o segredo que nunca deveria ser commitado.
+
 ## Referências
 
-- [git-rebase - Git Documentation](https://git-scm.com/docs/git-rebase) - Git, en
-- [git-stash - Git Documentation](https://git-scm.com/docs/git-stash) - Git, en
+- [Pro Git - Sobre Controle de Versão](https://git-scm.com/book/pt-br/v2/Primeiros-Passos-Sobre-Controle-de-Vers%c3%a3o) - Scott Chacon e Ben Straub, pt-BR
+- [Pro Git - Configuração inicial do Git](https://git-scm.com/book/pt-br/v2/Primeiros-Passos-Configura%c3%a7%c3%a3o-inicial-do-Git) - Scott Chacon e Ben Straub, pt-BR
+- [Pro Git - Gravando Alterações no Repositório](https://git-scm.com/book/pt-br/v2/Fundamentos-do-Git-Gravando-Altera%c3%a7%c3%b5es-no-Reposit%c3%b3rio) - Scott Chacon e Ben Straub, pt-BR
+- [Ignorando arquivos](https://docs.github.com/pt/get-started/git-basics/ignoring-files) - GitHub Docs, pt-BR
+- [git-init - Git Documentation](https://git-scm.com/docs/git-init) - Git, en

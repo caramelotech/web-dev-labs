@@ -43,7 +43,7 @@ Spec completa em português: [semver.org/lang/pt-BR](https://semver.org/lang/pt-
 
 ## Conventional Commits
 
-O [Conventional Commits](https://www.conventionalcommits.org/pt-br/) é uma especificação para mensagens de commit que torna o histórico legível por humanos e por ferramentas. [Git: Fundamentos](./01-git-fundamentos) cobre os prefixos básicos - aqui vamos ao formato completo e às ferramentas que automatizam o processo.
+O [Conventional Commits](https://www.conventionalcommits.org/pt-br/) é uma especificação para mensagens de commit que torna o histórico legível por humanos e por ferramentas. [Git: Fundamentos](/labs/web-dev/ferramentas/01-git-fundamentos/) cobre os prefixos básicos - aqui vamos ao formato completo e às ferramentas que automatizam o processo.
 
 **Formato:**
 
