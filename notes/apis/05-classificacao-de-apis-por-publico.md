@@ -1,8 +1,8 @@
 # Classificação de APIs por Público
 
-As notas anteriores desta seção olham para API pela lente de **como** ela se comunica: REST, GraphQL, gRPC, e por aí vai (veja [Estilos de Comunicação de API](/labs/web-dev/apis/03-estilos-de-comunicacao/)). Existe outra lente, ortogonal a essa, que importa tanto quanto: **quem** pode acessar a API. Uma mesma API REST pode estar completamente aberta ao público ou trancada só para dois sistemas internos conversarem entre si, e essa decisão muda completamente como você pensa autenticação, contrato e superfície de risco.
+As notas anteriores desta seção olham para API pela lente de **como** ela se comunica: REST, GraphQL, gRPC, e por aí vai (veja [Estilos de Comunicação de API](/labs/web-dev/apis/04-estilos-de-comunicacao/)). Existe outra lente, ortogonal a essa, que importa tanto quanto: **quem** pode acessar a API. Uma mesma API REST pode estar completamente aberta ao público ou trancada só para dois sistemas internos conversarem entre si, e essa decisão muda completamente como você pensa autenticação, contrato e superfície de risco.
 
-Antes de seguir, um aviso sobre nome: "Open API" aqui é uma **categoria de acesso** (API de acesso público), não confundir com **OpenAPI**, a especificação usada para documentar APIs REST (Swagger), já vista em [Segurança e Evolução de APIs](/labs/web-dev/apis/02-seguranca-e-evolucao-de-apis/). São dois usos completamente diferentes do mesmo termo.
+Antes de seguir, um aviso sobre nome: "Open API" aqui é uma **categoria de acesso** (API de acesso público), não confundir com **OpenAPI**, a especificação usada para documentar APIs REST (Swagger), já vista em [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/). São dois usos completamente diferentes do mesmo termo.
 
 ## Open API: acesso público
 

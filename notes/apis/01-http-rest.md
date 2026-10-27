@@ -26,6 +26,72 @@ Composta de:
 - **Headers:** metadados (tipo do conteúdo, autenticação, etc.)
 - **Body:** dados enviados (presente em POST, PUT, PATCH)
 
+### Estrutura de uma resposta
+
+A resposta espelha a requisição: uma primeira linha, os headers e, opcionalmente, um body.
+
+```
+HTTP/1.1 201 Created
+Content-Type: application/json
+Content-Length: 67
+Date: Sun, 12 May 2024 10:30:00 GMT
+Location: /usuarios/42
+
+{
+  "id": 42,
+  "nome": "Ana Silva",
+  "email": "ana@exemplo.com"
+}
+```
+
+A primeira linha é a **status line**: versão do HTTP, código de status e uma frase curta que descreve o código (a *reason phrase*, aqui `Created`). Essa frase existe só para humanos lerem; nenhum cliente deve tomar decisão com base nela. Tanto que o HTTP/2 e o HTTP/3 aboliram a reason phrase: neles, o status viaja num pseudo-header `:status: 201`, sem texto nenhum.
+
+Os headers de resposta mais comuns:
+
+- `Content-Type`: formato do body (`application/json`)
+- `Content-Length`: tamanho do body em bytes
+- `Date`: quando a resposta foi gerada
+- `Location`: para onde olhar, usado no `201 Created` (o endereço do recurso novo) e nos redirecionamentos
+- `Cache-Control`: se e por quanto tempo a resposta pode ser guardada em cache
+
+O body traz a representação devolvida pelo servidor, quase sempre JSON numa API. Algumas respostas não têm body por definição, como o `204 No Content` e o `304 Not Modified`.
+
+### Path params, query params, headers e body
+
+Uma requisição tem quatro lugares para carregar informação, e cada um tem um papel:
+
+```
+GET /usuarios/10/pedidos?status=pago&page=2 HTTP/1.1
+    └────┬─────┘        └─────────┬───────┘
+     path param           query params
+Host: api.exemplo.com              ← header
+Authorization: Bearer eyJhbGci...  ← header
+```
+
+- **Path param** identifica *qual* recurso: o `10` em `/usuarios/10`. Sem ele, a URL aponta para outra coisa.
+- **Query param** refina a consulta sobre o recurso: filtrar, ordenar, paginar (`?status=pago&page=2`). A URL sem ele continua válida, só traz um resultado diferente. Filtros e ordenação estão em [Paginação](/labs/web-dev/apis/06-paginacao/).
+- **Headers** carregam metadados sobre a requisição, não sobre o recurso: quem está chamando (`Authorization`), em que formato (`Content-Type`, `Accept`), regras de cache. Também não são opcionais: no HTTP/1.1 o header `Host` é obrigatório em toda requisição.
+- **Body** carrega a representação enviada, em `POST`, `PUT` e `PATCH`. Um body num `GET` não tem significado definido pela RFC 9110, e muitos servidores, proxies e bibliotecas simplesmente o descartam. Se a busca precisa de muitos parâmetros, use query string ou um `POST` para um recurso de busca.
+
+Uma regra prática: se a informação muda *qual* recurso é, vai no path; se muda *como* olhar para ele, vai na query; se é sobre a conversa em si (credencial, formato), vai no header; se é o conteúdo que está sendo gravado, vai no body.
+
+Um cuidado: token, senha e API key nunca vão na URL, nem como query param. URLs ficam gravadas no log do servidor, no log de proxies, no histórico do navegador e podem vazar no header `Referer`. Credencial vai no header.
+
+### Negociação de conteúdo
+
+Dois headers parecidos fazem papéis opostos:
+
+- `Content-Type` descreve o formato do body **que está sendo enviado**. Na requisição, é o que o cliente manda; na resposta, é o que o servidor devolve.
+- `Accept` diz o formato que o cliente **quer receber** na resposta.
+
+```
+POST /relatorios HTTP/1.1
+Content-Type: application/json    ← estou mandando JSON
+Accept: text/csv                  ← quero a resposta em CSV
+```
+
+Esse acordo se chama **negociação de conteúdo**. JSON é o padrão de fato em APIs, mas não o único formato: upload de arquivo usa `multipart/form-data`, exportações usam CSV, integrações antigas usam XML. Quando não há acordo possível, existem dois códigos: `415 Unsupported Media Type` quando o servidor não aceita o formato que o cliente mandou, e `406 Not Acceptable` quando o servidor não consegue produzir nenhum dos formatos que o cliente pediu no `Accept`.
+
 ### Métodos HTTP
 
 | Método   | Uso                         | Idempotente | Tem body |
@@ -114,6 +180,8 @@ O código de status indica o resultado da requisição.
 | 502    | Bad Gateway           | Serviço upstream com problema |
 | 503    | Service Unavailable   | Serviço indisponível          |
 
+Os códigos menos comuns (202, 205, 303, 307, 308, 405, 504, 505), as dúvidas clássicas de entrevista (401 vs 403, 400 vs 422, 302 vs 307) e como montar um corpo de erro padronizado estão em [Status Codes e Tratamento de Erros](/labs/web-dev/apis/02-status-codes-e-tratamento-de-erros/).
+
 ## APIs
 
 API (Application Programming Interface) é um contrato que define como sistemas se comunicam. Uma API web expõe endpoints HTTP que outros sistemas podem chamar.
@@ -153,6 +221,57 @@ REST (Representational State Transfer) é um estilo arquitetural para APIs, não
 **Recursos:** a API é organizada em torno de recursos (substantivos), não ações. O recurso é identificado pela URL.
 
 **Verbos HTTP para ações:** as operações sobre os recursos são expressas pelos métodos HTTP.
+
+### As seis restrições do REST
+
+Os três princípios acima são a versão de bolso. A definição original vem do capítulo 5 da tese de doutorado de Roy Fielding, de 2000 (Fielding também foi um dos autores da especificação do HTTP). Ele descreve o REST como um conjunto de restrições: abrir mão de certas liberdades em troca de propriedades como escala e independência entre as partes. São seis:
+
+1. **Cliente-servidor.** Interface e armazenamento de dados ficam separados. O app mobile não sabe como o banco é organizado, e o servidor não sabe como a tela é desenhada. Cada lado pode evoluir sem mexer no outro, desde que o contrato da API se mantenha.
+2. **Stateless.** Cada requisição carrega tudo o que o servidor precisa para atendê-la, e o servidor não guarda contexto de sessão entre uma chamada e outra. Por isso o token vai em toda requisição. A vantagem é que qualquer instância do servidor pode atender qualquer requisição, o que facilita escalar horizontalmente, como explicado em [Stateless e Particionamento](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/).
+3. **Cache.** Toda resposta precisa dizer, de forma explícita ou implícita, se pode ser guardada em cache. É o papel de headers como `Cache-Control` e `ETag`. Uma resposta cacheada que um navegador ou uma [CDN](/labs/web-dev/escalabilidade/04-cdn/) reaproveita é uma requisição a menos chegando no servidor.
+4. **Interface uniforme.** Todos os recursos são manipulados do mesmo jeito, e Fielding considera essa a restrição central do estilo. Ela se divide em quatro:
+   - *identificação de recursos*: cada recurso tem sua URI;
+   - *manipulação por representações*: o cliente altera um recurso enviando uma representação dele (o JSON do usuário), e não chamando funções remotas;
+   - *mensagens autodescritivas*: cada mensagem diz como deve ser interpretada (método, `Content-Type`, status, regras de cache), sem depender de um combinado fora dela;
+   - *hipermídia como motor do estado da aplicação* (HATEOAS): as respostas trazem links para as próximas ações possíveis, o nível 3 do modelo de Richardson logo abaixo.
+5. **Sistema em camadas.** O cliente não sabe se está falando com o servidor final ou com um intermediário no caminho: load balancer, API gateway, cache, CDN. Isso permite colocar e tirar camadas sem mudar o cliente. O [Reverse Proxy](/labs/web-dev/escalabilidade/05-reverse-proxy/) é o exemplo mais comum.
+6. **Code on demand** (opcional). O servidor pode mandar código para o cliente executar e estender o que ele faz. O JavaScript que o navegador baixa e roda é o caso clássico. É a única restrição opcional, e APIs JSON quase nunca a usam.
+
+Essas restrições explicam por que o REST se espalhou tanto. Ele reaproveita o que o HTTP já tem (métodos, status, cache, proxies), dá para testar com qualquer cliente HTTP, funciona igual para web, mobile e servidor-a-servidor, e a natureza stateless simplifica escalar. Na prática, pouca API segue as seis à risca, em especial o HATEOAS, mas as quatro primeiras aparecem em quase todas.
+
+### Recurso e representação
+
+As duas palavras parecem sinônimas, mas não são.
+
+**Recurso** é a coisa em si: o usuário 1, a lista de pedidos, o produto 10. Ele é identificado por uma URI (`/usuarios/1`, `/pedidos`, `/produtos/10`) e existe independentemente de qualquer formato.
+
+**Representação** é um retrato do estado do recurso num momento, num formato específico. O mesmo usuário 1 pode ser representado como JSON, como XML, ou como uma página HTML:
+
+```
+GET /usuarios/1
+Accept: application/json   →  { "id": 1, "nome": "Ana Silva" }
+
+GET /usuarios/1
+Accept: application/xml    →  <usuario><id>1</id><nome>Ana Silva</nome></usuario>
+```
+
+É o mesmo recurso, com duas representações escolhidas pela negociação de conteúdo. O nome "Representational State Transfer" vem daí: cliente e servidor nunca trocam o recurso, trocam representações do estado dele. Quando você faz um `PUT` com um JSON, está mandando uma representação nova e pedindo ao servidor que deixe o recurso com aquele estado.
+
+### REST vs SOAP
+
+Essa comparação aparece em entrevista com frequência, e começa por uma diferença de natureza: REST é um **estilo arquitetural**, um conjunto de restrições; SOAP é um **protocolo**, com formato de mensagem definido (o envelope XML) e contrato formal descrito em WSDL.
+
+|                     | REST                                                       | SOAP                                                                       |
+| ------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------- |
+| O que é             | Estilo arquitetural                                        | Protocolo padronizado pelo W3C                                             |
+| Uso do HTTP         | Usa a semântica do HTTP: métodos, status, headers, cache   | Usa o HTTP só como transporte (quase tudo é `POST`); aceita outros, como SMTP |
+| Formato             | Livre: JSON na maioria, mas também XML, CSV, texto         | XML no envelope                                                            |
+| Contrato            | Opcional (OpenAPI)                                         | Obrigatório e rígido (WSDL)                                                |
+| Estado              | Stateless                                                  | Stateless no protocolo; estado vem de extensões WS-* ou da aplicação       |
+| Peso                | Mensagens enxutas                                          | Mensagens verbosas, com custo de processar o envelope                      |
+| Onde aparece        | Web, mobile, APIs públicas e internas                      | Integrações corporativas e reguladas: bancos, seguradoras, governo         |
+
+Dois pontos costumam vir errados em resumos por aí. Um é dizer que SOAP é "stateful": o protocolo em si não guarda estado, quem adiciona sessão são extensões do ecossistema WS-* ou a própria aplicação. O outro é dizer que SOAP "tem performance ruim" como se fosse uma propriedade absoluta: o custo vem do XML verboso e do processamento do envelope, e em troca ele oferece um contrato formal e padrões prontos de segurança e transação que fazem sentido em domínios regulados. Por que SOAP ainda sobrevive nesses setores está em [Classificação de APIs por Público](/labs/web-dev/apis/05-classificacao-de-apis-por-publico/).
 
 ### Design de rotas RESTful
 
@@ -321,7 +440,7 @@ GET /produtos?page=2&size=20&sort=nome,asc
 }
 ```
 
-As estratégias de paginação (offset, cursor, keyset), quando usar cada uma e o problema do OFFSET profundo estão em [Paginação](/labs/web-dev/apis/05-paginacao/).
+As estratégias de paginação (offset, cursor, keyset), quando usar cada uma e o problema do OFFSET profundo estão em [Paginação](/labs/web-dev/apis/06-paginacao/).
 
 - Documente com OpenAPI/Swagger - gera documentação interativa automaticamente
 
@@ -331,3 +450,6 @@ As estratégias de paginação (offset, cursor, keyset), quando usar cada uma e 
 - [Idempotente - Glossário MDN](https://developer.mozilla.org/pt-BR/docs/Glossary/Idempotent) - MDN Web Docs, pt-BR
 - [RFC 9110 - HTTP Semantics, §9 Method Definitions](https://www.rfc-editor.org/rfc/rfc9110.html#name-method-definitions) - IETF, en
 - [RFC 5789 - PATCH Method for HTTP](https://www.rfc-editor.org/rfc/rfc5789.html) - IETF, en
+- [Mensagens HTTP](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Guides/Messages) - MDN Web Docs, pt-BR
+- [Negociação de conteúdo](https://developer.mozilla.org/pt-BR/docs/Web/HTTP/Guides/Content_negotiation) - MDN Web Docs, pt-BR
+- [Architectural Styles and the Design of Network-based Software Architectures, cap. 5](https://ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm) - Roy Fielding, en

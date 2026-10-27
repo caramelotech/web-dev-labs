@@ -23,7 +23,7 @@ Só que "logar uma vez e acessar tudo" não acontece por mágica, alguém precis
 
 OAuth 2.0 responde a uma pergunta bem específica: "esse app tem permissão para acessar tal recurso em nome do usuário?". Ele não diz nada sobre quem é esse usuário, só o que uma aplicação pode fazer depois de receber autorização.
 
-O fluxo completo (Authorization Code, o papel do `access token` e do `refresh token`) já está detalhado em [Segurança baseada em token: JWT e OAuth2](/labs/web-dev/apis/02-seguranca-e-evolucao-de-apis/), então não vamos repetir aqui. O que importa reter para o resto desta nota é só isso: OAuth sozinho não autentica ninguém, ele delega acesso.
+O fluxo completo (Authorization Code, o papel do `access token` e do `refresh token`) já está detalhado em [Segurança baseada em token: JWT e OAuth2](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/), então não vamos repetir aqui. O que importa reter para o resto desta nota é só isso: OAuth sozinho não autentica ninguém, ele delega acesso.
 
 ## OIDC: identidade em cima do OAuth 2.0
 

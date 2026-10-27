@@ -1,6 +1,6 @@
 # JWT na Prática
 
-O formato do JWT (`header.payload.signature`), o fato de o payload ser só codificado e não cifrado, e a ideia de autenticação stateless já foram vistos em [Segurança e Evolução de APIs](/labs/web-dev/apis/02-seguranca-e-evolucao-de-apis/). Saber ler um token é o começo. Os problemas de verdade aparecem na hora de usar: onde guardar, como validar, o que fazer quando ele é roubado e como renovar sem abrir brecha.
+O formato do JWT (`header.payload.signature`), o fato de o payload ser só codificado e não cifrado, e a ideia de autenticação stateless já foram vistos em [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/). Saber ler um token é o começo. Os problemas de verdade aparecem na hora de usar: onde guardar, como validar, o que fazer quando ele é roubado e como renovar sem abrir brecha.
 
 ## Ciclo de vida de um JWT
 
@@ -63,7 +63,7 @@ Quando a API recebe o token, conferir a assinatura prova só que o token foi emi
 - **`iss`**: veio do emissor configurado, e não de qualquer servidor que assine tokens;
 - **`aud`**: foi emitido para esta API. Sem essa checagem, um token feito para a API de relatórios internos seria aceito pela API de pagamentos, se as duas confiam no mesmo emissor.
 
-Se qualquer item falhar, a resposta é `401 Unauthorized`. O mesmo checklist aparece na validação do ID token em [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/07-sso-oauth-oidc-saml/), onde também está a diferença entre ID token e access token.
+Se qualquer item falhar, a resposta é `401 Unauthorized`. O mesmo checklist aparece na validação do ID token em [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/08-sso-oauth-oidc-saml/), onde também está a diferença entre ID token e access token.
 
 Na prática quase ninguém escreve isso na mão, a biblioteca faz. O cuidado é **passar todas as opções**, porque várias bibliotecas só checam o que você pede:
 
@@ -164,7 +164,7 @@ Não existe solução sem custo, mas existem formas de diminuir a janela:
 
 - **Access tokens curtos.** Com 5 a 15 minutos de vida, um token roubado tem pouco tempo de uso, e uma mudança de permissão vale no máximo nesse prazo. O preço é renovar com mais frequência, e é para isso que existe o refresh token.
 - **Denylist por `jti`.** Para os casos que não podem esperar (conta comprometida, desligamento de funcionário), guarde o `jti` dos tokens revogados num armazenamento rápido como o [Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/), com expiração igual à do token. A API consulta a lista a cada requisição. Sim, isso traz de volta um pouco de estado, mas é uma consulta pequena e só a lista dos revogados, não de todas as sessões.
-- **Decisões sensíveis no dono do dado.** A claim `roles` serve para filtrar o óbvio, mas "este usuário pode estornar este pagamento agora?" deve ser checado pelo serviço dono do recurso, com o estado atual do banco, e não confiando só no que estava no token. A divisão entre o que o gateway barra e o que o serviço decide está em [Segurança e Evolução de APIs](/labs/web-dev/apis/02-seguranca-e-evolucao-de-apis/).
+- **Decisões sensíveis no dono do dado.** A claim `roles` serve para filtrar o óbvio, mas "este usuário pode estornar este pagamento agora?" deve ser checado pelo serviço dono do recurso, com o estado atual do banco, e não confiando só no que estava no token. A divisão entre o que o gateway barra e o que o serviço decide está em [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/).
 
 ## Refresh token com segurança
 

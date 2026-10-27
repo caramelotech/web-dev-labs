@@ -34,7 +34,7 @@ Todo cache é, por definição, uma cópia que pode ficar desatualizada em rela�
 
 ### Armazenamento vs computação
 
-Toda resposta que o sistema devolve precisa ser calculada em algum momento. A pergunta é *quando*: na hora em que o dado é escrito, guardando o resultado pronto, ou na hora em que alguém pede, calculando do zero.
+Toda resposta que o sistema devolve precisa ser calculada em algum momento. A pergunta é _quando_: na hora em que o dado é escrito, guardando o resultado pronto, ou na hora em que alguém pede, calculando do zero.
 
 Pré-computar desloca o trabalho para a escrita. Um contador de curtidas que é incrementado a cada like, uma [materialized view](/labs/web-dev/banco-de-dados/03-views-e-triggers/) com o resumo de vendas do mês, uma timeline já montada para cada usuário: na leitura é só buscar e devolver, sem `JOIN`, sem `COUNT(*)` varrendo milhões de linhas. O preço aparece em três lugares. Ocupa espaço (o mesmo dado agora existe na fonte e na cópia derivada), dá mais trabalho na escrita (cada mudança precisa atualizar a cópia) e abre uma janela em que a cópia ainda não refletiu a última mudança.
 
@@ -69,7 +69,7 @@ Quando um dado muda, alguém precisa ficar sabendo. Ou o servidor avisa (push), 
 
 No **pull**, o cliente faz polling: a cada X segundos manda um "tem novidade?". É o modelo mais simples que existe, funciona com HTTP comum, o servidor não precisa lembrar de ninguém entre uma requisição e outra, e um cliente que caiu simplesmente para de perguntar. O problema é o desperdício. Se o dado muda uma vez por hora e o cliente pergunta a cada 5 segundos, são 719 respostas "nada mudou" para cada uma útil, multiplicadas pelo número de clientes. E a novidade só chega na próxima pergunta, então o atraso pode ser de até um intervalo inteiro de polling.
 
-No **push**, o servidor manda a atualização assim que ela existe, por [WebSocket, Server-Sent Events ou webhooks](/labs/web-dev/apis/03-estilos-de-comunicacao/). Nenhuma requisição é jogada fora e a entrega é praticamente imediata. A conta vem do outro lado: WebSocket e SSE mantêm uma conexão aberta por cliente, então 100 mil usuários online são 100 mil conexões vivas que o servidor (e o load balancer) precisam segurar, reconectar quando caem e distribuir entre instâncias. Webhook não segura conexão, mas exige que quem recebe tenha um endpoint público e trate reenvios.
+No **push**, o servidor manda a atualização assim que ela existe, por [WebSocket, Server-Sent Events ou webhooks](/labs/web-dev/apis/04-estilos-de-comunicacao/). Nenhuma requisição é jogada fora e a entrega é praticamente imediata. A conta vem do outro lado: WebSocket e SSE mantêm uma conexão aberta por cliente, então 100 mil usuários online são 100 mil conexões vivas que o servidor (e o load balancer) precisam segurar, reconectar quando caem e distribuir entre instâncias. Webhook não segura conexão, mas exige que quem recebe tenha um endpoint público e trate reenvios.
 
 ```mermaid
 sequenceDiagram

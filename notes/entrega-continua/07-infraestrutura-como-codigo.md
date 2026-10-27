@@ -95,7 +95,7 @@ O ganho maior aparece quando a infraestrutura entra no mesmo fluxo do código:
 
 - **Nada de mexer no console**: se alguém altera um recurso na mão, o código deixa de ser a verdade e o drift volta. Mudou? Muda no código.
 - **Módulos reutilizáveis**: empacote padrões que se repetem (uma VPC, um serviço com banco) e reaproveite em vez de copiar e colar.
-- **Segredos fora do código**: senhas e chaves não vão para o repositório; use um gerenciador de segredos e referencie-o (veja Gestão de segredos em [Segurança e Evolução de APIs](/labs/web-dev/apis/02-seguranca-e-evolucao-de-apis/)).
+- **Segredos fora do código**: senhas e chaves não vão para o repositório; use um gerenciador de segredos e referencie-o (veja Gestão de segredos em [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/)).
 - **Estado remoto e com lock**: o arquivo de estado precisa ficar num lugar compartilhado (um bucket, por exemplo) com bloqueio, para duas pessoas não aplicarem mudanças ao mesmo tempo. Ele também pode conter dados sensíveis, então trate como segredo.
 - **Mudanças pequenas e frequentes**: um `plan` com 3 alterações é fácil de revisar; um com 300 não é.
 
