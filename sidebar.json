@@ -17,6 +17,10 @@
       "directory": "frontend-avancado"
     },
     {
+      "label": "TypeScript",
+      "directory": "typescript"
+    },
+    {
       "label": "Algoritmos e Estruturas de Dados",
       "directory": "algoritmos-e-estruturas-de-dados"
     },
