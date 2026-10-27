@@ -16,9 +16,10 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   fundamentos/                # Fundamentos de front-end: HTML e CSS
   atomic-design/              # Arquitetura de componentes de interface: átomos, moléculas, organismos, templates e páginas
   frontend-avancado/          # Além do alicerce: JavaScript, React e padrões recentes de data fetching e renderização
+  typescript/                 # TypeScript do básico ao avançado: sistema de tipos, narrowing, generics, tipos avançados, módulos, tsconfig e padrões para projetos reais
   algoritmos-e-estruturas-de-dados/  # Base para resolver problemas: raciocínio, estruturas de dados, complexidade (Big O), paradigmas de algoritmos e padrões de resolução
   engenharia-de-software/     # Design e qualidade de código: princípios, padrões e testes
-  apis/                       # Projeto de APIs: protocolos, estilos de comunicação, segurança e evolução
+  apis/                       # Projeto de APIs: protocolos, status codes e erros, estilos de comunicação, segurança, testes, documentação e evolução
   banco-de-dados/             # Bancos relacionais e NoSQL: modelo, garantias transacionais, arquitetura interna, performance de consultas e busca
   system-design/              # Projeto de sistemas: fundamentos, trade-offs e metodologia
   escalabilidade/             # Escalar carga e a infraestrutura que sustenta isso (cache, load balancer, gateway, CDN, ...)
@@ -30,7 +31,7 @@ notes/           # Notas em Markdown puro - cada arquivo vira uma página no sit
   observabilidade/            # Enxergar o sistema em produção: logs, métricas, traces e ferramentas
   entrega-continua/           # Empacotar, entregar e hospedar: containers, orquestração, CI/CD, infraestrutura como código e categorias de serviço em nuvem
   estudos-de-caso/            # System design na prática: problemas resolvidos ponta a ponta
-  ferramentas/                # Ferramental de trabalho: Git, Conventional Commits, PRs, fluxos, GPG
+  ferramentas/                # Ferramental de trabalho: Git, GitHub, Conventional Commits, PRs, fluxos, tags e releases, GitHub Actions, GPG
 sidebar.json     # Seções da barra lateral no site (labels e ordem)
 examples/        # Exercícios e projetos práticos (não publicados no site)
 ROADMAP.md       # Backlog do que ainda falta cobrir (não publicado no site)
@@ -38,7 +39,7 @@ ROADMAP.md       # Backlog do que ainda falta cobrir (não publicado no site)
 
 O comentário ao lado de cada pasta é o **escopo** dela, não um índice das notas. Adicionar uma nota dentro de um escopo já descrito não exige atualizar esta lista - só mexa aqui quando criar uma seção nova ou quando o escopo de uma pasta mudar de fato.
 
-A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da base de front-end (Fundamentos, Atomic Design, Front-end Avançado) e escrita de código (Algoritmos e Estruturas de Dados, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade, Entrega Contínua e System Design na Prática).
+A ordem das seções segue uma progressão de estudo pensada para entrevistas de backend: da base de front-end (Fundamentos, Atomic Design, Front-end Avançado, TypeScript) e escrita de código (Algoritmos e Estruturas de Dados, Engenharia de Software, APIs, Databases) até sistemas distribuídos em escala (System Design, Escalabilidade, Sistemas Distribuídos, Transações Distribuídas, Mensageria, Microsserviços, Resiliência, Observabilidade, Entrega Contínua e System Design na Prática).
 
 ## Padrão de nomenclatura de pastas e arquivos
 

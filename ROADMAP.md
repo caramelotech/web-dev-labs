@@ -14,6 +14,16 @@ Escopo: fundamentos de front-end (HTML e CSS). Fundamentos de programação (alg
 
 Sem lacunas planejadas no momento.
 
+### `typescript/`
+
+Escopo: TypeScript do básico ao avançado - sistema de tipos, narrowing, generics, tipos avançados, módulos, tsconfig e padrões para projetos reais.
+
+- ⬜ Decorators (padrão do TS 5.0 vs `experimentalDecorators`)
+- ⬜ TypeScript com React em profundidade (hooks, context, componentes genéricos)
+- ⬜ TypeScript no back-end com Node (ex: NestJS)
+- ⬜ Declaration merging e module augmentation em detalhe
+- ⬜ Recursos recentes: `NoInfer`, `using` e explicit resource management
+
 ### `algoritmos-e-estruturas-de-dados/`
 
 Escopo: base para resolver problemas - pilares de estudo, lógica e pensamento computacional, estruturas de dados, complexidade (Big O), paradigmas de projeto de algoritmos e padrões de resolução de problemas.
@@ -43,14 +53,13 @@ Escopo: design e qualidade de código, princípios, padrões de projeto e testes
 
 Escopo: projeto de APIs - protocolos, estilos de comunicação, segurança e evolução.
 
-- ⬜ Ataques web comuns: DDoS e XSS
+- ⬜ Ataques web comuns: DDoS (XSS, CSRF e injeção já estão em `09-seguranca-de-apis-na-pratica`)
 - ⬜ TLS/SSL em detalhe (handshake, certificados, cadeia de confiança)
 
 ### `banco-de-dados/`
 
 Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência, arquitetura interna das engines, performance de consultas (índices, planos de execução, diagnóstico de queries lentas) e busca (tipos de busca, full-text).
 
-- ⬜ Data modeling em NoSQL (embutir vs referenciar, modelagem orientada a consultas). A normalização relacional já tem nota
 - ⬜ Armazenamento distribuído (HDFS) e processamento distribuído com Spark
 
 ## Trilha 2: System Design
