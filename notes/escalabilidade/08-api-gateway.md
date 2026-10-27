@@ -50,11 +50,11 @@ flowchart LR
 
 Quando entra o terceiro personagem, o [reverse proxy](/labs/web-dev/escalabilidade/05-reverse-proxy/), a confusão aumenta, porque os três ficam na frente dos serviços, recebem a requisição e repassam adiante. O jeito mais útil de separar é pela pergunta que cada um responde:
 
-| Componente    | Pergunta que responde                                 | Exemplo de decisão                                                     |
-| ------------- | ----------------------------------------------------- | ---------------------------------------------------------------------- |
-| Reverse proxy | "Por onde a requisição entra e para onde ela vai?"    | `blog.loja.com` vai para o servidor do blog, com TLS terminado aqui    |
-| Load balancer | "Qual instância atende esta requisição?"              | Das 4 réplicas saudáveis da API, manda para a réplica 3                |
-| API Gateway   | "Esta requisição pode passar? E de que jeito?"        | Token válido, dentro do limite de 100 req/min, roteia para `/v2/pedidos` |
+| Componente    | Pergunta que responde                              | Exemplo de decisão                                                       |
+| ------------- | -------------------------------------------------- | ------------------------------------------------------------------------ |
+| Reverse proxy | "Por onde a requisição entra e para onde ela vai?" | `blog.loja.com` vai para o servidor do blog, com TLS terminado aqui      |
+| Load balancer | "Qual instância atende esta requisição?"           | Das 4 réplicas saudáveis da API, manda para a réplica 3                  |
+| API Gateway   | "Esta requisição pode passar? E de que jeito?"     | Token válido, dentro do limite de 100 req/min, roteia para `/v2/pedidos` |
 
 ### Onde eles se sobrepõem
 
@@ -148,7 +148,7 @@ flowchart LR
 
 Em vez de manter duas versões inteiras de cada microsserviço só para atender clientes em versões diferentes, o gateway pode concentrar essa **adaptação**:
 
-- **Versionamento**: rotear `/v1/*` e `/v2/*` para o serviço certo, ou até para a mesma versão do serviço, aplicando uma transformação de payload no meio do caminho, seguindo as estratégias de versionamento já vistas em [Segurança e Evolução de APIs](/labs/web-dev/apis/02-seguranca-e-evolucao-de-apis/).
+- **Versionamento**: rotear `/v1/*` e `/v2/*` para o serviço certo, ou até para a mesma versão do serviço, aplicando uma transformação de payload no meio do caminho, seguindo as estratégias de versionamento já vistas em [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/).
 - **Transformação de payload**: reduzir o payload para o cliente mobile (menos campos, dados mais compactos, pensando em banda e bateria) e manter o payload completo para o cliente web, sem duplicar lógica de negócio no serviço de origem.
 
 Isso mantém os microsserviços de trás enxutos, falando uma única versão do contrato internamente, enquanto o gateway absorve a complexidade de traduzir esse contrato para o que cada geração de cliente espera.
