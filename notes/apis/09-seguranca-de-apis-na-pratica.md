@@ -171,7 +171,7 @@ const hash = await argon2.hash(senha); // argon2id é o padrão da biblioteca
 const ok = await argon2.verify(hash, tentativa);
 ```
 
-O hash protege a senha depois de um vazamento. O endpoint de login precisa de proteções próprias: limitar tentativas por conta e por IP (ver [Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/)), oferecer MFA e responder com uma mensagem genérica como "e-mail ou senha inválidos", sem dizer qual dos dois errou, para não confirmar quais e-mails estão cadastrados.
+O hash protege a senha depois de um vazamento. O endpoint de login precisa de proteções próprias: limitar tentativas por conta e por IP (ver [Rate Limiting](/labs/web-dev/escalabilidade/12-rate-limiting/)), oferecer MFA e responder com uma mensagem genérica como "e-mail ou senha inválidos", sem dizer qual dos dois errou, para não confirmar quais e-mails estão cadastrados.
 
 ## OWASP API Security Top 10 (2023)
 

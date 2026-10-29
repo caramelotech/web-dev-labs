@@ -201,12 +201,12 @@ flowchart TB
 
 A pergunta que guia a evolução é: **onde esse desenho falha quando o tráfego crescer?** No encurtador, a resposta costuma ser a leitura no banco, porque cada redirect vira uma consulta. Só então entra o cache:
 
-1. **Cache Redis** para os códigos mais acessados. O banco continua sendo a fonte da verdade, e o cache só guarda cópias (veja [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)).
+1. **Cache Redis** para os códigos mais acessados. O banco continua sendo a fonte da verdade, e o cache só guarda cópias (veja [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/)).
 2. **Escala horizontal** da aplicação atrás do load balancer, que é fácil porque ela não guarda estado.
 3. **Replicação e read replicas** quando o banco continua sofrendo com leituras que o cache não pegou ([Replicação de Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/)).
 4. **Sharding por `shortCode`** quando o volume de dados ou de escritas passa do que um servidor aguenta ([Stateless e Particionamento](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/)).
-5. **CDN** onde fizer sentido, para aproximar o redirect do usuário ([CDN](/labs/web-dev/escalabilidade/04-cdn/)).
-6. **Rate limiting** para proteger a criação de links contra abuso ([Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/)).
+5. **CDN** onde fizer sentido, para aproximar o redirect do usuário ([CDN](/labs/web-dev/escalabilidade/05-cdn/)).
+6. **Rate limiting** para proteger a criação de links contra abuso ([Rate Limiting](/labs/web-dev/escalabilidade/12-rate-limiting/)).
 
 O critério para aceitar cada peça é conseguir dizer por que ela entrou. Saber cem tecnologias importa menos do que explicar, para cada uma, qual problema medido ela resolve.
 

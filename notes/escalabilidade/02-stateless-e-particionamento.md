@@ -17,7 +17,7 @@ Requisição 2 (ver pedidos) -> cai na Instância B -> B não sabe quem é o usu
 
 **Onde armazenar o que antes ficava na memória:**
 
-- **Sessão do usuário**: mover para um cache compartilhado, como Redis (veja [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)), ou usar um token que carrega o próprio estado, como um JWT assinado, guardado no cliente.
+- **Sessão do usuário**: mover para um cache compartilhado, como Redis (veja [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/)), ou usar um token que carrega o próprio estado, como um JWT assinado, guardado no cliente.
 - **Dados de negócio**: ficam no banco de dados, nunca em variável de instância.
 - **Arquivos enviados pelo usuário**: vão para um storage compartilhado (S3, GCS), nunca no disco local da instância, porque o disco local some ou some se a instância for substituída.
 - **Cache de leitura**: pode até existir localmente por performance, mas precisa ser tratado como descartável, se ele sumir a aplicação continua funcionando, só busca a informação de novo na fonte.
@@ -71,7 +71,7 @@ O grande custo do sharding é que ele quebra algumas operações que eram trivia
 
 Nem todo sistema sofre gargalo do mesmo jeito. Vale separar dois problemas diferentes:
 
-- **Escalar leitura**: a maioria dos sistemas lê muito mais do que escreve (pense num feed de rede social: milhares de pessoas leem o mesmo post, poucas o criam). Esse padrão escala relativamente fácil com [réplicas de leitura](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/) e [cache](/labs/web-dev/escalabilidade/09-cache-e-redis/), porque o mesmo dado pode ser copiado e servido de vários lugares ao mesmo tempo.
+- **Escalar leitura**: a maioria dos sistemas lê muito mais do que escreve (pense num feed de rede social: milhares de pessoas leem o mesmo post, poucas o criam). Esse padrão escala relativamente fácil com [réplicas de leitura](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/) e [cache](/labs/web-dev/escalabilidade/10-cache-e-redis/), porque o mesmo dado pode ser copiado e servido de vários lugares ao mesmo tempo.
 - **Escalar escrita**: escritas não podem simplesmente ser copiadas para vários lugares, cada escrita precisa acontecer em algum lugar que seja a fonte de verdade daquele dado. Por isso escalar escrita costuma exigir sharding: em vez de todas as escritas caírem num único banco, elas são distribuídas entre vários shards, cada um responsável por uma fatia dos dados.
 
 Um erro comum é tentar resolver todo gargalo de escala com mais réplicas de leitura, quando o problema real é volume de escrita. Réplicas de leitura não ajudam em nada quando o sistema está sofrendo porque não consegue processar escritas rápido o suficiente.

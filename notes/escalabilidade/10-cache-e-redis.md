@@ -4,7 +4,7 @@
 
 Cache é uma cópia de um dado guardada num lugar de acesso mais rápido que a fonte original, para evitar refazer um trabalho caro (uma consulta pesada ao banco, uma chamada a uma API externa) toda vez que esse dado é pedido de novo.
 
-**Redis** é o banco de dados em memória mais usado como cache em sistemas web. Por guardar tudo em memória RAM em vez de disco, ele responde em microssegundos, muito mais rápido que uma consulta a um banco relacional tradicional. Além de cache, Redis também é usado para filas simples, contadores, rate limiting (veja [Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/)) e armazenamento de sessão (veja [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/)), mas o uso mais comum de todos é como cache. Esses outros papéis do Redis estão reunidos em [Casos de Uso do Redis](/labs/web-dev/escalabilidade/10-casos-de-uso-do-redis/).
+**Redis** é o banco de dados em memória mais usado como cache em sistemas web. Por guardar tudo em memória RAM em vez de disco, ele responde em microssegundos, muito mais rápido que uma consulta a um banco relacional tradicional. Além de cache, Redis também é usado para filas simples, contadores, rate limiting (veja [Rate Limiting](/labs/web-dev/escalabilidade/12-rate-limiting/)) e armazenamento de sessão (veja [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/)), mas o uso mais comum de todos é como cache. Esses outros papéis do Redis estão reunidos em [Casos de Uso do Redis](/labs/web-dev/escalabilidade/11-casos-de-uso-do-redis/).
 
 Existem dois níveis de cache, e eles não são excludentes:
 

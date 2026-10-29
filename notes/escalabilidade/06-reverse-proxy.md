@@ -57,7 +57,7 @@ O proxy é quem negocia o HTTPS com o cliente, decifra a requisição e repassa 
 
 ### Cache de respostas
 
-Se várias pessoas pedem a mesma página ou o mesmo arquivo, o proxy pode guardar a resposta e servir as próximas cópias sem incomodar o servidor de origem. As regras de quanto tempo guardar seguem os mesmos cabeçalhos HTTP (`Cache-Control`, `ETag`) vistos em [CDN](/labs/web-dev/escalabilidade/04-cdn/).
+Se várias pessoas pedem a mesma página ou o mesmo arquivo, o proxy pode guardar a resposta e servir as próximas cópias sem incomodar o servidor de origem. As regras de quanto tempo guardar seguem os mesmos cabeçalhos HTTP (`Cache-Control`, `ETag`) vistos em [CDN](/labs/web-dev/escalabilidade/05-cdn/).
 
 ### Compressão
 
@@ -75,11 +75,11 @@ flowchart LR
     P -->|blog.loja.com| B[Blog]
 ```
 
-Quando o proxy manda o mesmo caminho para **várias instâncias iguais** de um serviço, ele já está fazendo o papel de [load balancer](/labs/web-dev/escalabilidade/06-load-balancer/). E quando passa a aplicar autenticação e rate limiting por rota de API, está virando um [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/). Essa sobreposição é comum e está detalhada na comparação dentro da nota de API Gateway.
+Quando o proxy manda o mesmo caminho para **várias instâncias iguais** de um serviço, ele já está fazendo o papel de [load balancer](/labs/web-dev/escalabilidade/07-load-balancer/). E quando passa a aplicar autenticação e rate limiting por rota de API, está virando um [API Gateway](/labs/web-dev/escalabilidade/09-api-gateway/). Essa sobreposição é comum e está detalhada na comparação dentro da nota de API Gateway.
 
 ### Relação com CDN
 
-Uma [CDN](/labs/web-dev/escalabilidade/04-cdn/) é, no fundo, um reverse proxy com cache espalhado em centenas de pontos pelo mundo. A ideia é a mesma (ficar na frente da origem, responder no lugar dela quando possível), a diferença é a escala geográfica: a CDN coloca esse proxy perto do usuário, enquanto um NGINX na frente da sua aplicação fica perto dos servidores.
+Uma [CDN](/labs/web-dev/escalabilidade/05-cdn/) é, no fundo, um reverse proxy com cache espalhado em centenas de pontos pelo mundo. A ideia é a mesma (ficar na frente da origem, responder no lugar dela quando possível), a diferença é a escala geográfica: a CDN coloca esse proxy perto do usuário, enquanto um NGINX na frente da sua aplicação fica perto dos servidores.
 
 ## Ferramentas comuns
 

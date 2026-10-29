@@ -101,7 +101,7 @@ Dica de uso: para um dicionário de chaves dinâmicas, prefira `Map` ao objeto s
 
 Fora do código de aplicação, a ideia aparece em vários lugares deste lab:
 
-- **Cache:** um cache é, na essência, uma tabela chave-valor. A política LRU descrita em [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/) costuma ser implementada combinando uma tabela hash (para achar o item rápido) com uma lista duplamente ligada (para saber qual foi usado há mais tempo).
+- **Cache:** um cache é, na essência, uma tabela chave-valor. A política LRU descrita em [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/) costuma ser implementada combinando uma tabela hash (para achar o item rápido) com uma lista duplamente ligada (para saber qual foi usado há mais tempo).
 - **Distribuição de dados:** decidir em qual servidor uma chave mora é aplicar `hash(chave)` e mapear para um nó. A nota de [Consistent Hashing e Gossip](/labs/web-dev/sistemas-distribuidos/04-consistent-hashing-e-gossip/) mostra o problema que essa ideia simples tem quando servidores entram e saem.
 - **Encurtador de URL:** o mapeamento `código -> URL` é uma tabela hash em grande escala (veja [Encurtador de URL](/labs/web-dev/estudos-de-caso/01-encurtador-de-url/)).
 

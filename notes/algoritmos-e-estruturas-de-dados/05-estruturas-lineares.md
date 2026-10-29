@@ -63,7 +63,7 @@ class ListaLigada {
 }
 ```
 
-Existe também a lista **duplamente ligada**, em que cada nó aponta para o próximo e para o anterior. Ela permite remover um nó em O(1) quando você já tem a referência dele, e é a peça que faz certos caches funcionarem (veja a política LRU em [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)).
+Existe também a lista **duplamente ligada**, em que cada nó aponta para o próximo e para o anterior. Ela permite remover um nó em O(1) quando você já tem a referência dele, e é a peça que faz certos caches funcionarem (veja a política LRU em [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/)).
 
 Na prática de JavaScript, a lista ligada raramente é a melhor escolha: o array é mais simples, e por percorrer memória contínua costuma ser mais rápido. Ela vale mais como conceito, porque aparece dentro de outras estruturas (filas, caches, tabelas hash).
 

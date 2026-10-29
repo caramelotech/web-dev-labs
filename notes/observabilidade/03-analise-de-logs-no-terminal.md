@@ -121,7 +121,7 @@ Um IP com 30 vezes mais requisições que o segundo colocado merece um olhar. Po
 grep -F '203.0.113.7' /var/log/nginx/access.log | awk '{print $9, $7}' | sort | uniq -c | sort -rn | head
 ```
 
-Se a resposta for milhares de `401 /login`, é força bruta, e um [rate limiting](/labs/web-dev/escalabilidade/11-rate-limiting/) na borda teria segurado boa parte disso.
+Se a resposta for milhares de `401 /login`, é força bruta, e um [rate limiting](/labs/web-dev/escalabilidade/12-rate-limiting/) na borda teria segurado boa parte disso.
 
 ## jq para logs em JSON
 

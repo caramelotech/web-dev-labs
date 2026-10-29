@@ -10,7 +10,7 @@ Até aqui cada nota deste lab tratou uma técnica de banco de dados isoladamente
 | Materialized Views | consulta cara recalculada toda hora           | [Views e Triggers](/labs/web-dev/banco-de-dados/03-views-e-triggers/)                                 |
 | Vertical Scaling   | servidor sem capacidade (CPU/RAM/disco)       | [Escalabilidade](/labs/web-dev/escalabilidade/01-escalabilidade/)                                     |
 | Denormalization    | leitura lenta por excesso de `JOIN`           | ver seção abaixo                                                                                      |
-| Database Caching   | mesma consulta repetida com frequência        | [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)                                       |
+| Database Caching   | mesma consulta repetida com frequência        | [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/)                                       |
 | Replication        | leitura concentrada num único servidor        | [Replicação de Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/)         |
 | Sharding           | volume/tráfego que não cabe numa máquina      | [Stateless, Particionamento e Sharding](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/) |
 | Partitioning       | tabela grande demais para manter numa peça só | ver seção abaixo                                                                                      |
@@ -97,6 +97,8 @@ A ordem de investimento que costuma fazer mais sentido, do mais barato para o ma
 5. **Denormalization**, **Partitioning** ou **Sharding**: mudam o modelo de dados ou a arquitetura de armazenamento, então só compensam quando as opções mais baratas já foram esgotadas e o gargalo continua.
 
 Pular direto para sharding ou desnormalização sem antes checar índice e query é o erro mais comum: na maioria dos casos, uma consulta mal escrita ou um índice faltando explica o problema inteiro, e nenhuma das técnicas mais caras seria necessária.
+
+Quando o problema deixa de ser uma consulta lenta e passa a ser o banco inteiro chegando no limite de capacidade, a sequência continua em [Escalando o Banco de Dados Passo a Passo](/labs/web-dev/escalabilidade/04-escalando-o-banco-de-dados/), que ordena os degraus pelo quanto cada um muda o código da aplicação e mostra como Figma e Notion chegaram ao sharding.
 
 ## Referências
 

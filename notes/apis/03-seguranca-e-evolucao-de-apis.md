@@ -86,7 +86,7 @@ O ponto fraco do RBAC é que ele só olha _quem você é_ (sua função). Regras
 
 Na prática, muitos sistemas combinam os dois: RBAC para o grosso ("essa função acessa esse módulo") e uma checagem de atributo para o fino ("mas só os dados da própria loja").
 
-Sobre **onde** a decisão acontece: o [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/) costuma validar o token e barrar o que é óbvio (função sem acesso àquela rota). Regras que dependem dos dados (o pedido é dessa loja?) só o serviço dono do dado consegue avaliar, então a checagem final fica lá. Não confie apenas no gateway: um serviço interno chamado direto por outro serviço também precisa validar. As funções do usuário costumam viajar dentro do token (claims do JWT), como visto em [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/08-sso-oauth-oidc-saml/).
+Sobre **onde** a decisão acontece: o [API Gateway](/labs/web-dev/escalabilidade/09-api-gateway/) costuma validar o token e barrar o que é óbvio (função sem acesso àquela rota). Regras que dependem dos dados (o pedido é dessa loja?) só o serviço dono do dado consegue avaliar, então a checagem final fica lá. Não confie apenas no gateway: um serviço interno chamado direto por outro serviço também precisa validar. As funções do usuário costumam viajar dentro do token (claims do JWT), como visto em [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/08-sso-oauth-oidc-saml/).
 
 ### Comunicação segura: HTTPS e mTLS
 
@@ -140,7 +140,7 @@ O `refresh token` existe porque access tokens costumam ter vida curta (minutos a
 
 ### Segurança no API Gateway
 
-O gateway é o ponto natural para concentrar autenticação, autorização de alto nível e rate limiting, porque toda requisição externa passa por ele antes de chegar em qualquer serviço. Isso evita que cada microsserviço reimplemente validação de token do zero. Esse papel do gateway é aprofundado em [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/), incluindo a diferença entre o que o gateway resolve e o que um load balancer resolve.
+O gateway é o ponto natural para concentrar autenticação, autorização de alto nível e rate limiting, porque toda requisição externa passa por ele antes de chegar em qualquer serviço. Isso evita que cada microsserviço reimplemente validação de token do zero. Esse papel do gateway é aprofundado em [API Gateway](/labs/web-dev/escalabilidade/09-api-gateway/), incluindo a diferença entre o que o gateway resolve e o que um load balancer resolve.
 
 Vale reforçar um ponto: o gateway validar o token não elimina a necessidade de autorização mais granular dentro de cada serviço. O gateway normalmente confirma "esse token é válido e pertence a alguém autenticado", mas a regra de negócio específica ("esse usuário pode editar esse pedido em particular") costuma viver no serviço dono do recurso.
 
@@ -173,7 +173,7 @@ Prevenção nunca é 100% eficaz, então detectar rápido quando algo deu errado
 | Exposição excessiva de dados             | O endpoint devolve o objeto inteiro (incluindo campos sensíveis como senha com hash, CPF, dados internos) e deixa o filtro do que mostrar a cargo do cliente, em vez de já retornar só o necessário                                                             |
 | Man-in-the-middle                        | Alguém intercepta a comunicação entre cliente e servidor para ler ou alterar dados em trânsito; mitigado com HTTPS/mTLS e, em casos críticos, certificate pinning                                                                                               |
 | Injeção                                  | Entrada do usuário é interpretada como código ou comando (SQL injection, command injection) porque a aplicação concatena a entrada direto numa query ou comando em vez de tratá-la como dado                                                                    |
-| DoS (Denial of Service)                  | Volume de requisições (intencional ou não) suficiente para esgotar os recursos do serviço e tirá-lo do ar; mitigado com rate limiting na borda, aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/)                                  |
+| DoS (Denial of Service)                  | Volume de requisições (intencional ou não) suficiente para esgotar os recursos do serviço e tirá-lo do ar; mitigado com rate limiting na borda, aprofundado em [Rate Limiting](/labs/web-dev/escalabilidade/12-rate-limiting/)                                  |
 | Dependências inseguras                   | Bibliotecas de terceiros com vulnerabilidades conhecidas (ou comprometidas por um ataque de supply chain) acabam rodando dentro da própria aplicação; mitigado mantendo dependências atualizadas e rodando scanners (`npm audit`, Dependabot, Snyk) no pipeline |
 
 ## Por que evoluir APIs

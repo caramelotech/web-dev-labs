@@ -35,7 +35,7 @@ Dentro de um provedor de IaaS/PaaS, os serviços se organizam em algumas famíli
 | Observabilidade       | Métricas, logs e alertas                              | CloudWatch / Cloud Monitoring                              |
 | Identidade (IAM)      | Quem pode fazer o quê                                 | IAM / IAM                                                  |
 
-Quase toda peça deste lab tem uma versão "as a service": em vez de instalar e operar Redis, você usa um [cache gerenciado](/labs/web-dev/escalabilidade/09-cache-e-redis/); em vez de administrar um Postgres, usa um [banco gerenciado](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/); em vez de manter um cluster Kafka, usa mensageria gerenciada. O custo é sempre o mesmo trade-off: menos trabalho operacional, mais dependência do provedor e, em geral, conta mais cara por unidade.
+Quase toda peça deste lab tem uma versão "as a service": em vez de instalar e operar Redis, você usa um [cache gerenciado](/labs/web-dev/escalabilidade/10-cache-e-redis/); em vez de administrar um Postgres, usa um [banco gerenciado](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/); em vez de manter um cluster Kafka, usa mensageria gerenciada. O custo é sempre o mesmo trade-off: menos trabalho operacional, mais dependência do provedor e, em geral, conta mais cara por unidade.
 
 ## Storage: block, file e object
 
@@ -71,7 +71,7 @@ Os trade-offs são reais:
 - **Limite de tempo e recursos**: função não serve para processo longo; costuma ter teto de alguns minutos
 - **Lock-in**: o código acaba amarrado ao formato de evento e às integrações daquele provedor
 
-**Edge computing** é rodar código não num data center central, mas nos pontos de presença espalhados pelo mundo (a mesma malha que a [CDN](/labs/web-dev/escalabilidade/04-cdn/) usa para servir conteúdo). Como o código roda fisicamente perto do usuário, a latência cai bastante. Serve bem para tarefas curtas no caminho da requisição: checar autenticação, redirecionar, escolher a variante de um teste A/B, personalizar um cabeçalho. Não serve para lógica pesada ou acesso a banco central, que continua longe.
+**Edge computing** é rodar código não num data center central, mas nos pontos de presença espalhados pelo mundo (a mesma malha que a [CDN](/labs/web-dev/escalabilidade/05-cdn/) usa para servir conteúdo). Como o código roda fisicamente perto do usuário, a latência cai bastante. Serve bem para tarefas curtas no caminho da requisição: checar autenticação, redirecionar, escolher a variante de um teste A/B, personalizar um cabeçalho. Não serve para lógica pesada ou acesso a banco central, que continua longe.
 
 ## Escolher provedor
 

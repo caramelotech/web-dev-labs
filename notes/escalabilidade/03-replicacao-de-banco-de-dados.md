@@ -41,7 +41,7 @@ Read replicas resolvem o gargalo de leitura, mas não resolvem o gargalo de escr
 | Partitioning  | Linhas de uma tabela, mas na mesma instância | Performance de consulta/manutenção  |
 | Federation    | Tabelas/domínios inteiros                    | Escrita e isolamento entre domínios |
 
-Na prática, sistemas grandes combinam essas técnicas: federation para separar domínios de negócio, sharding dentro de um domínio que cresceu demais, e read replicas em cada shard para absorver leitura.
+Na prática, sistemas grandes combinam essas técnicas: federation para separar domínios de negócio, sharding dentro de um domínio que cresceu demais, e read replicas em cada shard para absorver leitura. Em que ordem adotar cada uma está em [Escalando o Banco de Dados Passo a Passo](/labs/web-dev/escalabilidade/04-escalando-o-banco-de-dados/).
 
 ## Database bottlenecks
 

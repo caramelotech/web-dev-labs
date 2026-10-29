@@ -30,7 +30,7 @@ Detalhado em [NoSQL](/labs/web-dev/banco-de-dados/11-nosql/). Relacional dá con
 
 ### Cache vs consistência
 
-Todo cache é, por definição, uma cópia que pode ficar desatualizada em relação à fonte de verdade. Cachear mais agressivamente (TTL mais longo, invalidação mais preguiçosa) melhora performance e reduz carga no banco, mas aumenta a chance de servir dado velho. Ajustar TTL e estratégia de invalidação (veja [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)) é literalmente negociar esse trade-off.
+Todo cache é, por definição, uma cópia que pode ficar desatualizada em relação à fonte de verdade. Cachear mais agressivamente (TTL mais longo, invalidação mais preguiçosa) melhora performance e reduz carga no banco, mas aumenta a chance de servir dado velho. Ajustar TTL e estratégia de invalidação (veja [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/)) é literalmente negociar esse trade-off.
 
 ### Armazenamento vs computação
 
@@ -57,7 +57,7 @@ Duas perguntas costumam decidir:
 - **Quantas leituras existem para cada escrita?** Se um dado é escrito uma vez e lido milhares de vezes (o perfil de um produto, o número de seguidores), pré-computar compensa fácil. Se é escrito o tempo todo e lido raramente, você vai gastar recurso atualizando uma cópia que quase ninguém consulta.
 - **Quanto atraso o dado tolera?** Um dashboard que mostra as vendas de ontem aceita um `REFRESH` por hora sem problema. O saldo de uma conta bancária na hora do saque, não.
 
-Na prática o meio-termo é muito comum: calcular sob demanda e guardar o resultado num cache com TTL (veja [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)). A primeira leitura paga o cálculo, as seguintes reaproveitam, e o TTL define o atraso máximo aceito. É por isso que esse trade-off anda junto com o de cache vs consistência logo acima: no fundo, toda cópia pré-calculada é um tipo de cache.
+Na prática o meio-termo é muito comum: calcular sob demanda e guardar o resultado num cache com TTL (veja [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/)). A primeira leitura paga o cálculo, as seguintes reaproveitam, e o TTL define o atraso máximo aceito. É por isso que esse trade-off anda junto com o de cache vs consistência logo acima: no fundo, toda cópia pré-calculada é um tipo de cache.
 
 ### Síncrono vs assíncrono
 

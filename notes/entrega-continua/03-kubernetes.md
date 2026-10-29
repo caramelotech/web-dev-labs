@@ -37,7 +37,7 @@ Automatizar a orquestração desses recursos traz um conjunto de ganhos que seri
 - **Auto-scaling**: o número de Pods de um Deployment pode crescer ou diminuir automaticamente com base em métricas como uso de CPU, adaptando a capacidade disponível à carga real de tráfego.
 - **Self-healing**: se um container trava, para de responder ou o Pod inteiro morre, o Kubernetes detecta e sobe uma substituição automaticamente, sem esperar alguém perceber o problema.
 - **Rolling updates e rollbacks**: uma nova versão da aplicação é implantada gradualmente, trocando Pods antigos por novos aos poucos, sem derrubar o serviço; se a nova versão apresentar problema, um rollback volta para a versão anterior com o mesmo mecanismo.
-- **Service discovery e load balancing nativos**: o Kubernetes resolve, por baixo dos panos, o problema de saber onde cada Pod está rodando e distribuir tráfego entre eles (aprofundado em [Service Discovery](/labs/web-dev/escalabilidade/07-service-discovery/)), sem exigir nenhuma configuração extra da aplicação.
+- **Service discovery e load balancing nativos**: o Kubernetes resolve, por baixo dos panos, o problema de saber onde cada Pod está rodando e distribuir tráfego entre eles (aprofundado em [Service Discovery](/labs/web-dev/escalabilidade/08-service-discovery/)), sem exigir nenhuma configuração extra da aplicação.
 - **Otimização de recursos**: o agendador do Kubernetes decide em qual nó (servidor) cada Pod deve rodar considerando CPU e memória disponíveis, encaixando as cargas de trabalho de forma mais eficiente do que uma distribuição manual.
 - **Alta disponibilidade**: réplicas de um mesmo serviço podem ser espalhadas por diferentes nós ou zonas, então a falha de uma máquina isolada não derruba o serviço inteiro.
 

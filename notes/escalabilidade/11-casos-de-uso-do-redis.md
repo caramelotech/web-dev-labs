@@ -1,6 +1,6 @@
 # Casos de Uso do Redis
 
-Quase todo mundo conhece o Redis como cache, e é isso que a nota de [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/) cobre a fundo. Mas cache é só o uso mais popular. O mesmo Redis que guarda respostas de consulta também serve de armazenamento de sessão, contador de rate limiting, placar de jogo em tempo real, fila de tarefas e canal de notificação. Esta nota passa por esses outros papéis e mostra qual estrutura de dados sustenta cada um.
+Quase todo mundo conhece o Redis como cache, e é isso que a nota de [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/) cobre a fundo. Mas cache é só o uso mais popular. O mesmo Redis que guarda respostas de consulta também serve de armazenamento de sessão, contador de rate limiting, placar de jogo em tempo real, fila de tarefas e canal de notificação. Esta nota passa por esses outros papéis e mostra qual estrutura de dados sustenta cada um.
 
 ## Redis é mais que cache
 
@@ -60,7 +60,7 @@ Esse mesmo tema aparece pelo lado da aplicação em [Stateless, Particionamento 
 
 ## Rate limiting
 
-Rate limiting é limitar quantas requisições uma origem (um usuário, um IP, uma API key) pode fazer num intervalo. Os algoritmos por trás disso (Token Bucket, Sliding Window e companhia) estão detalhados na nota de [Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/). Aqui interessa o motivo de o Redis ser a peça usada para implementar quase todos eles.
+Rate limiting é limitar quantas requisições uma origem (um usuário, um IP, uma API key) pode fazer num intervalo. Os algoritmos por trás disso (Token Bucket, Sliding Window e companhia) estão detalhados na nota de [Rate Limiting](/labs/web-dev/escalabilidade/12-rate-limiting/). Aqui interessa o motivo de o Redis ser a peça usada para implementar quase todos eles.
 
 Dois motivos:
 

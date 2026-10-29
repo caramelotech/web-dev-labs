@@ -80,7 +80,7 @@ sequenceDiagram
     Note over C: usa a cópia que já tinha
 ```
 
-A `ETag` é uma "impressão digital" da versão do recurso. Na segunda requisição o cliente pergunta "mudou desde a versão v12?". Se não mudou, o servidor responde 304 sem corpo e economiza a banda de mandar tudo de novo. O mesmo vale com datas, usando `Last-Modified` e `If-Modified-Since`. Como esses headers conversam com CDN e proxies está em [CDN](/labs/web-dev/escalabilidade/04-cdn/).
+A `ETag` é uma "impressão digital" da versão do recurso. Na segunda requisição o cliente pergunta "mudou desde a versão v12?". Se não mudou, o servidor responde 304 sem corpo e economiza a banda de mandar tudo de novo. O mesmo vale com datas, usando `Last-Modified` e `If-Modified-Since`. Como esses headers conversam com CDN e proxies está em [CDN](/labs/web-dev/escalabilidade/05-cdn/).
 
 ## 4xx: erro do cliente
 
@@ -119,7 +119,7 @@ HTTP/1.1 429 Too Many Requests
 Retry-After: 30
 ```
 
-Os algoritmos que decidem quando devolver 429 estão em [Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/).
+Os algoritmos que decidem quando devolver 429 estão em [Rate Limiting](/labs/web-dev/escalabilidade/12-rate-limiting/).
 
 ## 5xx: erro do servidor
 

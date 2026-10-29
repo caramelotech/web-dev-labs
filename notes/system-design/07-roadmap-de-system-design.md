@@ -25,7 +25,7 @@ Quem usa o sistema, quando e com que frequência. Esses números viram a carga q
 | Tipos de usuário, roles e demografia | Em breve                                                                               |
 | Picos (horário do dia, dias do ano)  | [Capacity Planning e Capacity Math](/labs/web-dev/system-design/03-capacity-planning/) |
 | Frequência de uso e duração média    | [Capacity Planning e Capacity Math](/labs/web-dev/system-design/03-capacity-planning/) |
-| Web vs mobile                        | [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/) (BFF por tipo de cliente)  |
+| Web vs mobile                        | [API Gateway](/labs/web-dev/escalabilidade/09-api-gateway/) (BFF por tipo de cliente)  |
 
 ## 03. Modelo de dados
 
@@ -52,7 +52,7 @@ Como o sistema conversa com o mundo e como se protege.
 | SOAP                             | [Classificação de APIs por Público](/labs/web-dev/apis/05-classificacao-de-apis-por-publico/)                                                                   |
 | REST                             | [HTTP, APIs e REST](/labs/web-dev/apis/01-http-rest/)                                                                                                           |
 | gRPC e GraphQL                   | [Estilos de Comunicação de API](/labs/web-dev/apis/04-estilos-de-comunicacao/)                                                                                  |
-| Rate limiting                    | [Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/)                                                                                                 |
+| Rate limiting                    | [Rate Limiting](/labs/web-dev/escalabilidade/12-rate-limiting/)                                                                                                 |
 | Ataques: DoS e MITM              | [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/) (Ameaças comuns)                                                            |
 | Ataques: DDoS e XSS              | Em breve                                                                                                                                                        |
 | Autenticação vs autorização, JWT | [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/) e [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/08-sso-oauth-oidc-saml/) |
@@ -79,8 +79,8 @@ Onde o sistema roda em relação a quem o usa, e o que a distância custa.
 | Tópico           | Onde estudar                                                                                                                               |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | Regiões          | [Disponibilidade](/labs/web-dev/resiliencia/03-disponibilidade/) (multi-região e disaster recovery)                                        |
-| CDN              | [CDN](/labs/web-dev/escalabilidade/04-cdn/)                                                                                                |
-| Distância e RTT  | [CDN](/labs/web-dev/escalabilidade/04-cdn/) e [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/) |
+| CDN              | [CDN](/labs/web-dev/escalabilidade/05-cdn/)                                                                                                |
+| Distância e RTT  | [CDN](/labs/web-dev/escalabilidade/05-cdn/) e [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/) |
 | Latência de rede | [Latência, Throughput e Performance](/labs/web-dev/system-design/04-latencia-e-performance/)                                               |
 
 ## 07. Proxies
@@ -89,10 +89,10 @@ O que fica entre o cliente e os servidores.
 
 | Tópico                                           | Onde estudar                                                                                                                 |
 | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------- |
-| Reverse proxy (API Gateway, application gateway) | [Reverse Proxy](/labs/web-dev/escalabilidade/05-reverse-proxy/), [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/) |
+| Reverse proxy (API Gateway, application gateway) | [Reverse Proxy](/labs/web-dev/escalabilidade/06-reverse-proxy/), [API Gateway](/labs/web-dev/escalabilidade/09-api-gateway/) |
 | Forward proxy                                    | Em breve                                                                                                                     |
-| Load balancers e estratégias                     | [Load Balancer](/labs/web-dev/escalabilidade/06-load-balancer/)                                                              |
-| Layer 4 vs layer 7                               | [Load Balancer](/labs/web-dev/escalabilidade/06-load-balancer/)                                                              |
+| Load balancers e estratégias                     | [Load Balancer](/labs/web-dev/escalabilidade/07-load-balancer/)                                                              |
+| Layer 4 vs layer 7                               | [Load Balancer](/labs/web-dev/escalabilidade/07-load-balancer/)                                                              |
 
 ## 08. Disponibilidade e microsserviços
 
@@ -112,10 +112,10 @@ Como evitar trabalho repetido e proteger o banco.
 
 | Tópico                               | Onde estudar                                                                                       |
 | ------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| Write-through e write-behind         | [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/) (Estratégias de cache)             |
+| Write-through e write-behind         | [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/) (Estratégias de cache)             |
 | Algoritmos de hash                   | [Consistent Hashing e Gossip](/labs/web-dev/sistemas-distribuidos/04-consistent-hashing-e-gossip/) |
-| Políticas de eviction (LRU e outras) | [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/) (Políticas de eviction)            |
-| Cache hit e miss                     | [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/)                                    |
+| Políticas de eviction (LRU e outras) | [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/) (Políticas de eviction)            |
+| Cache hit e miss                     | [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/)                                    |
 
 ## 10. Mensageria
 
@@ -136,11 +136,11 @@ Decorar dezenas de conceitos não ajuda quando aparece um problema novo. O camin
 
 | Se o problema é...                               | Comece por                      | Notas do lab                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
 | ------------------------------------------------ | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Muita carga ou risco de queda                    | Escalabilidade e confiabilidade | [Load Balancer](/labs/web-dev/escalabilidade/06-load-balancer/), [Cache e Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/), [Replicação de Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/), [Stateless e Particionamento](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/), [Rate Limiting](/labs/web-dev/escalabilidade/11-rate-limiting/), [Timeout, Retry, Circuit Breaker e Bulkhead](/labs/web-dev/resiliencia/01-timeout-retry-circuit-breaker-e-bulkhead/) |
+| Muita carga ou risco de queda                    | Escalabilidade e confiabilidade | [Load Balancer](/labs/web-dev/escalabilidade/07-load-balancer/), [Cache e Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/), [Replicação de Banco de Dados](/labs/web-dev/escalabilidade/03-replicacao-de-banco-de-dados/), [Stateless e Particionamento](/labs/web-dev/escalabilidade/02-stateless-e-particionamento/), [Rate Limiting](/labs/web-dev/escalabilidade/12-rate-limiting/), [Timeout, Retry, Circuit Breaker e Bulkhead](/labs/web-dev/resiliencia/01-timeout-retry-circuit-breaker-e-bulkhead/) |
 | Como as partes conversam                         | Rede e comunicação              | [HTTP, APIs e REST](/labs/web-dev/apis/01-http-rest/), [Estilos de Comunicação de API](/labs/web-dev/apis/04-estilos-de-comunicacao/), [Filas e Mensageria](/labs/web-dev/mensageria/01-filas-e-mensageria/), [Arquitetura Orientada a Eventos](/labs/web-dev/mensageria/02-arquitetura-orientada-a-eventos/)                                                                                                                                                                                                       |
 | Onde e como guardar os dados                     | Dados e sistemas distribuídos   | [SQL](/labs/web-dev/banco-de-dados/01-sql/), [NoSQL](/labs/web-dev/banco-de-dados/11-nosql/), [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/), [ACID](/labs/web-dev/banco-de-dados/04-acid/), [Teorema de CAP](/labs/web-dev/banco-de-dados/05-teorema-de-cap/)                                                                                                                                                                                                       |
 | Quem pode acessar e como enxergar o que acontece | Segurança e observabilidade     | [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/), [SSO, OAuth 2.0, OIDC e SAML](/labs/web-dev/apis/08-sso-oauth-oidc-saml/), [Logs, Metrics e Traces](/labs/web-dev/observabilidade/01-logs-metrics-e-traces/)                                                                                                                                                                                                                                                                   |
-| Como organizar o código e os serviços            | Arquitetura e design de API     | [Fundamentos de Microsserviços](/labs/web-dev/microsservicos/01-fundamentos-de-microsservicos/), [API Gateway](/labs/web-dev/escalabilidade/08-api-gateway/), [Service Discovery](/labs/web-dev/escalabilidade/07-service-discovery/)                                                                                                                                                                                                                                                                               |
+| Como organizar o código e os serviços            | Arquitetura e design de API     | [Fundamentos de Microsserviços](/labs/web-dev/microsservicos/01-fundamentos-de-microsservicos/), [API Gateway](/labs/web-dev/escalabilidade/09-api-gateway/), [Service Discovery](/labs/web-dev/escalabilidade/08-service-discovery/)                                                                                                                                                                                                                                                                               |
 | Como colocar no ar e recuperar                   | Infraestrutura e deployment     | [CI/CD para Microsserviços](/labs/web-dev/entrega-continua/04-ci-cd-para-microsservicos/), [Infraestrutura como Código](/labs/web-dev/entrega-continua/07-infraestrutura-como-codigo/), [Docker](/labs/web-dev/entrega-continua/01-docker/), [Kubernetes](/labs/web-dev/entrega-continua/03-kubernetes/), [Categorias de Serviço em Nuvem](/labs/web-dev/entrega-continua/06-categorias-de-servico-em-nuvem/), [Disponibilidade e Disaster Recovery](/labs/web-dev/resiliencia/03-disponibilidade/)                 |
 
 ## Extras

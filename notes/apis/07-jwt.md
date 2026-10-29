@@ -163,7 +163,7 @@ Na prática, isso significa:
 Não existe solução sem custo, mas existem formas de diminuir a janela:
 
 - **Access tokens curtos.** Com 5 a 15 minutos de vida, um token roubado tem pouco tempo de uso, e uma mudança de permissão vale no máximo nesse prazo. O preço é renovar com mais frequência, e é para isso que existe o refresh token.
-- **Denylist por `jti`.** Para os casos que não podem esperar (conta comprometida, desligamento de funcionário), guarde o `jti` dos tokens revogados num armazenamento rápido como o [Redis](/labs/web-dev/escalabilidade/09-cache-e-redis/), com expiração igual à do token. A API consulta a lista a cada requisição. Sim, isso traz de volta um pouco de estado, mas é uma consulta pequena e só a lista dos revogados, não de todas as sessões.
+- **Denylist por `jti`.** Para os casos que não podem esperar (conta comprometida, desligamento de funcionário), guarde o `jti` dos tokens revogados num armazenamento rápido como o [Redis](/labs/web-dev/escalabilidade/10-cache-e-redis/), com expiração igual à do token. A API consulta a lista a cada requisição. Sim, isso traz de volta um pouco de estado, mas é uma consulta pequena e só a lista dos revogados, não de todas as sessões.
 - **Decisões sensíveis no dono do dado.** A claim `roles` serve para filtrar o óbvio, mas "este usuário pode estornar este pagamento agora?" deve ser checado pelo serviço dono do recurso, com o estado atual do banco, e não confiando só no que estava no token. A divisão entre o que o gateway barra e o que o serviço decide está em [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/).
 
 ## Refresh token com segurança
