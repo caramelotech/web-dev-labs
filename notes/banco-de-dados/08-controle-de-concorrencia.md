@@ -257,6 +257,77 @@ Isso reforça, com um exemplo concreto, a mesma tabela de trade-off já vista em
 
 Quando o recurso compartilhado não vive dentro do banco de dados (por exemplo, um arquivo, uma fila, ou um passo de um processo que precisa rodar só uma vez entre várias instâncias), é preciso um mecanismo de lock que funcione entre máquinas diferentes, coordenado por um serviço externo (Redis, ZooKeeper, etcd, por exemplo). A ideia é a mesma do mutex (só uma execução por vez na seção crítica), mas implementada numa infraestrutura compartilhada em vez de memória local, e com tratamento extra para o caso de uma instância travar o lock e nunca liberar (normalmente resolvido com um tempo de expiração automática do lock).
 
+## Deadlock
+
+Locks resolvem a race condition, mas trazem um problema novo. **Deadlock** é quando duas transações ficam esperando uma pela outra: cada uma segura um lock que a outra precisa, e nenhuma das duas consegue continuar. É como dois carros que entram ao mesmo tempo numa ponte de mão única, um de cada lado 🚗🚗
+
+### Exemplo: transferências em sentidos opostos
+
+Duas transferências acontecem ao mesmo tempo: a transação A move R$ 10 da conta 1 para a conta 2, e a transação B move R$ 20 da conta 2 para a conta 1. Cada uma começa travando a conta de origem:
+
+```sql
+-- Transação A                                -- Transação B
+BEGIN;                                         BEGIN;
+UPDATE account SET balance = balance - 10      UPDATE account SET balance = balance - 20
+WHERE id = 1;  -- trava a conta 1              WHERE id = 2;  -- trava a conta 2
+
+UPDATE account SET balance = balance + 10      UPDATE account SET balance = balance + 20
+WHERE id = 2;  -- espera B soltar a conta 2    WHERE id = 1;  -- espera A soltar a conta 1
+```
+
+```mermaid
+flowchart LR
+    A[Transação A] -- segura --> C1[(Conta 1)]
+    B[Transação B] -- segura --> C2[(Conta 2)]
+    A -. espera .-> C2
+    B -. espera .-> C1
+```
+
+A espera B, B espera A, e o ciclo está fechado. Repare que nenhuma das duas fez nada de errado sozinha. O problema é a **ordem** em que os locks foram pedidos.
+
+### As quatro condições
+
+Em 1971, Edward Coffman descreveu quatro condições que precisam acontecer **todas juntas** para existir deadlock:
+
+1. **Exclusão mútua**: o recurso só pode ser usado por um de cada vez (é a definição de um lock exclusivo).
+2. **Segurar e esperar**: quem já tem um lock pede outro sem soltar o primeiro.
+3. **Sem preempção**: ninguém tira o lock de quem está com ele à força, só o dono solta.
+4. **Espera circular**: existe um ciclo, A espera B, que espera A (ou A espera B, que espera C, que espera A).
+
+Basta quebrar uma delas para o deadlock deixar de ser possível. Na prática, a mais fácil de quebrar é a quarta.
+
+### Como o banco reage
+
+Bancos relacionais como PostgreSQL e MySQL (InnoDB) **detectam** o deadlock sozinhos. No PostgreSQL, quando uma transação passa mais que `deadlock_timeout` (1 segundo por padrão) esperando um lock, o banco verifica se existe um ciclo de espera. Se existe, ele aborta uma das transações para liberar a outra:
+
+```text
+ERROR:  deadlock detected
+DETAIL:  Process 4821 waits for ShareLock on transaction 9012; blocked by process 4822.
+         Process 4822 waits for ShareLock on transaction 9011; blocked by process 4821.
+```
+
+O código desse erro é `40P01`. A documentação do PostgreSQL avisa que não dá para prever qual das duas transações vai ser abortada, então a aplicação precisa estar pronta para receber esse erro em qualquer uma delas.
+
+Fora do banco a história é outra. Um mutex na aplicação ou um lock distribuído sem expiração não tem ninguém olhando o ciclo: as threads ficam presas para sempre, sem erro e sem log, até alguém reiniciar o processo.
+
+### Como prevenir
+
+- **Ordem global de aquisição**: todo código que trava mais de um registro trava sempre na mesma ordem, por exemplo, do menor `id` para o maior. No exemplo das transferências, as duas transações travariam primeiro a conta 1 e depois a conta 2, então B esperaria A terminar em vez de formar um ciclo:
+
+  ```sql
+  SELECT id FROM account
+  WHERE id IN (1, 2)
+  ORDER BY id
+  FOR UPDATE;
+  ```
+
+- **Transações curtas**: quanto menos tempo um lock fica preso, menor a janela para outra transação pedir o mesmo recurso. Nada de chamada HTTP para outro serviço no meio de uma transação aberta.
+- **`lock_timeout`**: limita quanto tempo uma transação espera por um lock antes de desistir com erro (`SET lock_timeout = '2s';`). Não evita o deadlock, mas evita esperas longas em geral.
+- **Retry da transação abortada**: como o banco resolve o deadlock abortando uma transação, tratar o erro `40P01` repetindo a transação inteira (com backoff) costuma ser suficiente quando o deadlock é raro. Se ele é frequente, o problema é a ordem dos locks e o retry só esconde isso.
+- **Lock otimista**: sem lock segurado durante a transação, não há ciclo de espera. O custo passa a ser tratar conflitos de versão.
+
+Deadlock é um dos modos de falha catalogados em [Modos de Falha Comuns](/labs/web-dev/resiliencia/04-modos-de-falha/).
+
 ## Comparação das estratégias
 
 | Estratégia          | Como evita o conflito                                     | Melhor uso                                                                                                 | Principal limitação                               |
@@ -312,3 +383,4 @@ Vale um cuidado aqui: `@Transactional` sozinho garante atomicidade da transaçã
 
 - [PostgreSQL e o Controle de Concorrência por Multiversão (MVCC)](https://blog.4linux.com.br/postgresql-e-o-controle-de-concorrencia-por-multiversao-mvcc/) - Almeida Robson (Blog 4Linux), pt-BR
 - [13.2. Transaction Isolation - PostgreSQL Documentation](https://www.postgresql.org/docs/current/transaction-iso.html) - PostgreSQL, en
+- [13.3. Explicit Locking (Deadlocks) - PostgreSQL Documentation](https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-DEADLOCKS) - PostgreSQL, en
