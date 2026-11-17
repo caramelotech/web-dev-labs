@@ -1,0 +1,13 @@
+{
+  // Regras completas: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+  "config": {
+    "default": true,
+    // Conteúdo didático em prosa não quebra linha em 80 colunas.
+    "MD013": false,
+    // "Vantagens"/"Desvantagens" se repetem em seções diferentes
+    // (escalabilidade vertical vs. horizontal). Só é erro se o título
+    // duplicado estiver sob o mesmo pai.
+    "MD024": { "siblings_only": true }
+  },
+  "globs": ["notes/**/*.md", "README.md", "AGENTS.md"]
+}
