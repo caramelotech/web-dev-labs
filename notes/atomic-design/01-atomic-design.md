@@ -117,7 +117,7 @@ Pense assim: o template é a planta baixa da casa, a página é a casa mobiliada
 
 Uma forma comum de refletir os cinco níveis no código é espelhar a hierarquia direto na árvore de pastas:
 
-```
+```text
 src/
 ├── componentes/
 │   ├── atomos/

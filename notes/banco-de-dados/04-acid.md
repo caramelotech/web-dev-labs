@@ -19,7 +19,7 @@ A sintaxe de `BEGIN`, `COMMIT` e `ROLLBACK` está detalhada na nota de [SQL](/la
 
 Atomicidade significa **tudo ou nada**. Se uma transação tem vários passos e qualquer um deles falha, o banco desfaz (`ROLLBACK`) tudo o que já tinha sido feito até ali, como se nada tivesse acontecido.
 
-```
+```text
 Transação: transferir R$500 da conta A para a conta B
 
 Passo 1: retirar R$500 de A   [OK]

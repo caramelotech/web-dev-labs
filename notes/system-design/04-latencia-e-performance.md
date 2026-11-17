@@ -13,7 +13,7 @@ Por isso, latência é medida em **percentis**:
 - **p95**: 95% das requisições foram mais rápidas. Comum em SLOs de APIs internas.
 - **p99**: 99% das requisições foram mais rápidas que esse valor, ou seja, 1% foi mais lenta. É o percentil mais citado em entrevistas e em dashboards de produção, porque em sistemas com muito tráfego, 1% ainda representa um número absoluto grande de usuários.
 
-```
+```text
 Sistema com 1 milhão de requisições/dia e p99 = 800ms:
 
 -> 10.000 requisições por dia (o "1% de cauda") levaram 800ms ou mais

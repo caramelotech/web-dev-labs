@@ -40,11 +40,11 @@ A terceira lente olha para os dados: decompor em torno de quem é dono de qual d
 
 Essa abordagem anda de mãos dadas com o princípio de [database per service](#database-per-service), abordado adiante: o resultado de uma boa decomposição data-driven é que cada serviço acaba realmente sendo dono exclusivo dos dados de que precisa.
 
-| Abordagem            | Pergunta que ela responde                          | Ponto forte                                                    | Limitação                                                             |
+| Abordagem | Pergunta que ela responde | Ponto forte | Limitação |
 | --------------------- | ---------------------------------------------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------- |
-| Business Capability   | "O que essa parte faz pela empresa?"                | Fácil de explicar e de alinhar com times de negócio             | Pode ficar genérica demais se o negócio não for bem entendido             |
-| Subdomain-Driven (DDD)| "Onde a linguagem e o modelo mudam de significado?" | Mais rigorosa, expõe fronteiras que não são óbvias à primeira vista | Exige investimento real em entender o domínio, não é um exercício rápido |
-| Data-Driven           | "Quem é dono de qual dado?"                          | Fronteiras alinhadas naturalmente com database per service        | Sozinha, pode ignorar comportamento e regra de negócio                    |
+| Business Capability | "O que essa parte faz pela empresa?" | Fácil de explicar e de alinhar com times de negócio | Pode ficar genérica demais se o negócio não for bem entendido |
+| Subdomain-Driven (DDD) | "Onde a linguagem e o modelo mudam de significado?" | Mais rigorosa, expõe fronteiras que não são óbvias à primeira vista | Exige investimento real em entender o domínio, não é um exercício rápido |
+| Data-Driven | "Quem é dono de qual dado?" | Fronteiras alinhadas naturalmente com database per service | Sozinha, pode ignorar comportamento e regra de negócio |
 
 Na prática, o fluxo mais comum é começar identificando capacidades de negócio, refinar essas capacidades usando a análise de subdomínios do DDD, e confirmar o resultado olhando para a posse dos dados. Quando as três lentes apontam para o mesmo corte, é um bom sinal de que a fronteira está no lugar certo.
 

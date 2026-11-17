@@ -12,7 +12,7 @@ const servidor = hash(chave) % 4;
 
 Funciona bem até o dia em que você adiciona um quinto servidor (ou perde um). Agora a conta virou `% 5`, e o resultado muda para **quase todas as chaves**. Praticamente todo o cache é invalidado de uma vez, todo mundo vai buscar no banco ao mesmo tempo, e o sistema pode cair só por causa do rebalanceamento.
 
-```
+```text
 hash(chave) = 100
 
 Com 4 nós:  100 % 4 = 0  -> nó 0

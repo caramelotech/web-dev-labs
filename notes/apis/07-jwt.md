@@ -42,10 +42,10 @@ Depois de conferir as credenciais, o servidor monta o payload com as **claims**,
 }
 ```
 
-| Claim | Significado                                                    |
-| ----- | -------------------------------------------------------------- |
-| `iss` | Quem emitiu o token (issuer)                                   |
-| `sub` | De quem é o token (subject), normalmente o ID do usuário       |
+| Claim | Significado                                                     |
+| ----- | --------------------------------------------------------------- |
+| `iss` | Quem emitiu o token (issuer)                                    |
+| `sub` | De quem é o token (subject), normalmente o ID do usuário        |
 | `aud` | Para quem o token foi feito (audience), qual API deve aceitá-lo |
 | `exp` | Quando expira, em segundos desde 1970 (Unix timestamp)          |
 | `nbf` | Antes desse momento, o token ainda não vale (not before)        |
@@ -121,12 +121,12 @@ Cada token traz no header um `kid` (key ID) dizendo com qual chave foi assinado,
 
 JWT faz parte de um conjunto de especificações chamado **JOSE** (JSON Object Signing and Encryption). Os nomes aparecem bastante em documentação e é fácil se perder:
 
-| Sigla | O que é                                                                 |
-| ----- | ----------------------------------------------------------------------- |
-| JWS   | JSON Web Signature: conteúdo **assinado** (íntegro, mas legível)        |
-| JWE   | JSON Web Encryption: conteúdo **cifrado** (ninguém lê sem a chave)      |
-| JWK   | JSON Web Key: uma chave criptográfica representada em JSON              |
-| JWKS  | JSON Web Key Set: uma lista de JWKs, como a do exemplo acima            |
+| Sigla | O que é                                                            |
+| ----- | ------------------------------------------------------------------ |
+| JWS   | JSON Web Signature: conteúdo **assinado** (íntegro, mas legível)   |
+| JWE   | JSON Web Encryption: conteúdo **cifrado** (ninguém lê sem a chave) |
+| JWK   | JSON Web Key: uma chave criptográfica representada em JSON         |
+| JWKS  | JSON Web Key Set: uma lista de JWKs, como a do exemplo acima       |
 
 O JWT é o formato das claims; ele pode ser transportado como JWS ou como JWE. Quase todo JWT que você vai encontrar é um **JWS**, ou seja, assinado e não cifrado. Por isso a regra de nunca colocar dado sensível no payload (CPF, endereço, dados de cartão): qualquer um que pegue o token lê tudo em um site de decodificação. JWE existe para quando o conteúdo precisa ser sigiloso, mas é bem menos comum e mais complexo de operar.
 

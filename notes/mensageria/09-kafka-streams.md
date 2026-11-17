@@ -2,7 +2,7 @@
 
 A nota de [Casos de Uso do Kafka](/labs/web-dev/mensageria/08-casos-de-uso-do-kafka/) apresentou o processamento de streams como um dos cinco padrões recorrentes do Kafka, e citou o Kafka Streams como uma das ferramentas para isso. Esta nota entra no funcionamento por dentro: como uma agregação com estado sobrevive a eventos atrasados e a um reinício do processo sem perder o que já tinha calculado.
 
-## Kafka Streams
+## Como funciona
 
 Kafka Streams é uma biblioteca Java (existe também um wrapper para Kotlin e Scala), não um serviço à parte. Isso é a diferença mais importante em relação a ksqlDB e Apache Flink: você adiciona a dependência no seu projeto, escreve a topologia de processamento em código e ela roda dentro do próprio processo da sua aplicação, sem precisar subir e operar um cluster adicional. Escalar o processamento é escalar o número de instâncias da sua aplicação, cada instância pega um pedaço das partições envolvidas, do mesmo jeito que um consumer group normal distribui partições entre consumers.
 

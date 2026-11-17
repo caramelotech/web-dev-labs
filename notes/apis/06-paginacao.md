@@ -8,7 +8,7 @@ Existem duas formas principais de fazer isso, e a diferença entre elas aparece 
 
 É a forma mais direta e a primeira que quase todo mundo escreve. A API recebe um número de página e um tamanho, e traduz isso para `LIMIT` e `OFFSET` no banco:
 
-```
+```http
 GET /produtos?page=3&size=20
 ```
 
@@ -55,7 +55,7 @@ Como a coluna de ordenação está indexada, o banco faz uma busca direta na ár
 
 O que a API expõe é um **cursor**: um token opaco (normalmente o último valor visto, codificado em base64) que o cliente devolve na próxima chamada para continuar:
 
-```
+```http
 GET /produtos?size=20
 GET /produtos?size=20&cursor=eyJub21lIjoiQ2FkZWlyYSBHYW1lciIsImlkIjo0ODIxfQ
 ```
@@ -98,7 +98,7 @@ Paginação quase nunca chega sozinha. O cliente raramente quer "a página 2 de 
 
 **Filtros por campo** são a forma mais simples: o nome do parâmetro é o campo, o valor é o que se quer.
 
-```
+```http
 GET /usuarios?role=admin&status=ativo
 ```
 
@@ -106,7 +106,7 @@ Vários parâmetros se combinam com "E": usuários que são admin **e** estão a
 
 **Intervalos** pedem dois parâmetros. Dá para usar nomes explícitos ou sufixos de operador, o importante é escolher um padrão:
 
-```
+```http
 GET /pedidos?dataInicio=2024-01-01&dataFim=2024-01-31
 GET /pedidos?criadoEm_gte=2024-01-01&criadoEm_lte=2024-01-31
 GET /produtos?preco[gte]=100&preco[lte]=500
@@ -114,7 +114,7 @@ GET /produtos?preco[gte]=100&preco[lte]=500
 
 **Ordenação** costuma vir em um de dois estilos: campo e direção separados, ou uma lista de campos com `-` na frente para decrescente (convenção usada por várias APIs públicas e pela especificação JSON:API):
 
-```
+```http
 GET /usuarios?sort=nome&order=asc
 GET /pedidos?sort=-criadoEm,id
 ```
@@ -125,7 +125,7 @@ O segundo estilo resolve de quebra o desempate pelo `id` visto em "Ordenação e
 
 Juntando tudo:
 
-```
+```http
 GET /pedidos?status=pago&dataInicio=2024-01-01&sort=-criadoEm&page=2&size=20
 ```
 
@@ -147,7 +147,7 @@ Por fim, a resposta precisa dizer ao cliente onde ele está. O jeito mais comum 
 
 Uma alternativa padronizada é o header `Link` (RFC 8288), que a API do GitHub usa: os links para as páginas vizinhas vão nos headers e o corpo fica só com os dados.
 
-```
+```http
 Link: <https://api.exemplo.com/pedidos?page=3&size=20>; rel="next",
       <https://api.exemplo.com/pedidos?page=8&size=20>; rel="last"
 ```

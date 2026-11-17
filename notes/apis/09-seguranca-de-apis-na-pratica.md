@@ -52,14 +52,14 @@ sequenceDiagram
 
 ### Os headers
 
-| Header                             | Para que serve                                                                 |
-| ---------------------------------- | ------------------------------------------------------------------------------ |
-| `Access-Control-Allow-Origin`      | Qual origem pode ler a resposta (uma origem exata, ou `*`)                     |
-| `Access-Control-Allow-Methods`     | Métodos permitidos na requisição real (resposta do preflight)                  |
-| `Access-Control-Allow-Headers`     | Headers que o cliente pode enviar (resposta do preflight)                      |
-| `Access-Control-Allow-Credentials` | `true` para permitir cookies ou autenticação HTTP na requisição                |
-| `Access-Control-Max-Age`           | Por quantos segundos o navegador pode reaproveitar o resultado do preflight    |
-| `Access-Control-Expose-Headers`    | Headers da resposta que o script pode ler além dos básicos (ex: `Location`)    |
+| Header                             | Para que serve                                                              |
+| ---------------------------------- | --------------------------------------------------------------------------- |
+| `Access-Control-Allow-Origin`      | Qual origem pode ler a resposta (uma origem exata, ou `*`)                  |
+| `Access-Control-Allow-Methods`     | Métodos permitidos na requisição real (resposta do preflight)               |
+| `Access-Control-Allow-Headers`     | Headers que o cliente pode enviar (resposta do preflight)                   |
+| `Access-Control-Allow-Credentials` | `true` para permitir cookies ou autenticação HTTP na requisição             |
+| `Access-Control-Max-Age`           | Por quantos segundos o navegador pode reaproveitar o resultado do preflight |
+| `Access-Control-Expose-Headers`    | Headers da resposta que o script pode ler além dos básicos (ex: `Location`) |
 
 Dois erros de configuração aparecem muito. O primeiro é tentar usar `Access-Control-Allow-Origin: *` com `Access-Control-Allow-Credentials: true`: o navegador recusa, porque com credenciais a origem precisa ser explícita. O segundo é o "conserto" do primeiro: pegar o header `Origin` da requisição e devolvê-lo sempre no `Allow-Origin`. Isso equivale a liberar qualquer site do mundo para fazer requisições autenticadas com os cookies do usuário. O certo é manter uma lista de origens permitidas e só devolver a origem se ela estiver na lista. Se a API não é chamada por navegador de outra origem, não habilite CORS.
 
@@ -143,15 +143,15 @@ Atenção com o que não dá para parametrizar, como nome de coluna em `ORDER BY
 
 Onde guardar o token no front (e o trade-off entre localStorage e cookie, que mexe justamente com XSS e CSRF) está em [JWT na Prática](/labs/web-dev/apis/07-jwt/).
 
-| Ameaça                     | Mitigação principal                                                      |
-| -------------------------- | ------------------------------------------------------------------------ |
-| SQL injection              | Queries parametrizadas, allowlist para nomes de coluna                   |
-| XSS                        | Encoding na saída, `Content-Type` correto, `nosniff`, CSP                |
-| CSRF                       | Token no header em vez de cookie, ou `SameSite` + token anti-CSRF        |
-| Mass assignment            | DTO de entrada com allowlist de campos                                   |
-| Exposição de dados         | DTO de saída, nunca devolver a entidade inteira                          |
-| Autenticação quebrada      | MFA, limite de tentativas, tokens curtos, sessão invalidada no logout    |
-| Configuração insegura      | Defaults seguros, CORS restrito, sem stack trace, endpoints de debug fora |
+| Ameaça                | Mitigação principal                                                       |
+| --------------------- | ------------------------------------------------------------------------- |
+| SQL injection         | Queries parametrizadas, allowlist para nomes de coluna                    |
+| XSS                   | Encoding na saída, `Content-Type` correto, `nosniff`, CSP                 |
+| CSRF                  | Token no header em vez de cookie, ou `SameSite` + token anti-CSRF         |
+| Mass assignment       | DTO de entrada com allowlist de campos                                    |
+| Exposição de dados    | DTO de saída, nunca devolver a entidade inteira                           |
+| Autenticação quebrada | MFA, limite de tentativas, tokens curtos, sessão invalidada no logout     |
+| Configuração insegura | Defaults seguros, CORS restrito, sem stack trace, endpoints de debug fora |
 
 ## Armazenamento de senhas
 
@@ -177,18 +177,18 @@ O hash protege a senha depois de um vazamento. O endpoint de login precisa de pr
 
 A OWASP mantém uma lista específica dos riscos mais comuns em APIs, separada do Top 10 de aplicações web. É uma boa lista de checagem para revisar uma API:
 
-| ID   | Risco                                       | Defesa em uma frase                                                                             |
-| ---- | ------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| API1 | Broken Object Level Authorization           | O IDOR: checar em todo endpoint se o objeto pedido pertence a quem pediu                        |
-| API2 | Broken Authentication                       | Mecanismo de login e de token bem implementado: MFA, limite de tentativas, validação completa do token |
-| API3 | Broken Object Property Level Authorization  | DTOs de entrada e saída, controlando quais propriedades cada um lê e escreve                    |
-| API4 | Unrestricted Resource Consumption           | Rate limiting, tamanho máximo de página e de body, timeouts                                     |
-| API5 | Broken Function Level Authorization         | Checar a função do usuário em endpoints administrativos, não só esconder o botão no front       |
-| API6 | Unrestricted Access to Sensitive Business Flows | Proteger fluxos que podem ser abusados em escala (compra de ingressos, cadastro) contra automação |
-| API7 | Server Side Request Forgery                 | Validar e restringir URLs que a API busca a pedido do cliente (webhooks, importar de URL)       |
-| API8 | Security Misconfiguration                   | Defaults seguros, CORS restrito, headers de segurança, sem detalhes de erro                     |
-| API9 | Improper Inventory Management               | Saber quais APIs e versões estão no ar e desligar as antigas e esquecidas                       |
-| API10 | Unsafe Consumption of APIs                 | Tratar respostas de APIs de terceiros como entrada não confiável: validar também               |
+| ID    | Risco                                           | Defesa em uma frase                                                                                    |
+| ----- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| API1  | Broken Object Level Authorization               | O IDOR: checar em todo endpoint se o objeto pedido pertence a quem pediu                               |
+| API2  | Broken Authentication                           | Mecanismo de login e de token bem implementado: MFA, limite de tentativas, validação completa do token |
+| API3  | Broken Object Property Level Authorization      | DTOs de entrada e saída, controlando quais propriedades cada um lê e escreve                           |
+| API4  | Unrestricted Resource Consumption               | Rate limiting, tamanho máximo de página e de body, timeouts                                            |
+| API5  | Broken Function Level Authorization             | Checar a função do usuário em endpoints administrativos, não só esconder o botão no front              |
+| API6  | Unrestricted Access to Sensitive Business Flows | Proteger fluxos que podem ser abusados em escala (compra de ingressos, cadastro) contra automação      |
+| API7  | Server Side Request Forgery                     | Validar e restringir URLs que a API busca a pedido do cliente (webhooks, importar de URL)              |
+| API8  | Security Misconfiguration                       | Defaults seguros, CORS restrito, headers de segurança, sem detalhes de erro                            |
+| API9  | Improper Inventory Management                   | Saber quais APIs e versões estão no ar e desligar as antigas e esquecidas                              |
+| API10 | Unsafe Consumption of APIs                      | Tratar respostas de APIs de terceiros como entrada não confiável: validar também                       |
 
 O API1 merece destaque: ele é o primeiro da lista desde a primeira edição, em 2019. Trocar `/pedidos/123` por `/pedidos/124` e ver o pedido de outra pessoa continua sendo a falha mais comum, e nenhum gateway resolve isso por você, porque só o serviço sabe de quem é cada pedido. O API9 conversa com versionamento: a v1 que ninguém lembra que está no ar costuma ser a que não recebeu as correções de segurança da v2 (ver [Segurança e Evolução de APIs](/labs/web-dev/apis/03-seguranca-e-evolucao-de-apis/)).
 

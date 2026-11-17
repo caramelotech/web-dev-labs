@@ -10,7 +10,7 @@ As notas são publicadas no site do Caramelo Labs em `https://caramelotech.com.b
 
 ## Estrutura
 
-```
+```text
 notes/           # Notas em Markdown puro - cada arquivo vira uma página no site
   index.md                    # Página de entrada do lab no site
   fundamentos/                # Fundamentos de front-end: HTML e CSS
@@ -71,6 +71,7 @@ Conteúdo aqui...
 
 1. Crie a subpasta em `notes/nova-secao/` com ao menos uma nota, seguindo o [padrão de nomenclatura](#padrão-de-nomenclatura-de-pastas-e-arquivos)
 2. Adicione a seção em `sidebar.json`:
+
    ```json
    { "label": "Título da Seção", "directory": "nova-secao" }
    ```

@@ -330,16 +330,16 @@ Deadlock é um dos modos de falha catalogados em [Modos de Falha Comuns](/labs/w
 
 ## Comparação das estratégias
 
-| Estratégia          | Como evita o conflito                                     | Melhor uso                                                                                                 | Principal limitação                               |
-| ------------------- | --------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
-| Execução sequencial | Remove o paralelismo                                      | Aplicações simples, uma única instância                                                                    | Baixa escalabilidade                              |
-| Atualização atômica | Executa a alteração direto no banco, numa instrução só    | Incrementos e decrementos simples                                                                          | Insuficiente para regras de negócio complexas     |
-| Mutex               | Permite uma execução por vez dentro do processo           | Estado compartilhado dentro de uma única instância                                                         | Não funciona sozinho entre réplicas diferentes    |
-| Lock pessimista     | Bloqueia a linha no banco antes de alterar                | Conflitos frequentes, regras que dependem do estado atual                                                  | Contenção e risco de deadlock                     |
-| Lock otimista       | Detecta alteração por número de versão, na hora de salvar | Conflitos pouco frequentes                                                                                 | Exige lógica de retry / tratamento de conflito    |
-| Lock distribuído    | Coordena instâncias via um serviço externo compartilhado  | Recursos compartilhados fora do banco                                                                      | Exige infraestrutura extra e tratamento de falhas |
-| MVCC (snapshot isolation) | O banco versiona a linha automaticamente, leitura nunca bloqueia escrita | Nível de isolamento Repeatable Read na maioria dos bancos modernos | Não evita write skew, só Serializable evita |
-| Ledger              | Registra eventos em vez de sobrescrever um valor único    | Dinheiro, auditoria, rastreabilidade (veja [Ledger Pattern](/labs/web-dev/banco-de-dados/09-ledger-pattern/)) | Maior complexidade arquitetural                   |
+| Estratégia                | Como evita o conflito                                                    | Melhor uso                                                                                                    | Principal limitação                               |
+| ------------------------- | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| Execução sequencial       | Remove o paralelismo                                                     | Aplicações simples, uma única instância                                                                       | Baixa escalabilidade                              |
+| Atualização atômica       | Executa a alteração direto no banco, numa instrução só                   | Incrementos e decrementos simples                                                                             | Insuficiente para regras de negócio complexas     |
+| Mutex                     | Permite uma execução por vez dentro do processo                          | Estado compartilhado dentro de uma única instância                                                            | Não funciona sozinho entre réplicas diferentes    |
+| Lock pessimista           | Bloqueia a linha no banco antes de alterar                               | Conflitos frequentes, regras que dependem do estado atual                                                     | Contenção e risco de deadlock                     |
+| Lock otimista             | Detecta alteração por número de versão, na hora de salvar                | Conflitos pouco frequentes                                                                                    | Exige lógica de retry / tratamento de conflito    |
+| Lock distribuído          | Coordena instâncias via um serviço externo compartilhado                 | Recursos compartilhados fora do banco                                                                         | Exige infraestrutura extra e tratamento de falhas |
+| MVCC (snapshot isolation) | O banco versiona a linha automaticamente, leitura nunca bloqueia escrita | Nível de isolamento Repeatable Read na maioria dos bancos modernos                                            | Não evita write skew, só Serializable evita       |
+| Ledger                    | Registra eventos em vez de sobrescrever um valor único                   | Dinheiro, auditoria, rastreabilidade (veja [Ledger Pattern](/labs/web-dev/banco-de-dados/09-ledger-pattern/)) | Maior complexidade arquitetural                   |
 
 ## Escolhendo uma estratégia na prática
 

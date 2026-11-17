@@ -17,7 +17,7 @@ Você gera um par de chaves:
 
 Quando você faz um commit assinado, o Git usa sua chave privada para gerar uma assinatura. O GitHub usa sua chave pública cadastrada para verificar que essa assinatura é legítima. Se bater, aparece o "Verified". Se não bater (ou não existir), aparece "Unverified".
 
-```
+```text
 Você        →  [chave privada]  →  assina o commit
 GitHub      →  [chave pública]  →  verifica a assinatura
 ```
@@ -80,7 +80,7 @@ gpg --list-secret-keys --keyid-format LONG
 
 A saída vai ser algo assim:
 
-```
+```text
 sec   rsa4096/3AA5C34371567BD2 2024-01-01 [SC]
       ABCDEF1234567890ABCDEF1234567890ABCDEF12
 uid   [ultimate] Seu Nome <voce@email.com>
@@ -106,6 +106,7 @@ gpg --armor --export 3AA5C34371567BD2
 
 Copie toda a saída (incluindo as linhas `-----BEGIN PGP PUBLIC KEY BLOCK-----` e `-----END PGP PUBLIC KEY BLOCK-----`) e adicione no GitHub em:
 
+<!-- markdownlint-disable-next-line MD036 -->
 **Settings > SSH and GPG keys > New GPG key**
 
 A partir daí, seus commits assinados vão exibir o selo "Verified" no GitHub.
@@ -164,13 +165,13 @@ gpg --edit-key 3AA5C34371567BD2
 
 Dentro do prompt interativo do GPG:
 
-```
+```text
 gpg> adduid
 ```
 
 Siga as instruções para digitar o novo nome e e-mail. Ao terminar:
 
-```
+```text
 gpg> save
 ```
 

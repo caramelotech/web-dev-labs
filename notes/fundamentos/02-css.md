@@ -7,18 +7,23 @@ CSS (Cascading Style Sheets) é a linguagem usada para definir o estilo e o layo
 ### 1. Seletores simples
 
 - **Seletor de elemento**:
+
   ```css
   p {
     color: blue;
   }
   ```
+
 - **Seletor de classe**:
+
   ```css
   .alert {
     color: red;
   }
   ```
+
 - **Seletor de ID**:
+
   ```css
   #header {
     font-size: 24px;
@@ -28,18 +33,23 @@ CSS (Cascading Style Sheets) é a linguagem usada para definir o estilo e o layo
 ### 2. Seletores combinadores
 
 - **Seletor descendente**:
+
   ```css
   div p {
     margin: 10px;
   }
   ```
+
 - **Seletor de filho direto**:
+
   ```css
   ul > li {
     list-style-type: square;
   }
   ```
+
 - **Seletor de irmão adjacente**:
+
   ```css
   h1 + p {
     font-weight: bold;
@@ -57,18 +67,23 @@ input[type="text"] {
 ### 4. Pseudo-classes
 
 - **`:hover`**:
+
   ```css
   a:hover {
     color: green;
   }
   ```
+
 - **`:nth-child()`**:
+
   ```css
   li:nth-child(2) {
     font-style: italic;
   }
   ```
+
 - **`:nth-of-type()`**:
+
   ```css
   p:nth-of-type(2) {
     color: blue;
@@ -78,13 +93,16 @@ input[type="text"] {
 ### 5. Pseudo-elementos
 
 - **`::before` e `::after`**:
+
   ```css
   p::before {
     content: "Nota: ";
     font-weight: bold;
   }
   ```
+
 - **`::first-line`**:
+
   ```css
   p::first-line {
     color: purple;
@@ -143,4 +161,3 @@ Exemplo de transição:
 Resultado:
 
 ![Exemplo de transição CSS](./assets/transitions.gif)
-

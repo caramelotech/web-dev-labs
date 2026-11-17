@@ -16,7 +16,7 @@ Um bom log de evento normalmente carrega:
 
 O problema de logs tradicionais é que eles costumam ser texto solto, do tipo:
 
-```
+```text
 [2026-08-23 14:32:01] ERROR: falha ao processar pedido 4821 para usuario 991
 ```
 

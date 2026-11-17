@@ -53,7 +53,7 @@ Tentativas de correção podem gerar eventos duplicados e efeitos colaterais ine
 
 ## Abordagens ingênuas
 
-**Só fazer dois writes**
+### Só fazer dois writes
 
 ```text
 save DB
@@ -62,7 +62,7 @@ publish event
 
 Não garante consistência.
 
-**2PC**
+### 2PC
 
 Tem alta complexidade e baixa adoção em microsserviços modernos.
 

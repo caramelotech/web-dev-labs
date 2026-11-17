@@ -103,7 +103,7 @@ SSE cobre um pedaço do problema que o WebSocket resolve por inteiro: quando o s
 
 O servidor mantém a conexão HTTP aberta e vai escrevendo eventos num formato de texto simples, com `Content-Type: text/event-stream`:
 
-```
+```text
 id: 101
 data: {"symbol": "AAPL", "price": 249.25}
 

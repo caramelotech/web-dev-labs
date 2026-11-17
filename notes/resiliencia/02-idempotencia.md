@@ -36,7 +36,7 @@ Dois problemas concretos nascem daí:
 
 A solução prática é o cliente gerar um identificador único para a _intenção_ da operação, não para a requisição HTTP em si, e enviar esse identificador em todas as tentativas daquela mesma operação.
 
-```
+```http
 POST /pagamentos
 Idempotency-Key: 7f3a9c1e-4b2d-4e91-9c3a-1d8f6b2a5e10
 

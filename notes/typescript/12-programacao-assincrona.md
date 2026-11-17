@@ -1,6 +1,6 @@
 # Programação assíncrona
 
-## Promise<T>
+## `Promise<T>`
 
 Em TypeScript, uma Promise carrega no tipo o valor que ela vai entregar: `Promise<Usuario>` é "uma promessa de um `Usuario` no futuro". O tipo do sucesso fica explícito na assinatura da função.
 
@@ -147,7 +147,7 @@ async function buscarUsuario(id: string): Promise<Usuario> {
 
 O `isUsuario` é um type guard, explicado em [Narrowing e type guards](/labs/web-dev/typescript/06-narrowing-e-type-guards/). Escrever esses guards à mão para objetos grandes cansa, e por isso é comum usar uma biblioteca de schema como o Zod, em que você descreve o formato uma vez e ganha a validação e o tipo juntos - veja [Padrões que escalam](/labs/web-dev/typescript/15-padroes-que-escalam/).
 
-## Promise<void> vs Promise<undefined>
+## `Promise<void>` vs `Promise<undefined>`
 
 Os dois parecem iguais, mas comunicam intenções diferentes:
 

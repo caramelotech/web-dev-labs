@@ -124,15 +124,15 @@ Para uma comparação dos bancos, veja [Escolha de Banco de Dados na Prática](/
 
 ### Estratégias
 
-**Auto-increment + Base62**
+#### Auto-increment + Base62
 
 Simples e determinístico, mas previsível.
 
-**Hash da URL**
+#### Hash da URL
 
 Pode colidir e dificulta controle.
 
-**ID distribuído**
+#### ID distribuído
 
 Escalável e evita gargalo central.
 

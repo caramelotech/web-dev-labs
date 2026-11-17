@@ -105,7 +105,7 @@ Na prática, os dois costumam trabalhar juntos: um fluxo OAuth2 termina emitindo
 
 **Como o JWT funciona:** um JWT é uma string com três partes separadas por ponto, `header.payload.signature`, cada uma codificada em Base64URL (uma variação do Base64 que troca `+` e `/` por `-` e `_` e dispensa o `=` final, para o token poder ir numa URL sem escapar nada):
 
-```
+```text
 eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjMiLCJyb2xlIjoiYWRtaW4iLCJleHAiOjE3MjAwMDAwMDB9.4f8a3d...
 ```
 
@@ -188,7 +188,7 @@ Isso cria uma tensão: a API precisa evoluir, mas não pode simplesmente quebrar
 
 A versão fica embutida no próprio caminho da URL:
 
-```
+```http
 GET /api/v1/pedidos/42
 GET /api/v2/pedidos/42
 ```
@@ -201,7 +201,7 @@ GET /api/v2/pedidos/42
 
 A versão vai como parâmetro de query:
 
-```
+```http
 GET /pedidos/42?version=1
 GET /pedidos/42?version=2
 ```
@@ -214,7 +214,7 @@ GET /pedidos/42?version=2
 
 A versão vai num header customizado, fora da URL:
 
-```
+```http
 GET /pedidos/42
 Accept-Version: 1
 ```
@@ -227,7 +227,7 @@ Accept-Version: 1
 
 A versão é parte do próprio tipo de mídia aceito, usando o header `Accept` padrão do HTTP:
 
-```
+```http
 GET /pedidos/42
 Accept: application/vnd.empresa.v2+json
 ```

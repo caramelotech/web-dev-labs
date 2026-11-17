@@ -19,7 +19,7 @@ A conversão de DAU para QPS é o primeiro cálculo que qualquer capacity planni
 
 A fórmula base para o QPS médio é:
 
-```
+```text
 QPS = (DAU × requests por usuário por dia) / 86400
 ```
 
@@ -27,13 +27,13 @@ O `86400` é o número de segundos em um dia (24 × 60 × 60). Divide o total de
 
 Para isso existe o **fator de pico** (peak factor): a razão entre o tráfego no pico e o tráfego médio. Um fator de pico comum em produtos de consumo é entre 2x e 5x, dependendo de quão concentrado é o uso ao longo do dia.
 
-```
+```text
 QPS de pico = QPS médio × fator de pico
 ```
 
 Cima do QPS de pico ainda se soma uma margem de segurança, chamada de **headroom**: capacidade extra reservada para picos inesperados (uma campanha de marketing viralizando, um evento externo, um bug em outro serviço jogando mais tráfego no seu). Um headroom típico fica entre 20% e 50% acima do QPS de pico calculado.
 
-```
+```text
 Capacidade máxima planejada = QPS de pico × (1 + headroom)
 ```
 
@@ -45,7 +45,7 @@ Vamos aplicar as fórmulas a um cenário concreto: uma rede social com **10 milh
 
 **QPS médio:**
 
-```
+```text
 QPS médio = (10.000.000 × 50) / 86400
 QPS médio = 500.000.000 / 86400
 QPS médio ≈ 5.787 QPS
@@ -53,13 +53,13 @@ QPS médio ≈ 5.787 QPS
 
 **QPS de pico**, assumindo um fator de pico de 3x (tráfego concentrado em horários de maior uso):
 
-```
+```text
 QPS de pico = 5.787 × 3 ≈ 17.361 QPS
 ```
 
 **Capacidade planejada**, com 30% de headroom:
 
-```
+```text
 Capacidade planejada = 17.361 × 1,3 ≈ 22.570 QPS
 ```
 

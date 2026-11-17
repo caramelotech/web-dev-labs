@@ -10,7 +10,7 @@ Um Config Server resolve isso centralizando a configuração num lugar só, serv
 
 Na prática, a forma mais comum de implementar isso é usando um repositório Git como fonte de verdade. Esse repositório guarda arquivos de configuração organizados por serviço e por ambiente, por exemplo:
 
-```
+```text
 config-repo/
   pedidos-service.yml
   pedidos-service-prod.yml

@@ -12,7 +12,7 @@ NoSQL não é um modelo único, é uma família de quatro modelos de dados difer
 
 O modelo mais simples: cada dado é guardado como um par chave/valor, parecido com um dicionário gigante. A aplicação só sabe fazer duas operações de verdade, buscar pela chave e gravar na chave, sem consultar o conteúdo do valor.
 
-```
+```text
 chave: "sessao:usuario:42"
 valor: { "logado": true, "carrinho": [12, 87] }
 ```
@@ -42,7 +42,7 @@ Guarda cada registro como um documento (geralmente JSON ou BSON), que pode ter e
 
 Parece uma tabela à primeira vista (linhas e colunas), mas cada linha pode ter um conjunto diferente de colunas, e o banco é otimizado para escrever e ler colunas específicas de bilhões de linhas rapidamente, em vez de linhas inteiras. É desenhado para escala massiva de escrita, distribuída entre muitos nós.
 
-```
+```text
 Linha: usuario_42
   coluna "nome"        -> "Ana"
   coluna "ultimo_login" -> "2026-08-20"
@@ -72,12 +72,12 @@ Os bancos já detalhados na nota de [Escolha de Banco de Dados na Prática](/lab
 
 A pergunta "SQL ou NoSQL" não tem uma resposta certa isolada, ela depende do que o sistema precisa em cada uma dessas frentes:
 
-| Critério                 | SQL (relacional)                                                                                   | NoSQL                                                                                                                                      |
-| ------------------------ | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| Consistência             | Forte por padrão, com garantias [ACID](/labs/web-dev/banco-de-dados/04-acid/) completas em transações | Varia por banco e por configuração; muitos priorizam disponibilidade (veja [CAP](/labs/web-dev/banco-de-dados/05-teorema-de-cap/))            |
-| Escalabilidade           | Verticalmente fácil, horizontalmente exige esforço extra (sharding manual, ferramentas externas)   | Pensado para escalar horizontalmente desde o design                                                                                        |
-| Flexibilidade do esquema | Esquema fixo, definido antes de gravar dados (`CREATE TABLE`), alterar depois custa uma migração   | Esquema flexível ou inexistente, cada registro pode ter formato próprio                                                                    |
-| Modelo de dados          | Tabelas normalizadas, relacionamentos via chave estrangeira e `JOIN`                               | Depende da categoria: chave-valor, documento, colunar ou grafo                                                                             |
-| Casos de uso típicos     | Dados com relacionamentos claros e regras de negócio rígidas: financeiro, estoque, pedidos         | Dados de alto volume, formato variável ou fortemente ligados a um padrão de acesso específico: sessões, catálogos, feeds, séries temporais |
+| Critério                 | SQL (relacional)                                                                                      | NoSQL                                                                                                                                      |
+| ------------------------ | ----------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| Consistência             | Forte por padrão, com garantias [ACID](/labs/web-dev/banco-de-dados/04-acid/) completas em transações | Varia por banco e por configuração; muitos priorizam disponibilidade (veja [CAP](/labs/web-dev/banco-de-dados/05-teorema-de-cap/))         |
+| Escalabilidade           | Verticalmente fácil, horizontalmente exige esforço extra (sharding manual, ferramentas externas)      | Pensado para escalar horizontalmente desde o design                                                                                        |
+| Flexibilidade do esquema | Esquema fixo, definido antes de gravar dados (`CREATE TABLE`), alterar depois custa uma migração      | Esquema flexível ou inexistente, cada registro pode ter formato próprio                                                                    |
+| Modelo de dados          | Tabelas normalizadas, relacionamentos via chave estrangeira e `JOIN`                                  | Depende da categoria: chave-valor, documento, colunar ou grafo                                                                             |
+| Casos de uso típicos     | Dados com relacionamentos claros e regras de negócio rígidas: financeiro, estoque, pedidos            | Dados de alto volume, formato variável ou fortemente ligados a um padrão de acesso específico: sessões, catálogos, feeds, séries temporais |
 
 Na prática, a escolha segue o mesmo raciocínio já visto na nota de [Escolha de Banco de Dados](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/): comece pela pergunta "que tipo de garantia esse dado específico precisa, e que formato ele naturalmente tem", não pela preferência por uma tecnologia. Um sistema real frequentemente usa os dois ao mesmo tempo, um banco relacional para pedidos e pagamentos, e um banco key-value ao lado só para sessão e cache.

@@ -8,7 +8,7 @@ Existem três formas de pensar em escala: escalar a máquina (vertical), escalar
 
 Escalar verticalmente é adicionar mais recursos a uma máquina que já existe: mais CPU, mais memória RAM, disco mais rápido. É literalmente trocar o servidor por um mais potente.
 
-```
+```text
 Antes                Depois
 +----------+         +----------------+
 | 2 vCPU   |   -->   | 8 vCPU         |
@@ -17,13 +17,13 @@ Antes                Depois
    1 máquina             1 máquina (mais forte)
 ```
 
-**Vantagens**
+### Vantagens
 
 - Simples de implementar: não exige mudar a arquitetura da aplicação
 - Não precisa lidar com dados distribuídos entre máquinas diferentes
 - Bom primeiro passo quando o sistema ainda é pequeno
 
-**Desvantagens**
+### Desvantagens
 
 - Existe um limite físico: em algum momento não há hardware mais potente para comprar
 - Custo cresce de forma desproporcional (uma máquina 2x mais forte pode custar muito mais que 2x)
@@ -44,13 +44,13 @@ flowchart LR
 
 Para isso funcionar, é necessário um **load balancer** (balanceador de carga) na frente das instâncias, distribuindo as requisições entre elas.
 
-**Vantagens**
+### Vantagens
 
 - Não tem teto de hardware: para crescer, basta adicionar mais instâncias
 - Maior resiliência: se uma instância cair, as outras continuam atendendo
 - Pode usar máquinas mais baratas (commodity hardware) em vez de uma máquina única muito cara
 
-**Desvantagens**
+### Desvantagens
 
 - Mais complexidade: a aplicação precisa ser projetada para rodar em várias instâncias ao mesmo tempo
 - Aplicações precisam ser **stateless** (sem guardar estado local, como sessão de usuário em memória), ou o estado precisa ser compartilhado (ex: sessão em Redis)
@@ -59,14 +59,14 @@ Para isso funcionar, é necessário um **load balancer** (balanceador de carga) 
 
 ## Vertical vs horizontal
 
-| Aspecto                  | Vertical (scale-up)        | Horizontal (scale-out)                |
-| ------------------------- | --------------------------- | --------------------------------------- |
-| O que muda                | Poder de uma máquina        | Número de máquinas                     |
-| Limite                    | Limite físico do hardware   | Praticamente ilimitado                 |
-| Complexidade              | Baixa                       | Alta                                    |
-| Ponto único de falha      | Sim                          | Não (com redundância)                  |
-| Custo                     | Cresce de forma não linear   | Cresce de forma mais previsível        |
-| Exige mudança no código   | Geralmente não               | Sim (stateless, dados compartilhados)  |
+| Aspecto                 | Vertical (scale-up)        | Horizontal (scale-out)                |
+| ----------------------- | -------------------------- | ------------------------------------- |
+| O que muda              | Poder de uma máquina       | Número de máquinas                    |
+| Limite                  | Limite físico do hardware  | Praticamente ilimitado                |
+| Complexidade            | Baixa                      | Alta                                  |
+| Ponto único de falha    | Sim                        | Não (com redundância)                 |
+| Custo                   | Cresce de forma não linear | Cresce de forma mais previsível       |
+| Exige mudança no código | Geralmente não             | Sim (stateless, dados compartilhados) |
 
 Na prática, os dois caminhos não são excludentes: é comum começar escalando verticalmente enquanto o sistema é pequeno e migrar para escalabilidade horizontal quando os limites de uma única máquina começam a aparecer.
 
@@ -97,4 +97,3 @@ Uma forma de evitar esse cenário é o princípio conhecido como **"you build it
 ## Referências
 
 - [You build it, You run it](https://ontologia.eximia.co/principios/you-build-it-you-run-it/) - EximiaCo, pt-BR
-

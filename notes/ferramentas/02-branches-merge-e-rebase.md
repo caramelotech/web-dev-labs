@@ -95,7 +95,7 @@ Git tenta fazer o merge automaticamente. Se houver alterações no mesmo trecho 
 
 Quando `main` não teve commits desde que a branch foi criada, Git apenas avança o ponteiro:
 
-```
+```text
 Antes:  main ──●──●
                     \
         feature       ●──●
@@ -107,7 +107,7 @@ Depois: main ──●──●──●──●
 
 Quando ambas avançaram, Git cria um commit de merge:
 
-```
+```text
         main    ──●──●──●──────●
                        \      /
         feature  ────────●──●
@@ -117,7 +117,7 @@ Quando ambas avançaram, Git cria um commit de merge:
 
 O merge junta o histórico de duas branches criando um commit de junção. O rebase faz outra coisa: pega os commits da sua branch e reaplica eles, um por um, como se você tivesse escrito cada um a partir de um ponto de partida diferente.
 
-```
+```text
 Antes:
               A───B───C  feature
              /
@@ -151,7 +151,7 @@ O `git rebase -i` abre um editor com a lista de commits e deixa você reescrever
 git rebase -i HEAD~3
 ```
 
-```
+```text
 pick a1b2c3d adicionar validação de email
 pick e4f5g6h corrigir typo na mensagem de erro
 pick i7j8k9l ajustar teste que quebrou
@@ -170,7 +170,7 @@ Trocando a palavra no começo da linha, você decide o que fazer com cada commit
 
 Um uso comum: três commits de "correção de typo" que só poluem o histórico virando um só, antes do PR:
 
-```
+```text
 pick a1b2c3d adicionar validação de email
 fixup e4f5g6h corrigir typo na mensagem de erro
 fixup i7j8k9l ajustar teste que quebrou
@@ -206,7 +206,7 @@ A regra prática que resolve a maioria dos casos: rebase na sua própria branch,
 
 Quando duas branches modificam o mesmo trecho de código, Git marca o conflito no arquivo:
 
-```
+```text
 <<<<<<< HEAD
     return saldo - taxa;
 =======

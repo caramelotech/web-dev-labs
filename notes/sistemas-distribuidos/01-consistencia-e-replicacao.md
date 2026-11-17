@@ -95,7 +95,7 @@ Quando um sistema tem várias réplicas, ele não precisa esperar todas confirma
 
 A fórmula mais comum usa duas variáveis: `W` (quantas réplicas precisam confirmar uma escrita) e `R` (quantas réplicas precisam ser consultadas numa leitura), sobre um total de `N` réplicas. Se `W + R > N`, o sistema garante que toda leitura vai enxergar pelo menos uma réplica com a escrita mais recente, porque o conjunto de réplicas lidas e o conjunto de réplicas escritas sempre se sobrepõem em pelo menos um nó.
 
-```
+```text
 N = 3 réplicas
 W = 2 (precisa de 2 confirmações para escrever)
 R = 2 (precisa consultar 2 réplicas para ler)

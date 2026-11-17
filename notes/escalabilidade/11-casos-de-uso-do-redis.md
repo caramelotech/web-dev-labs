@@ -69,7 +69,7 @@ Dois motivos:
 
 Um rate limiter de janela fixa cabe em poucas linhas:
 
-```
+```text
 INCR   rate:user:42:1699999860      # incrementa o contador da janela atual
 EXPIRE rate:user:42:1699999860 60   # na primeira vez, define expiração de 60s
 ```
@@ -86,7 +86,7 @@ Fazer isso com `ORDER BY` num banco relacional fica caro quando a tabela cresce 
 
 Os comandos principais:
 
-```
+```text
 ZADD    ranking 1500 jogador:42        # define (ou atualiza) o score
 ZINCRBY ranking 30 jogador:42          # soma 30 ao score atual
 ZREVRANGE ranking 0 9 WITHSCORES       # top 10 (do maior score para o menor)
@@ -117,7 +117,7 @@ O Redis Stream é um log append-only de eventos, parecido em ideia com o que a n
 
 O recurso que muda o jogo é o **consumer group**: um grupo de workers divide as mensagens entre si (cada mensagem vai para um worker do grupo), e o Redis rastreia quais mensagens cada um pegou mas ainda não confirmou.
 
-```
+```text
 XADD pedidos * cliente 42 valor 199.90        # publica um evento
 XREADGROUP GROUP faturamento worker1 COUNT 10 STREAMS pedidos >
 XACK pedidos faturamento 1699999999999-0      # confirma que processou
@@ -131,7 +131,7 @@ Quando o Redis basta e quando não: para volume moderado de jobs internos, filas
 
 O Pub/Sub do Redis é um mecanismo de transmissão ao vivo. Um publisher manda uma mensagem para um canal, e todos os subscribers **conectados naquele instante** recebem. Ninguém guarda nada.
 
-```
+```text
 SUBSCRIBE notificacoes:user:42        # cliente A fica ouvindo
 PUBLISH   notificacoes:user:42 "novo comentario no seu post"
 ```
@@ -159,7 +159,7 @@ E torna ele inadequado quando a entrega precisa ser garantida. Nesse caso a esco
 
 A forma básica usa um `SET` com duas opções:
 
-```
+```text
 SET lock:relatorio-diario <id-unico-do-dono> NX PX 30000
 ```
 

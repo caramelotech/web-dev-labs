@@ -53,7 +53,7 @@ Há dois tipos:
 
 O `git init` cria uma pasta oculta `.git` na raiz do projeto. É ali que o Git guarda tudo: os objetos (o conteúdo dos arquivos e dos commits), as referências (branches e tags), o arquivo `HEAD` e a configuração local do repositório (`.git/config`).
 
-```
+```text
 .git/
 ├── HEAD        # para onde você está apontando agora
 ├── config      # configurações só deste repositório
@@ -73,7 +73,7 @@ Cada commit é identificado por um hash SHA-1 de 40 caracteres, normalmente exib
 
 Uma branch é uma linha independente de desenvolvimento. O trabalho em uma branch não afeta outras até ser mesclado (merge).
 
-```
+```text
 main           ──●──●──●──────────●──
                        \          /
 feature/login   ────────●──●──●──
@@ -102,7 +102,7 @@ Git tem três áreas:
 2. **Staging area (index)** - alterações preparadas para o próximo commit
 3. **Repository** - histórico de commits
 
-```
+```text
 Editar arquivo → git add → git commit
 (working dir)  (staging)  (repository)
 ```

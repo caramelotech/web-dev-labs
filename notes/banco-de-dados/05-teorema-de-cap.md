@@ -16,7 +16,7 @@ Um sistema distribuído pode oferecer, no máximo, duas das três garantias abai
 
 Toda leitura retorna o dado mais recente que foi escrito, ou um erro. Nenhum nó responde com um valor desatualizado.
 
-```
+```text
 Escreve X = 10 no nó 1
 Lê X no nó 2 -> precisa retornar 10 (nunca o valor antigo)
 ```

@@ -33,7 +33,7 @@ O Feature Branch Workflow simples não tem resposta clara para isso. O Git Flow 
 
 O Git Flow usa duas branches de longa duração:
 
-```
+```text
 main      ──────────────────────────────────────● v1.2
                                                /
 develop   ──●──●──●──●──●──●──●──●──●──●──●──

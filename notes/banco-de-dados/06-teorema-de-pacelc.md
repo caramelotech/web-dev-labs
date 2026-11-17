@@ -8,7 +8,7 @@ Proposto pelo engenheiro Daniel Abadi em 2010, o PACELC parte do princípio de q
 
 PACELC é uma junção de duas perguntas, cada uma com sua própria troca:
 
-```
+```text
 PACELC = PAC + ELC
 
   se Partição (P):

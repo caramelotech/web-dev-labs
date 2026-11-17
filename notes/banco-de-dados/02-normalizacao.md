@@ -208,9 +208,11 @@ Um `JOIN` com índice é barato e o banco é excelente nisso. O custo pesa quand
 O que ajuda a manter o modelo normalizado rápido:
 
 - **Índice nas colunas de chave estrangeira.** No PostgreSQL, `PRIMARY KEY` e `UNIQUE` criam índice automaticamente, mas a chave estrangeira **não**. A documentação recomenda indexar as colunas referenciadoras, porque um `DELETE` ou `UPDATE` na tabela referenciada obriga o banco a procurar as linhas que apontam para ela. Sem índice, essa procura lê a tabela inteira. Já o MySQL com InnoDB cria esse índice sozinho.
+
   ```sql
   CREATE INDEX idx_alunos_orientador_id ON alunos (orientador_id);
   ```
+
 - **Índices compostos** pensados nos padrões de consulta reais. A ordem das colunas importa, como explica a nota de [Índices e Planos de Execução](/labs/web-dev/banco-de-dados/14-indices-e-planos-de-execucao/). A chave primária composta de `matriculas` já atende bem buscas por `aluno_id`, porque ele é a primeira coluna.
 - **Evitar `SELECT *`.** Você lê colunas que não usa e perde a chance de o banco responder só pelo índice (Index Only Scan).
 - **Escrever filtros que o índice consiga usar.** Existe um conselho popular, "filtre cedo", que engana: no PostgreSQL, o planner é livre para juntar as tabelas de um `INNER JOIN` em qualquer ordem, então a posição do filtro no texto não muda o plano. O que muda é o filtro permitir o uso do índice, sem função em cima da coluna, por exemplo.

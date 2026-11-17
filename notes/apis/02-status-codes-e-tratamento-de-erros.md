@@ -8,13 +8,13 @@ A nota [HTTP, APIs e REST](/labs/web-dev/apis/01-http-rest/) tem uma tabela ráp
 
 O primeiro dígito diz a categoria da resposta:
 
-| Classe | Significado          | Em uma frase                                       |
-| ------ | -------------------- | -------------------------------------------------- |
-| 1xx    | Informativo          | "Recebi, continue" (raro de ver em código de API)  |
-| 2xx    | Sucesso              | "Deu certo"                                        |
-| 3xx    | Redirecionamento     | "O que você quer está em outro lugar"              |
-| 4xx    | Erro do cliente      | "O problema está no que você mandou"               |
-| 5xx    | Erro do servidor     | "O problema é meu, não seu"                        |
+| Classe | Significado      | Em uma frase                                      |
+| ------ | ---------------- | ------------------------------------------------- |
+| 1xx    | Informativo      | "Recebi, continue" (raro de ver em código de API) |
+| 2xx    | Sucesso          | "Deu certo"                                       |
+| 3xx    | Redirecionamento | "O que você quer está em outro lugar"             |
+| 4xx    | Erro do cliente  | "O problema está no que você mandou"              |
+| 5xx    | Erro do servidor | "O problema é meu, não seu"                       |
 
 A divisão entre 4xx e 5xx é a mais importante na prática. Um 4xx diz ao cliente que repetir a mesma requisição vai dar o mesmo erro, então ele precisa mudar alguma coisa (corrigir o body, fazer login, pedir permissão). Um 5xx diz que a requisição estava ok e o servidor falhou, então tentar de novo mais tarde pode funcionar.
 
@@ -57,10 +57,10 @@ Redirecionamentos têm duas perguntas por trás: a mudança é temporária ou pe
 
 A segunda pergunta parece estranha, mas tem história. Os navegadores antigos, ao receber um 301 ou 302 depois de um `POST`, refaziam a requisição como `GET` no novo endereço, contrariando a especificação da época. Esse comportamento virou padrão de fato, e a RFC 9110 acabou aceitando: no 301 e no 302, o cliente **pode** trocar `POST` por `GET`. Como isso é ambíguo, criaram códigos novos com regras claras.
 
-|                 | Pode trocar o método para GET | Mantém método e body |
-| --------------- | ----------------------------- | -------------------- |
-| **Temporário**  | 302 Found                     | 307 Temporary Redirect |
-| **Permanente**  | 301 Moved Permanently         | 308 Permanent Redirect |
+|                | Pode trocar o método para GET | Mantém método e body   |
+| -------------- | ----------------------------- | ---------------------- |
+| **Temporário** | 302 Found                     | 307 Temporary Redirect |
+| **Permanente** | 301 Moved Permanently         | 308 Permanent Redirect |
 
 E tem o **303 See Other**, que é o único que manda explicitamente trocar para `GET`. Ele é usado depois de um `POST` para dizer "o resultado do que você fez está ali, vá buscar com GET". É o padrão POST-redirect-GET de formulários web, que evita que um F5 reenvie o formulário.
 
@@ -157,13 +157,13 @@ O status diz a categoria do erro, mas o cliente quase sempre precisa de mais: qu
 
 Em vez de inventar esse formato, dá para usar um padrão: a **RFC 9457, Problem Details for HTTP APIs** (de 2023, que substituiu a RFC 7807). Ela define o media type `application/problem+json` e um conjunto de campos:
 
-| Campo      | O que é                                                                                 |
-| ---------- | --------------------------------------------------------------------------------------- |
-| `type`     | URI que identifica o tipo do problema (pode apontar para uma página de documentação)    |
-| `title`    | Resumo curto do tipo do problema, igual em todas as ocorrências                         |
-| `status`   | O status HTTP, repetido no corpo por conveniência (precisa ser igual ao da resposta)    |
-| `detail`   | Explicação desta ocorrência específica, pensada para ajudar o cliente a corrigir        |
-| `instance` | URI que identifica esta ocorrência                                                      |
+| Campo      | O que é                                                                              |
+| ---------- | ------------------------------------------------------------------------------------ |
+| `type`     | URI que identifica o tipo do problema (pode apontar para uma página de documentação) |
+| `title`    | Resumo curto do tipo do problema, igual em todas as ocorrências                      |
+| `status`   | O status HTTP, repetido no corpo por conveniência (precisa ser igual ao da resposta) |
+| `detail`   | Explicação desta ocorrência específica, pensada para ajudar o cliente a corrigir     |
+| `instance` | URI que identifica esta ocorrência                                                   |
 
 Além deles, a API pode adicionar campos próprios, as **extensões**. Um cliente que não conhece uma extensão simplesmente a ignora. Um erro de validação ficaria assim:
 

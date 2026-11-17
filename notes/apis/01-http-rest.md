@@ -8,7 +8,7 @@ HTTP (Hypertext Transfer Protocol) é o protocolo de comunicação da web. Funci
 
 ### Estrutura de uma requisição
 
-```
+```http
 POST /usuarios HTTP/1.1
 Host: api.exemplo.com
 Content-Type: application/json
@@ -30,7 +30,7 @@ Composta de:
 
 A resposta espelha a requisição: uma primeira linha, os headers e, opcionalmente, um body.
 
-```
+```http
 HTTP/1.1 201 Created
 Content-Type: application/json
 Content-Length: 67
@@ -60,7 +60,7 @@ O body traz a representação devolvida pelo servidor, quase sempre JSON numa AP
 
 Uma requisição tem quatro lugares para carregar informação, e cada um tem um papel:
 
-```
+```http
 GET /usuarios/10/pedidos?status=pago&page=2 HTTP/1.1
     └────┬─────┘        └─────────┬───────┘
      path param           query params
@@ -84,7 +84,7 @@ Dois headers parecidos fazem papéis opostos:
 - `Content-Type` descreve o formato do body **que está sendo enviado**. Na requisição, é o que o cliente manda; na resposta, é o que o servidor devolve.
 - `Accept` diz o formato que o cliente **quer receber** na resposta.
 
-```
+```http
 POST /relatorios HTTP/1.1
 Content-Type: application/json    ← estou mandando JSON
 Accept: text/csv                  ← quero a resposta em CSV
@@ -108,11 +108,11 @@ Esse acordo se chama **negociação de conteúdo**. JSON é o padrão de fato em
 
 A tabela acima cobre os cinco métodos que aparecem em quase toda API REST, mas o protocolo HTTP define mais quatro:
 
-| Método    | Uso                                                                |
-| --------- | ------------------------------------------------------------------- |
-| `HEAD`    | Igual ao `GET`, mas a resposta vem só com os headers, sem body      |
-| `OPTIONS` | Pergunta ao servidor quais métodos e headers são aceitos naquele recurso |
-| `CONNECT` | Abre um túnel através de um proxy, usado para estabelecer conexões HTTPS |
+| Método    | Uso                                                                                      |
+| --------- | ---------------------------------------------------------------------------------------- |
+| `HEAD`    | Igual ao `GET`, mas a resposta vem só com os headers, sem body                           |
+| `OPTIONS` | Pergunta ao servidor quais métodos e headers são aceitos naquele recurso                 |
+| `CONNECT` | Abre um túnel através de um proxy, usado para estabelecer conexões HTTPS                 |
 | `TRACE`   | Ecoa de volta a requisição recebida, para diagnosticar o que um proxy alterou no caminho |
 
 Na prática, o mais comum de encontrar no dia a dia é o `OPTIONS`: é ele que o navegador dispara automaticamente antes de um `POST` ou `PUT` entre origens diferentes, o "preflight" do CORS, para checar se o servidor aceita aquela requisição antes de mandar a de verdade. `HEAD` aparece quando um cliente só quer saber se um recurso existe ou qual o tamanho dele, sem baixar o conteúdo inteiro. Já `CONNECT` e `TRACE` raramente aparecem em código de aplicação: `CONNECT` é coisa de proxy, e `TRACE` costuma vir desabilitado por padrão em servidores web, porque ecoar a requisição de volta pode vazar informação sensível de headers ou cookies.
@@ -126,7 +126,7 @@ Vale reparar que "seguro" e "idempotente" não são a mesma coisa, mesmo sendo f
 
 É aqui que o `PATCH` foge do padrão da tabela. A RFC 5789, que define o `PATCH`, é explícita: ele não é seguro nem idempotente *por definição*, mas pode ser implementado de um jeito que seja. Depende inteiramente da semântica do patch que a API aceita:
 
-```
+```http
 # idempotente: sempre resulta no mesmo estado final
 PATCH /usuarios/42
 { "status": "ativo" }
@@ -144,7 +144,7 @@ Essas propriedades não são só categorização acadêmica: são o que permite 
 
 O código de status indica o resultado da requisição.
 
-**2xx - Sucesso**
+#### 2xx - Sucesso
 
 | Código | Nome       | Quando usar                               |
 | ------ | ---------- | ----------------------------------------- |
@@ -152,7 +152,7 @@ O código de status indica o resultado da requisição.
 | 201    | Created    | Recurso criado com sucesso (POST)         |
 | 204    | No Content | Sucesso sem corpo de resposta (DELETE)    |
 
-**3xx - Redirecionamento**
+#### 3xx - Redirecionamento
 
 | Código | Nome              | Quando usar                 |
 | ------ | ----------------- | --------------------------- |
@@ -160,7 +160,7 @@ O código de status indica o resultado da requisição.
 | 302    | Found             | Redirecionamento temporário |
 | 304    | Not Modified      | Cache ainda válido          |
 
-**4xx - Erro do cliente**
+#### 4xx - Erro do cliente
 
 | Código | Nome              | Quando usar                                   |
 | ------ | ----------------- | --------------------------------------------- |
@@ -172,7 +172,7 @@ O código de status indica o resultado da requisição.
 | 422    | Unprocessable     | Dados válidos mas com erros de validação      |
 | 429    | Too Many Requests | Rate limit atingido                           |
 
-**5xx - Erro do servidor**
+#### 5xx - Erro do servidor
 
 | Código | Nome                  | Quando usar                   |
 | ------ | --------------------- | ----------------------------- |
@@ -247,7 +247,7 @@ As duas palavras parecem sinônimas, mas não são.
 
 **Representação** é um retrato do estado do recurso num momento, num formato específico. O mesmo usuário 1 pode ser representado como JSON, como XML, ou como uma página HTML:
 
-```
+```text
 GET /usuarios/1
 Accept: application/json   →  { "id": 1, "nome": "Ana Silva" }
 
@@ -261,21 +261,21 @@ Accept: application/xml    →  <usuario><id>1</id><nome>Ana Silva</nome></usuar
 
 Essa comparação aparece em entrevista com frequência, e começa por uma diferença de natureza: REST é um **estilo arquitetural**, um conjunto de restrições; SOAP é um **protocolo**, com formato de mensagem definido (o envelope XML) e contrato formal descrito em WSDL.
 
-|                     | REST                                                       | SOAP                                                                       |
-| ------------------- | ---------------------------------------------------------- | -------------------------------------------------------------------------- |
-| O que é             | Estilo arquitetural                                        | Protocolo padronizado pelo W3C                                             |
-| Uso do HTTP         | Usa a semântica do HTTP: métodos, status, headers, cache   | Usa o HTTP só como transporte (quase tudo é `POST`); aceita outros, como SMTP |
-| Formato             | Livre: JSON na maioria, mas também XML, CSV, texto         | XML no envelope                                                            |
-| Contrato            | Opcional (OpenAPI)                                         | Obrigatório e rígido (WSDL)                                                |
-| Estado              | Stateless                                                  | Stateless no protocolo; estado vem de extensões WS-* ou da aplicação       |
-| Peso                | Mensagens enxutas                                          | Mensagens verbosas, com custo de processar o envelope                      |
-| Onde aparece        | Web, mobile, APIs públicas e internas                      | Integrações corporativas e reguladas: bancos, seguradoras, governo         |
+|              | REST                                                     | SOAP                                                                          |
+| ------------ | -------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| O que é      | Estilo arquitetural                                      | Protocolo padronizado pelo W3C                                                |
+| Uso do HTTP  | Usa a semântica do HTTP: métodos, status, headers, cache | Usa o HTTP só como transporte (quase tudo é `POST`); aceita outros, como SMTP |
+| Formato      | Livre: JSON na maioria, mas também XML, CSV, texto       | XML no envelope                                                               |
+| Contrato     | Opcional (OpenAPI)                                       | Obrigatório e rígido (WSDL)                                                   |
+| Estado       | Stateless                                                | Stateless no protocolo; estado vem de extensões WS-* ou da aplicação          |
+| Peso         | Mensagens enxutas                                        | Mensagens verbosas, com custo de processar o envelope                         |
+| Onde aparece | Web, mobile, APIs públicas e internas                    | Integrações corporativas e reguladas: bancos, seguradoras, governo            |
 
 Dois pontos costumam vir errados em resumos por aí. Um é dizer que SOAP é "stateful": o protocolo em si não guarda estado, quem adiciona sessão são extensões do ecossistema WS-* ou a própria aplicação. O outro é dizer que SOAP "tem performance ruim" como se fosse uma propriedade absoluta: o custo vem do XML verboso e do processamento do envelope, e em troca ele oferece um contrato formal e padrões prontos de segurança e transação que fazem sentido em domínios regulados. Por que SOAP ainda sobrevive nesses setores está em [Classificação de APIs por Público](/labs/web-dev/apis/05-classificacao-de-apis-por-publico/).
 
 ### Design de rotas RESTful
 
-```
+```text
 GET    /usuarios          → listar todos os usuários
 POST   /usuarios          → criar novo usuário
 GET    /usuarios/42       → buscar usuário de id 42
@@ -290,7 +290,7 @@ GET    /usuarios/42/pedidos/7   → pedido 7 do usuário 42
 
 URLs devem usar **substantivos no plural** e **kebab-case** para múltiplas palavras:
 
-```
+```text
 ✅ /produtos-destaque
 ✅ /categorias/eletrônicos/produtos
 ❌ /buscarProdutos
@@ -381,7 +381,7 @@ HttpResponse<String> postResponse = client.send(postRequest,
 
 ## Headers importantes
 
-```
+```text
 Content-Type: application/json        → tipo do body enviado
 Accept: application/json              → tipo de resposta esperado
 Authorization: Bearer <token>         → autenticação JWT
@@ -396,7 +396,7 @@ Content-Encoding: br                  → algoritmo usado na resposta
 
 Um JSON de listagem com 200 KB de texto vira uns 30 KB depois de comprimido. Essa economia de banda é negociada entre cliente e servidor a cada requisição: o cliente manda `Accept-Encoding` dizendo quais algoritmos sabe descomprimir, o servidor escolhe um e devolve a resposta comprimida com o header `Content-Encoding` indicando qual foi usado. Se o cliente não anuncia nada, a resposta vai sem compressão.
 
-```
+```text
 Requisição:  Accept-Encoding: gzip, br, zstd
 Resposta:    Content-Encoding: br
 ```
@@ -426,7 +426,7 @@ Existe um cuidado de segurança. O ataque **BREACH** explora a compressão de um
 
 - Implemente paginação para listagens grandes:
 
-```
+```text
 GET /produtos?page=2&size=20&sort=nome,asc
 ```
 

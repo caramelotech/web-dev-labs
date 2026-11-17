@@ -130,13 +130,13 @@ O arquivo CODEOWNERS define quem é responsável por revisar quais partes do có
 
 Crie o arquivo em `.github/CODEOWNERS`:
 
-```
+```text
 # Sintaxe: padrão   @responsável
 ```
 
 **Configurando por usuário:**
 
-```
+```text
 # Qualquer arquivo no repositório
 *   @tech-lead
 
@@ -154,7 +154,7 @@ src/auth/config.ts   @responsavel-seguranca
 
 Em organizações do GitHub, você pode usar times como responsáveis:
 
-```
+```text
 src/   @minha-org/time-backend
 *.css  @minha-org/time-design
 docs/  @minha-org/tech-writers
@@ -164,7 +164,7 @@ O time inteiro recebe a solicitação de revisão. Qualquer membro aprovado cont
 
 **Outros padrões úteis:**
 
-```
+```text
 # Arquivos de configuração e infraestrutura
 .github/    @devops
 *.yml       @devops

@@ -8,7 +8,7 @@ Toda biblioteca, API ou software de que outras pessoas dependem precisa de um si
 
 O formato é sempre:
 
-```
+```text
 MAJOR.MINOR.PATCH
 ```
 
@@ -29,7 +29,7 @@ Regras práticas:
 
 **Versões de pré-release:**
 
-```
+```text
 1.0.0-alpha
 1.0.0-beta.1
 1.0.0-rc.1      # release candidate
@@ -47,7 +47,7 @@ O [Conventional Commits](https://www.conventionalcommits.org/pt-br/) é uma espe
 
 **Formato:**
 
-```
+```text
 <tipo>[escopo opcional]: <descrição curta>
 
 [corpo opcional]
@@ -69,7 +69,7 @@ docs(readme): atualizar instruções de instalação
 
 Para commits mais complexos, use o corpo para explicar o _porquê_ e o rodapé para metadados como referências a issues ou revisores:
 
-```
+```text
 feat(auth): adicionar login com Google OAuth
 
 Implementa o fluxo OAuth 2.0 com Google. Usuários podem
@@ -192,7 +192,7 @@ npm run commit
 
 O commitizen faz uma série de perguntas no terminal:
 
-```
+```text
 ? Select the type of change you're committing:
 ❯ feat:     A new feature
   fix:      A bug fix
@@ -215,7 +215,7 @@ O commitizen faz uma série de perguntas no terminal:
 
 E gera a mensagem pronta:
 
-```
+```text
 feat(auth): adicionar login com Google
 
 Closes #42
