@@ -83,7 +83,7 @@ Uma [CDN](/labs/web-dev/escalabilidade/05-cdn/) é, no fundo, um reverse proxy c
 
 ## Ferramentas comuns
 
-- **NGINX**: provavelmente o mais usado como reverse proxy. A diretiva `proxy_pass` é o coração da configuração.
+- **NGINX**: provavelmente o mais usado como reverse proxy. A diretiva `proxy_pass` é o coração da configuração. Os outros papéis que ele costuma acumular (load balancer, cache, rate limiting, WebSocket) estão em [Casos de Uso do NGINX](/labs/web-dev/escalabilidade/13-casos-de-uso-do-nginx/).
 - **HAProxy**: muito forte em balanceamento de carga (L4 e L7) e alta performance.
 - **Apache HTTP Server**: faz reverse proxy com o módulo `mod_proxy`, comum em ambientes que já usam Apache.
 - **Envoy**: proxy pensado para microsserviços, base de vários service meshes (como o Istio) e configurável dinamicamente por API.
