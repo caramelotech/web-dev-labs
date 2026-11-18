@@ -58,7 +58,7 @@ Escopo: projeto de APIs - protocolos, estilos de comunicação, segurança e evo
 
 ### `banco-de-dados/`
 
-Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência, arquitetura interna das engines, performance de consultas (índices, planos de execução, diagnóstico de queries lentas) e busca (tipos de busca, full-text).
+Escopo: bancos relacionais e NoSQL - modelo, garantias transacionais, concorrência, arquitetura interna das engines, performance de consultas (índices, planos de execução, diagnóstico de queries lentas), busca (tipos de busca, full-text) e operação em produção (connection pooling, migrations, backup e recuperação).
 
 - ⬜ Armazenamento distribuído (HDFS) e processamento distribuído com Spark
 

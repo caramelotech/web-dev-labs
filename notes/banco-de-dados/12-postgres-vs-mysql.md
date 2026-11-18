@@ -41,7 +41,7 @@ O **PostgreSQL** cria **um processo do sistema operacional para cada conexão**.
 
 O **MySQL** usa **uma thread para cada conexão**, todas dentro de um único processo `mysqld`. Threads são mais baratas de criar que processos e compartilham memória entre si com mais facilidade.
 
-Isso tem um efeito direto no dia a dia: no Postgres, cada conexão custa mais memória e é mais cara de abrir. Por isso, aplicações que abrem e fecham conexão o tempo todo (ou que rodam em muitas instâncias, cada uma com seu pool) costumam colocar um **pooler de conexões** na frente do Postgres, tipo o PgBouncer, que mantém um número fixo de conexões reais com o banco e multiplexa as conexões da aplicação em cima delas. No MySQL a pressão por um pooler externo é menor, embora pools no lado da aplicação continuem sendo boa prática nos dois.
+Isso tem um efeito direto no dia a dia: no Postgres, cada conexão custa mais memória e é mais cara de abrir. Por isso, aplicações que abrem e fecham conexão o tempo todo (ou que rodam em muitas instâncias, cada uma com seu pool) costumam colocar um **pooler de conexões** na frente do Postgres, tipo o PgBouncer, que mantém um número fixo de conexões reais com o banco e multiplexa as conexões da aplicação em cima delas. No MySQL a pressão por um pooler externo é menor, embora pools no lado da aplicação continuem sendo boa prática nos dois. Como dimensionar o pool e os modos do PgBouncer estão em [Connection Pooling](/labs/web-dev/banco-de-dados/19-connection-pooling/).
 
 ## Onde os dados moram no disco
 

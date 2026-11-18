@@ -11,7 +11,7 @@ Base de conhecimento sobre **desenvolvimento web** do Caramelo Tech - do HTML ao
 - **Algoritmos e Estruturas de Dados** - a base para resolver problemas: raciocínio, estruturas de dados, complexidade (Big O) e padrões de resolução
 - **Engenharia de Software** - escrever código que dá para manter: princípios, padrões e testes
 - **APIs** - como os sistemas conversam: protocolos, status codes e erros, estilos de comunicação, segurança, testes, documentação e evolução
-- **Databases** - guardar dados com segurança: modelo relacional e NoSQL, garantias transacionais, arquitetura interna, performance de consultas, busca e MongoDB na prática
+- **Databases** - guardar dados com segurança: modelo relacional e NoSQL, garantias transacionais, arquitetura interna, performance de consultas, busca, operação em produção (conexões, migrations e backup) e MongoDB na prática
 - **System Design** - pensar o sistema antes de construir: fundamentos, trade-offs e metodologia
 - **Escalabilidade e Infraestrutura** - aguentar mais carga: escala, cache, load balancer, API Gateway, CDN
 - **Sistemas Distribuídos** - quando os dados vivem em várias máquinas: consistência, replicação e coordenação entre nós

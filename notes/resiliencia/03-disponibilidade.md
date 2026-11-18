@@ -89,7 +89,7 @@ Comece pelo custo da indisponibilidade: quanto o negócio perde por hora fora do
 
 ### Testar o plano
 
-Um plano de DR que nunca foi executado provavelmente não funciona: o backup está corrompido, a permissão para restaurar não existe, o passo a passo está desatualizado. Pratique restaurar backups periodicamente e faça simulações de desastre (_game days_), em que a equipe executa o plano de verdade num ambiente de teste e mede o RTO e o RPO reais contra as metas.
+Um plano de DR que nunca foi executado provavelmente não funciona: o backup está corrompido, a permissão para restaurar não existe, o passo a passo está desatualizado. Pratique restaurar backups periodicamente e faça simulações de desastre (_game days_), em que a equipe executa o plano de verdade num ambiente de teste e mede o RTO e o RPO reais contra as metas. Os tipos de backup de banco, o point-in-time recovery e o caso do GitLab estão em [Backup e Recuperação](/labs/web-dev/banco-de-dados/21-backup-e-recuperacao/).
 
 ## Referências
 
