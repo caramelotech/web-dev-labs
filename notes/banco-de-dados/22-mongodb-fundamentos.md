@@ -9,9 +9,9 @@ Como ele guarda esses documentos no disco (a storage engine WiredTiger, o cache 
 O que o MongoDB oferece além de "guardar JSON":
 
 - **Consultas ad-hoc**: dá para filtrar por qualquer campo, inclusive dentro de documentos aninhados e arrays, sem definir antes quais consultas vão existir.
-- **Índices** secundários em qualquer campo, inclusive compostos, em arrays, de texto e geoespaciais (veja [MongoDB: índices](/labs/web-dev/banco-de-dados/22-mongodb-indices/)).
-- **Aggregation pipeline** para transformar e resumir dados dentro do banco, o equivalente a `GROUP BY` e `JOIN` (veja [MongoDB: aggregation pipeline](/labs/web-dev/banco-de-dados/23-mongodb-aggregation-pipeline/)).
-- **Replicação** com failover automático e **sharding** para escalar horizontalmente (veja [MongoDB: replicação, sharding e transações](/labs/web-dev/banco-de-dados/24-mongodb-replicacao-sharding-e-transacoes/)).
+- **Índices** secundários em qualquer campo, inclusive compostos, em arrays, de texto e geoespaciais (veja [MongoDB: índices](/labs/web-dev/banco-de-dados/25-mongodb-indices/)).
+- **Aggregation pipeline** para transformar e resumir dados dentro do banco, o equivalente a `GROUP BY` e `JOIN` (veja [MongoDB: aggregation pipeline](/labs/web-dev/banco-de-dados/26-mongodb-aggregation-pipeline/)).
+- **Replicação** com failover automático e **sharding** para escalar horizontalmente (veja [MongoDB: replicação, sharding e transações](/labs/web-dev/banco-de-dados/27-mongodb-replicacao-sharding-e-transacoes/)).
 - **GridFS**, uma convenção para guardar arquivos maiores que o limite de um documento, quebrando-os em pedaços.
 
 Um pouco de história ajuda a entender algumas decisões do produto. A empresa 10gen foi fundada em 2007 e lançou o MongoDB 1.0 em 2009, escrito em C++. Em 2013 a 10gen passou a se chamar MongoDB Inc. O serviço gerenciado em nuvem, o **Atlas**, chegou em 2016. Em outubro de 2018 a licença do servidor mudou de AGPL para **SSPL** (Server Side Public License), que permite uso livre na sua aplicação mas impõe condições a quem quiser oferecer o próprio MongoDB como serviço. Por isso a OSI não reconhece a SSPL como licença open source, e o "Community Server" é mais bem descrito como "gratuito com código disponível".
@@ -147,7 +147,7 @@ Dois limites influenciam a modelagem desde o primeiro dia:
 - Um documento BSON tem no máximo **16 MB**.
 - Um documento pode ter no máximo **100 níveis** de aninhamento (cada objeto ou array conta um nível).
 
-16 MB parece muito para um JSON, e é, até alguém modelar "todos os comentários de um post" como um array dentro do post. Arrays que crescem sem limite são o caminho clássico para bater no teto. A nota [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/21-mongodb-modelagem-de-dados/) mostra como decidir entre embutir e referenciar justamente para não cair nisso. Para arquivos grandes de verdade (vídeos, PDFs), a saída é GridFS ou, mais comum hoje, um storage de objetos como S3 com só a referência no documento.
+16 MB parece muito para um JSON, e é, até alguém modelar "todos os comentários de um post" como um array dentro do post. Arrays que crescem sem limite são o caminho clássico para bater no teto. A nota [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/24-mongodb-modelagem-de-dados/) mostra como decidir entre embutir e referenciar justamente para não cair nisso. Para arquivos grandes de verdade (vídeos, PDFs), a saída é GridFS ou, mais comum hoje, um storage de objetos como S3 com só a referência no documento.
 
 ## Schema flexível não é ausência de schema
 

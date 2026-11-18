@@ -150,7 +150,7 @@ sh.shardCollection("loja.eventos", { dispositivoId: "hashed" });
 São duas estratégias (alguns materiais listam três, contando a mesma duas vezes com nomes diferentes):
 
 - **Ranged**: documentos com valores próximos da shard key ficam juntos. Consultas por intervalo ("pedidos do cliente 42 em março") vão para um shard só. O risco é concentração: com uma chave que só cresce, como data ou ObjectId, toda escrita nova cai no mesmo shard, o do fim do intervalo.
-- **Hashed**: o MongoDB usa o hash do valor (o índice hashed de [MongoDB: índices](/labs/web-dev/banco-de-dados/22-mongodb-indices/)). Distribui bem, mesmo com chaves crescentes, mas consultas por intervalo viram consultas a todos os shards.
+- **Hashed**: o MongoDB usa o hash do valor (o índice hashed de [MongoDB: índices](/labs/web-dev/banco-de-dados/25-mongodb-indices/)). Distribui bem, mesmo com chaves crescentes, mas consultas por intervalo viram consultas a todos os shards.
 
 **Zones** são um recurso à parte, não uma terceira estratégia: permitem amarrar intervalos da shard key a shards específicos, por exemplo para que dados de clientes europeus fiquem fisicamente em servidores na Europa.
 
@@ -188,7 +188,7 @@ Em produção, um replica set é o ponto de partida mínimo, mesmo para sistemas
 
 ## Transações multi-documento
 
-As propriedades ACID e o que cada letra garante estão em [ACID](/labs/web-dev/banco-de-dados/04-acid/). No MongoDB, a primeira coisa a saber é que **escrita em um único documento sempre foi atômica**, inclusive quando altera vários campos, subdocumentos e arrays de uma vez. Com um bom modelo (veja [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/21-mongodb-modelagem-de-dados/)), a maior parte das operações cabe num documento e não precisa de transação.
+As propriedades ACID e o que cada letra garante estão em [ACID](/labs/web-dev/banco-de-dados/04-acid/). No MongoDB, a primeira coisa a saber é que **escrita em um único documento sempre foi atômica**, inclusive quando altera vários campos, subdocumentos e arrays de uma vez. Com um bom modelo (veja [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/24-mongodb-modelagem-de-dados/)), a maior parte das operações cabe num documento e não precisa de transação.
 
 Quando a operação precisa alterar **vários documentos** ou várias coleções juntas, tudo ou nada, existem as transações multi-documento:
 

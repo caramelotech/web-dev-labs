@@ -2,7 +2,7 @@
 
 ## O que é o aggregation pipeline
 
-O `find` (veja [MongoDB: CRUD e consultas](/labs/web-dev/banco-de-dados/20-mongodb-crud-e-consultas/)) filtra e devolve documentos como eles estão guardados. Quando você precisa **calcular** algo a partir deles (total vendido por produto, média de nota por turma, pedidos com os dados do cliente juntos), a ferramenta é o **aggregation pipeline**.
+O `find` (veja [MongoDB: CRUD e consultas](/labs/web-dev/banco-de-dados/23-mongodb-crud-e-consultas/)) filtra e devolve documentos como eles estão guardados. Quando você precisa **calcular** algo a partir deles (total vendido por produto, média de nota por turma, pedidos com os dados do cliente juntos), a ferramenta é o **aggregation pipeline**.
 
 A ideia é a de uma linha de montagem: os documentos da coleção entram no primeiro **estágio**, que faz uma transformação e passa o resultado para o próximo, e assim por diante. Cada estágio recebe documentos e devolve documentos, então dá para encaixá-los na ordem que você quiser.
 
@@ -220,7 +220,7 @@ Por padrão, documentos com array vazio ou sem o campo **somem** no `$unwind`. S
 
 ### $lookup
 
-`$lookup` traz documentos de **outra coleção** para dentro de cada documento, como um `LEFT OUTER JOIN`: o resultado vem num array (vazio se não houver correspondência). É o que permite juntar dados referenciados, como discutido em [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/21-mongodb-modelagem-de-dados/).
+`$lookup` traz documentos de **outra coleção** para dentro de cada documento, como um `LEFT OUTER JOIN`: o resultado vem num array (vazio se não houver correspondência). É o que permite juntar dados referenciados, como discutido em [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/24-mongodb-modelagem-de-dados/).
 
 A forma simples compara um campo local com um campo da outra coleção:
 
@@ -355,7 +355,7 @@ db.pedidos.aggregate([
 
 ## Desempenho do pipeline
 
-**Filtre e ordene cedo.** `$match` e `$sort` no início do pipeline usam índices (as mesmas regras de [MongoDB: índices](/labs/web-dev/banco-de-dados/22-mongodb-indices/)). Depois de um `$group`, `$unwind` ou `$project` que muda os campos, o índice não ajuda mais, porque os documentos já não são os da coleção.
+**Filtre e ordene cedo.** `$match` e `$sort` no início do pipeline usam índices (as mesmas regras de [MongoDB: índices](/labs/web-dev/banco-de-dados/25-mongodb-indices/)). Depois de um `$group`, `$unwind` ou `$project` que muda os campos, o índice não ajuda mais, porque os documentos já não são os da coleção.
 
 **Deixe o otimizador trabalhar, mas não conte só com ele.** O MongoDB reordena alguns estágios sozinho: move um `$match` para antes de um `$project` quando o filtro não depende dos campos calculados, junta `$sort` + `$limit` em top-k, junta `$match` consecutivos, e também identifica quais campos o pipeline realmente usa para não carregar o resto. Ele não faz mágica com um `$lookup` ou `$unwind` colocado antes de um filtro que poderia vir primeiro.
 

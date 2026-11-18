@@ -6,7 +6,7 @@ No banco relacional, a modelagem começa pelos **dados**: você identifica as en
 
 No MongoDB, a modelagem começa pelas **consultas**. A pergunta-guia é: "que dados a aplicação lê e escreve juntos, e com que frequência?". A regra prática que resume a filosofia é **dado que é acessado junto fica junto**. Se toda vez que você mostra um produto também mostra as especificações dele, faz sentido que as especificações morem dentro do documento do produto.
 
-Isso tem uma consequência importante: no MongoDB, uma escrita em **um documento é atômica**, inclusive quando ela mexe em vários campos, documentos embutidos e arrays de uma vez. Quanto mais o que precisa mudar junto está no mesmo documento, menos você depende de transações multi-documento, que existem, mas custam mais (veja [MongoDB: replicação, sharding e transações](/labs/web-dev/banco-de-dados/24-mongodb-replicacao-sharding-e-transacoes/)). A própria documentação do MongoDB diz que transação não deve substituir um bom design de schema.
+Isso tem uma consequência importante: no MongoDB, uma escrita em **um documento é atômica**, inclusive quando ela mexe em vários campos, documentos embutidos e arrays de uma vez. Quanto mais o que precisa mudar junto está no mesmo documento, menos você depende de transações multi-documento, que existem, mas custam mais (veja [MongoDB: replicação, sharding e transações](/labs/web-dev/banco-de-dados/27-mongodb-replicacao-sharding-e-transacoes/)). A própria documentação do MongoDB diz que transação não deve substituir um bom design de schema.
 
 Na prática, cada relacionamento vira uma escolha entre duas ferramentas: **embutir** o dado relacionado dentro do documento, ou **referenciar** outro documento pelo `_id`.
 
@@ -38,7 +38,7 @@ O que se ganha:
 - **Atomicidade de graça**: atualizar o nome e as specs ao mesmo tempo é uma operação atômica.
 - **Localidade**: os dados ficam fisicamente juntos, o que é bom para o cache do banco.
 
-Para consultar e indexar campos embutidos, use a dot notation (detalhada em [MongoDB: CRUD e consultas](/labs/web-dev/banco-de-dados/20-mongodb-crud-e-consultas/)):
+Para consultar e indexar campos embutidos, use a dot notation (detalhada em [MongoDB: CRUD e consultas](/labs/web-dev/banco-de-dados/23-mongodb-crud-e-consultas/)):
 
 ```js
 db.usuarios.find({ "endereco.cidade": "Jaipur" });
@@ -78,7 +78,7 @@ db.produtos.aggregate([
 ]);
 ```
 
-O `$lookup` está detalhado em [MongoDB: aggregation pipeline](/labs/web-dev/banco-de-dados/23-mongodb-aggregation-pipeline/). Ele funciona bem, mas é mais caro que ler um documento só; se quase toda leitura precisa dele, o modelo provavelmente deveria embutir.
+O `$lookup` está detalhado em [MongoDB: aggregation pipeline](/labs/web-dev/banco-de-dados/26-mongodb-aggregation-pipeline/). Ele funciona bem, mas é mais caro que ler um documento só; se quase toda leitura precisa dele, o modelo provavelmente deveria embutir.
 
 O que se ganha ao referenciar:
 
@@ -194,7 +194,7 @@ Para cada relacionamento, responda:
 | O documento pode crescer até perto de 16 MB?        | Não                           | Sim                                 |
 | Os dados precisam mudar juntos atomicamente?        | Sim                           | Não (ou aceita transação)           |
 
-Quando as respostas ficam divididas, o híbrido (extended reference ou subset) costuma ser a saída. E nenhum modelo é definitivo: como o schema é flexível, dá para evoluir conforme as consultas reais aparecem, medindo com `explain()` (veja [MongoDB: índices](/labs/web-dev/banco-de-dados/22-mongodb-indices/)) em vez de adivinhar.
+Quando as respostas ficam divididas, o híbrido (extended reference ou subset) costuma ser a saída. E nenhum modelo é definitivo: como o schema é flexível, dá para evoluir conforme as consultas reais aparecem, medindo com `explain()` (veja [MongoDB: índices](/labs/web-dev/banco-de-dados/25-mongodb-indices/)) em vez de adivinhar.
 
 ## Referências
 

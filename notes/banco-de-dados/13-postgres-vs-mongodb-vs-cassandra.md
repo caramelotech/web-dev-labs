@@ -42,7 +42,7 @@ flowchart LR
 
 Réplicas do MongoDB (o **replica set**) elegem um nó primário via um algoritmo baseado em Raft, o mesmo mecanismo já citado na tabela de [Escolha de Banco de Dados na Prática](/labs/web-dev/banco-de-dados/07-escolha-de-banco-de-dados/). Só o primário aceita escritas, e os secundários replicam a partir dele.
 
-O uso do MongoDB no dia a dia (modelo de documentos, consultas, modelagem, índices, aggregation, replicação, sharding e transações) tem uma série própria, começando em [MongoDB: fundamentos e modelo de documentos](/labs/web-dev/banco-de-dados/19-mongodb-fundamentos/).
+O uso do MongoDB no dia a dia (modelo de documentos, consultas, modelagem, índices, aggregation, replicação, sharding e transações) tem uma série própria, começando em [MongoDB: fundamentos e modelo de documentos](/labs/web-dev/banco-de-dados/22-mongodb-fundamentos/).
 
 ## Cassandra: LSM tree, Memtable, SSTable e compaction
 

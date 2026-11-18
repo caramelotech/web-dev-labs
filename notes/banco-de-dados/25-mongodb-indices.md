@@ -79,7 +79,7 @@ db.produtos.createIndex({ tags: 1 });
 db.produtos.find({ tags: "promo" }); // IXSCAN: acha direto pela entrada "promo"
 ```
 
-Esse é o índice que torna barato o modelo de "array de referências" de [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/21-mongodb-modelagem-de-dados/). Duas observações: um documento com array de 1.000 elementos gera 1.000 entradas no índice (arrays grandes inflam o índice e encarecem a escrita), e num índice composto **no máximo um** dos campos pode ser array em cada documento, porque indexar dois arrays exigiria o produto cartesiano dos elementos.
+Esse é o índice que torna barato o modelo de "array de referências" de [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/24-mongodb-modelagem-de-dados/). Duas observações: um documento com array de 1.000 elementos gera 1.000 entradas no índice (arrays grandes inflam o índice e encarecem a escrita), e num índice composto **no máximo um** dos campos pode ser array em cada documento, porque indexar dois arrays exigiria o produto cartesiano dos elementos.
 
 ### Text
 
@@ -103,7 +103,7 @@ As limitações pesam: uma coleção pode ter **um único** text index (que pode
 
 ### Hashed
 
-O hashed index guarda o **hash** do valor do campo em vez do valor. Hashes de valores parecidos ficam espalhados, então ele distribui uniformemente, e é por isso que é usado como base do sharding por hash (veja [MongoDB: replicação, sharding e transações](/labs/web-dev/banco-de-dados/24-mongodb-replicacao-sharding-e-transacoes/)).
+O hashed index guarda o **hash** do valor do campo em vez do valor. Hashes de valores parecidos ficam espalhados, então ele distribui uniformemente, e é por isso que é usado como base do sharding por hash (veja [MongoDB: replicação, sharding e transações](/labs/web-dev/banco-de-dados/27-mongodb-replicacao-sharding-e-transacoes/)).
 
 ```js
 db.usuarios.createIndex({ userId: "hashed" });

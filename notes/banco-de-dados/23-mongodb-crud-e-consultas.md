@@ -1,6 +1,6 @@
 # MongoDB: CRUD e consultas
 
-CRUD é a sigla para as quatro operações básicas sobre dados: **C**reate (inserir), **R**ead (ler), **U**pdate (atualizar) e **D**elete (remover). No MongoDB, cada uma tem métodos com nomes bem diretos, como `insertOne`, `find`, `updateMany` e `deleteOne`. Os exemplos abaixo usam o `mongosh` (veja [MongoDB: fundamentos e modelo de documentos](/labs/web-dev/banco-de-dados/19-mongodb-fundamentos/)); nos drivers os nomes são os mesmos, só que com `await` na frente (ou em `snake_case` no Python).
+CRUD é a sigla para as quatro operações básicas sobre dados: **C**reate (inserir), **R**ead (ler), **U**pdate (atualizar) e **D**elete (remover). No MongoDB, cada uma tem métodos com nomes bem diretos, como `insertOne`, `find`, `updateMany` e `deleteOne`. Os exemplos abaixo usam o `mongosh` (veja [MongoDB: fundamentos e modelo de documentos](/labs/web-dev/banco-de-dados/22-mongodb-fundamentos/)); nos drivers os nomes são os mesmos, só que com `await` na frente (ou em `snake_case` no Python).
 
 ## Create: insertOne e insertMany
 
@@ -29,7 +29,7 @@ Por padrão o `insertMany` é **ordenado** (`ordered: true`): se o terceiro docu
 db.alunos.insertMany(documentos, { ordered: false })
 ```
 
-Repare que nenhum dos dois é "tudo ou nada": a inserção é atômica **por documento**. Se você precisa que vários documentos entrem juntos ou nenhum entre, isso é trabalho de transação (veja [MongoDB: replicação, sharding e transações](/labs/web-dev/banco-de-dados/24-mongodb-replicacao-sharding-e-transacoes/)).
+Repare que nenhum dos dois é "tudo ou nada": a inserção é atômica **por documento**. Se você precisa que vários documentos entrem juntos ou nenhum entre, isso é trabalho de transação (veja [MongoDB: replicação, sharding e transações](/labs/web-dev/banco-de-dados/27-mongodb-replicacao-sharding-e-transacoes/)).
 
 ## Read: find e findOne
 
@@ -182,7 +182,7 @@ db.pedidos.find({ $expr: { $lt: ["$pago", "$total"] } })
 Outros dois operadores de avaliação:
 
 - `$mod` casa por resto de divisão: `{ numero: { $mod: [2, 0] } }` traz os pares.
-- `$text` faz busca textual e exige um **text index** na coleção; ele está detalhado em [MongoDB: índices](/labs/web-dev/banco-de-dados/22-mongodb-indices/).
+- `$text` faz busca textual e exige um **text index** na coleção; ele está detalhado em [MongoDB: índices](/labs/web-dev/banco-de-dados/25-mongodb-indices/).
 
 E um que você vai ver em tutorial antigo e não deve usar: `$where`, que executa uma função JavaScript para cada documento. Server-side JavaScript (`$where`, `$function`, `$accumulator`) foi **deprecado no MongoDB 8.0**, é lento (não usa índice e roda um interpretador por documento) e quase sempre pode ser trocado por `$expr`.
 
@@ -341,7 +341,7 @@ db.alunos.updateOne({ _id: 1 }, { $pull: { provas: { nota: { $lt: 5 } } } })
 db.alunos.updateOne({ _id: 1 }, { $pop: { cursos: 1 } })
 ```
 
-O `$push` com `$slice` é um padrão útil para manter arrays **limitados** e não estourar o tamanho do documento (o tema volta em [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/21-mongodb-modelagem-de-dados/)).
+O `$push` com `$slice` é um padrão útil para manter arrays **limitados** e não estourar o tamanho do documento (o tema volta em [MongoDB: modelagem de dados](/labs/web-dev/banco-de-dados/24-mongodb-modelagem-de-dados/)).
 
 Para atualizar um elemento específico de um array existem os operadores **posicionais**:
 
